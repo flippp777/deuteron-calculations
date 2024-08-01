@@ -19,8 +19,8 @@ aHO = np.array([1.2, 1.4, 1.6, 1.8, 2.0])
 
 Nmax_lst = np.arange(5, 151, 5)
 
-def rsq_n(vec, mat_rsq, aHO_j_sq,i):
-    return np.matmul(vec, np.matmul(mat_rsq * aHO_j_sq, vec)) /i
+def rsq_n(vec, mat_rsq, aHO_j_sq):
+    return np.matmul(vec, np.matmul(mat_rsq * aHO_j_sq, vec))
 
 def compute_rms_j(j):
     rms_j = []
@@ -34,7 +34,7 @@ def compute_rms_j(j):
         mat_rsq = mat(rsq_Nmax150, i)
         
         with ThreadPoolExecutor() as executor:
-            futures = [executor.submit(rsq_n, vec, mat_rsq, aHO_j_sq,i) for vec in h_eigvecs]
+            futures = [executor.submit(rsq_n, vec, mat_rsq, aHO_j_sq) for vec in h_eigvecs]
             for future in futures:
                 rsq += future.result()
         
