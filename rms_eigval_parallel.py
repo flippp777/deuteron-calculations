@@ -20,7 +20,7 @@ aHO = np.array([1.2, 1.4, 1.6, 1.8, 2.0])
 Nmax_lst = np.arange(5, 151, 5)
 
 def rsq_n(vec, mat_rsq, aHO_j_sq):
-    return np.matmul(vec, np.matmul(mat_rsq * aHO_j_sq, vec))
+    return np.dot(vec, np.dot(mat_rsq * aHO_j_sq, vec))
 
 def compute_rms_j(j):
     rms_j = []
