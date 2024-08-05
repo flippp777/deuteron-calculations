@@ -1,17 +1,29 @@
 import numpy as np
 from matplotlib import pyplot as plt
+from sys import platform
 
-chi_Nmax20 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax20_LMax02_hwHO020.meho', skiprows=1)
-trel_Nmax20 = np.loadtxt(r'Matrixelemente\trel_NMax20_LMax02_hwHO020.meho', skiprows=1)
+if platform == "win32":
+    chi_Nmax20 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax20_LMax02_hwHO020.meho', skiprows=1)
+    trel_Nmax20 = np.loadtxt(r'Matrixelemente\trel_NMax20_LMax02_hwHO020.meho', skiprows=1)
 
-chi_Nmax150_aHO12 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO01.20.meho', skiprows=1)
-chi_Nmax150_aHO14 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO01.40.meho', skiprows=1)
-chi_Nmax150_aHO16 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO01.60.meho', skiprows=1)
-chi_Nmax150_aHO18 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO01.80.meho', skiprows=1)
-chi_Nmax150_aHO20 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_hwHO020.meho', skiprows=1)
+    chi_Nmax150_aHO12 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO01.20.meho', skiprows=1)
+    chi_Nmax150_aHO14 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO01.40.meho', skiprows=1)
+    chi_Nmax150_aHO16 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO01.60.meho', skiprows=1)
+    chi_Nmax150_aHO18 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO01.80.meho', skiprows=1)
+    chi_Nmax150_aHO20 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_hwHO020.meho', skiprows=1)
 
-trel_Nmax150 = np.loadtxt(r'Matrixelemente\trel_NMax150_LMax02_hwHO020.meho', skiprows=1)
+    trel_Nmax150 = np.loadtxt(r'Matrixelemente\trel_NMax150_LMax02_hwHO020.meho', skiprows=1)
+else:
+    chi_Nmax20 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax20_LMax02_hwHO020.meho', skiprows=1)
+    trel_Nmax20 = np.loadtxt(r'Matrixelemente/trel_NMax20_LMax02_hwHO020.meho', skiprows=1)
 
+    chi_Nmax150_aHO12 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO01.20.meho', skiprows=1)
+    chi_Nmax150_aHO14 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO01.40.meho', skiprows=1)
+    chi_Nmax150_aHO16 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO01.60.meho', skiprows=1)
+    chi_Nmax150_aHO18 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO01.80.meho', skiprows=1)
+    chi_Nmax150_aHO20 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_hwHO020.meho', skiprows=1)
+
+    
 
 # Erschtellt die Matirx mit gegebenen Matrixelementen
 def mat(mat_el, Nmax):
