@@ -26,5 +26,5 @@ for h_vec in h_eigvec:
     rsq += np.dot(h_vec, np.dot(rsq_mat, h_vec))
 print(np.sqrt(rsq))
 
-
+print(np.dot(np.array([1,2]), np.dot(np.identity(2), np.array([1,2]))))
 plt.show()
