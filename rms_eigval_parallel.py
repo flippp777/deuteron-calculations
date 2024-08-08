@@ -19,30 +19,30 @@ aHO = np.array([1.2, 1.4, 1.6, 1.8, 2.0])
 
 Nmax_lst = np.arange(5, 151, 5)
 
-def rsq_n(vec, mat_rsq, aHO_j_sq):
-    return np.dot(vec, np.dot(mat_rsq * aHO_j_sq, vec))
+def rsq_n(vec, mat_rsq, aHO_sq):
+    return np.dot(vec, np.dot(mat_rsq * aHO_sq, vec))
 
-def compute_rms_j(j):
-    rms_j = []
-    aHO_j_sq = aHO[j]**2
-    aHO_j_inv_sq = 1 / aHO_j_sq
+def compute_rms(j):
+    rms = []
+    aHO_sq = aHO[j]**2
+    aHO_inv_sq = 1 / aHO_sq
     
     for i in Nmax_lst:
         rsq = 0
-        h_eigvecs = np.linalg.eig(mat(chi[j], i) + mat(trel_Nmax150, i) * aHO_j_inv_sq)[1]
+        h_eigvecs = np.linalg.eig(mat(chi[j], i) + mat(trel_Nmax150, i) * aHO_inv_sq)[1]
         
         mat_rsq = mat(rsq_Nmax150, i)
         
         with ThreadPoolExecutor() as executor:
-            futures = [executor.submit(rsq_n, vec, mat_rsq, aHO_j_sq) for vec in h_eigvecs]
+            futures = [executor.submit(rsq_n, vec, mat_rsq, aHO_sq) for vec in h_eigvecs]
             for future in futures:
                 rsq += future.result()
         
-        rms_j.append(np.sqrt(rsq))
+        rms.append(np.sqrt(rsq))
     
-    return rms_j
+    return rms
 
-rms = np.array(Parallel(n_jobs=-1)(delayed(compute_rms_j)(j) for j in range(aHO.shape[0])))
+rms = np.array(Parallel(n_jobs=-1)(delayed(compute_rms)(j) for j in range(aHO.shape[0])))
 
 for i in range(rms.shape[0]):
     plt.scatter(Nmax_lst,rms[i])
