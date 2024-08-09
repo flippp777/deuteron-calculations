@@ -33,9 +33,9 @@ def rms_Nmax(i, j, rsq_Nmax150, aHO_sq, aHO_inv_sq):
     h_eigvals, h_eigvecs = np.linalg.eig(mat(chi[j], i) + mat(trel_Nmax150, i) * aHO_inv_sq)
     gs_index = np.where(h_eigvals == min(h_eigvals))[0][0]
     
-    mat_rsq = mat(rsq_Nmax150, i)
+    mat_rsq = mat(rsq_Nmax150, i) * aHO_sq
     
-    rsq = np.dot(h_eigvecs[gs_index], np.dot(mat_rsq * aHO_sq, h_eigvecs[gs_index]))
+    rsq = np.dot(h_eigvecs[gs_index], np.dot(mat_rsq, h_eigvecs[gs_index]))
     rms = np.sqrt(rsq)
     
     return [i, rms]

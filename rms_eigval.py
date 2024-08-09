@@ -26,7 +26,7 @@ gs_index = np.where(h_eigval == min(h_eigval))[0][0]
 
 
 rsq = np.dot(h_eigvec[gs_index], np.dot(rsq_mat, h_eigvec[gs_index]))
-
+print(np.sqrt(rsq))
 
 # start_time = time.time()
 
@@ -35,9 +35,9 @@ def rms_Nmax(i, j, rsq_Nmax150, aHO_sq, aHO_inv_sq):
     h_eigvals, h_eigvecs = np.linalg.eig(mat(chi[j], i) + mat(trel_Nmax150, i) * aHO_inv_sq)
     gz_index = np.where(h_eigvals == min(h_eigvals))[0][0]
     
-    mat_rsq = mat(rsq_Nmax150, i)
+    mat_rsq = mat(rsq_Nmax150, i) * aHO_sq
     
-    rsq = np.dot(h_eigvecs[gz_index], np.dot(mat_rsq * aHO_sq, h_eigvecs[gz_index]))
+    rsq = np.dot(h_eigvecs[gz_index], np.dot(mat_rsq, h_eigvecs[gz_index]))
     rms = np.sqrt(rsq)
     
     return [i, rms]
@@ -56,7 +56,7 @@ def rms_aHO(j, Nstep):
 
 rms = []
 for j in range(aHO.shape[0]):
-    rms.append(rms_aHO(j,1))
+    rms.append(rms_aHO(j,30))
 rms = np.array(rms)
 
 # stop_time = time.time()
@@ -64,7 +64,7 @@ rms = np.array(rms)
 # print(stop_time-start_time)
 
 for i in range(rms.shape[0]):
-    plt.plot(rms[i,::, 0],rms[i,::, 1])
+    plt.scatter(rms[i,::, 0],rms[i,::, 1])
 
 legend = np.array([])
 for i in aHO:
