@@ -26,7 +26,7 @@ aHO = np.array([1.2,1.4,1.6,1.8,2])
 
 # rsq = np.dot(h_eigvec[gz_index], np.dot(rsq_mat, h_eigvec[gz_index]))
 
-start_time = time.time()
+# start_time = time.time()
 
 def rms_Nmax(i, j, rsq_Nmax150, aHO_sq, aHO_inv_sq):
     rsq = 0
@@ -56,9 +56,9 @@ def rms_aHO(j, Nstep):
 
 rms = np.array(Parallel(n_jobs=-1)(delayed(rms_aHO)(j, 1) for j in range(aHO.shape[0])))
 
-stop_time = time.time()
+# stop_time = time.time()
 
-print((stop_time-start_time)/60)
+# print((stop_time-start_time)/60)
 
 for i in range(rms.shape[0]):
     plt.scatter(rms[i,::, 0],rms[i,::, 1])
