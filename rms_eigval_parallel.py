@@ -61,7 +61,7 @@ stop_time = time.time()
 print((stop_time-start_time)/60)
 
 for i in range(rms.shape[0]):
-    plt.plot(rms[i,::, 0],rms[i,::, 1])
+    plt.scatter(rms[i,::, 0],rms[i,::, 1])
 
 legend = np.array([])
 for i in aHO:
