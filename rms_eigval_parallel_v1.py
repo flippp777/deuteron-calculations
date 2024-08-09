@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from create_matrix import mat
 from concurrent.futures import ThreadPoolExecutor
 from joblib import Parallel, delayed
+import time
 
 
 chi_Nmax150_aHO12 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO01.20.meho', skiprows=1)
