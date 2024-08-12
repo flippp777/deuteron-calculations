@@ -223,7 +223,7 @@ def plotsE0aHO():
     plt.ylabel('$E_0$ (MeV)')
     plt.grid(linestyle='--')
 
-plotsE0Nmax()
-# plotsE0aHO()
+# plotsE0Nmax()
+plotsE0aHO()
 
 plt.show()
