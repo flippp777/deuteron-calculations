@@ -6,41 +6,58 @@ from concurrent.futures import ThreadPoolExecutor
 from math import sqrt
 import time
 
-chi_Nmax150_aHO12 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO01.20.meho', skiprows=1)
-chi_Nmax150_aHO14 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO01.40.meho', skiprows=1)
-chi_Nmax150_aHO16 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO01.60.meho', skiprows=1)
-chi_Nmax150_aHO18 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO01.80.meho', skiprows=1)
-chi_Nmax150_aHO20 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO02.00.meho', skiprows=1)
-trel_Nmax150 = np.loadtxt(r'Matrixelemente\trel_NMax150_LMax02.meho', skiprows=1)
+chi_Nmax150_aHO12 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO01.20.meho', skiprows=1)
+chi_Nmax150_aHO14 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO01.40.meho', skiprows=1)
+chi_Nmax150_aHO16 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO01.60.meho', skiprows=1)
+chi_Nmax150_aHO18 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO01.80.meho', skiprows=1)
+chi_Nmax150_aHO20 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO02.00.meho', skiprows=1)
+trel_Nmax150 = np.loadtxt(r'Matrixelemente/trel_NMax150_LMax02.meho', skiprows=1)
 rsq_Nmax150 = np.loadtxt(r'Matrixelemente/rsq_NMax150_LMax02.meho', skiprows=1)
 
 chi = np.array([chi_Nmax150_aHO12, chi_Nmax150_aHO14, chi_Nmax150_aHO16, chi_Nmax150_aHO18, chi_Nmax150_aHO20])
 aHO = np.array([1.2,1.4,1.6,1.8,2])
 
-chi_mat = mat(chi_Nmax150_aHO16, 100)
-trel_mat = mat(trel_Nmax150, 100) * 1/1.6**2
-rsq_mat = mat(rsq_Nmax150, 100) * 1.6**2
+chi_mat = mat(chi_Nmax150_aHO16, 20)
+trel_mat = mat(trel_Nmax150, 20) * 1/1.6**2
+rsq_mat = mat(rsq_Nmax150, 20) * 1.6**2
 
 h_eigval, h_eigvec = np.linalg.eig(chi_mat + trel_mat)
 gs_index = np.where(h_eigval == min(h_eigval))[0][0]
+gs_vec = h_eigvec[gs_index]
 
+rsq1 = 0
+for N1 in range(20):
+    for N2 in range(20):
+        rsq1 += rsq_Nmax150[((rsq_Nmax150[:,0] == N1) & 
+                             (rsq_Nmax150[:,2] == N1) & 
+                             (rsq_Nmax150[:,1] == 0) & 
+                             (rsq_Nmax150[:,3] == 0) & 
+                             (rsq_Nmax150[:, 4] == 1) &  # S=1
+                            (rsq_Nmax150[:, 5] == 1) &  # J=1
+                            (rsq_Nmax150[:, 6] == 0) &  
+                            (rsq_Nmax150[:, 7] == 0))] * gs_vec[N1] * gs_vec[N2]
 
-rsq = np.dot(h_eigvec[gs_index], np.dot(rsq_mat, h_eigvec[gs_index]))
-print(np.sqrt(rsq))
+print(rsq1)
+
+    
+    
+        
+ 
+# print(np.sqrt(rsq))
 
 # start_time = time.time()
 
-def rms_Nmax(i, j, rsq_Nmax150, aHO_sq, aHO_inv_sq):
+def rms_Nmax(Nmax, j, rsq_Nmax150, aHO_sq, aHO_inv_sq):
     rsq = 0
-    h_eigvals, h_eigvecs = np.linalg.eig(mat(chi[j], i) + mat(trel_Nmax150, i) * aHO_inv_sq)
+    h_eigvals, h_eigvecs = np.linalg.eig(mat(chi[j], Nmax) + mat(trel_Nmax150, Nmax) * aHO_inv_sq)
     gz_index = np.where(h_eigvals == min(h_eigvals))[0][0]
     
-    mat_rsq = mat(rsq_Nmax150, i) * aHO_sq
+    mat_rsq = mat(rsq_Nmax150, Nmax) * aHO_sq
     
     rsq = np.dot(h_eigvecs[gz_index], np.dot(mat_rsq, h_eigvecs[gz_index]))
     rms = np.sqrt(rsq)
     
-    return [i, rms]
+    return [Nmax, rms]
 
 def rms_aHO(j, Nstep):
     rms = []
@@ -75,4 +92,4 @@ plt.legend(legend)
 plt.ylabel("$R_{rms}$ fm")
 plt.xlabel('$N_{max}$')
 
-plt.show()
+#plt.show()

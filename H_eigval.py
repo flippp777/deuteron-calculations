@@ -83,6 +83,13 @@ def E0(chi, aHO, Nmax):
         return E0
     
 
+testmat = mat(chi_Nmax150_aHO20, 150)
+eigvec, eigval = np.linalg.eig(testmat + mat(trel_Nmax150,150)*1/2**2)
+
+for i in eigval:
+    print(np.sum(i**2))
+    
+
 Nmax_step75 = np.array([75,150])
 Nmax_step30 = np.arange(30, 180, 30)
 Nmax_step2 = np.arange(2,152,2)
@@ -223,7 +230,7 @@ def plotsE0aHO():
     plt.ylabel('$E_0$ (MeV)')
     plt.grid(linestyle='--')
 
-plotsE0Nmax()
-plotsE0aHO()
+# plotsE0Nmax()
+# plotsE0aHO()
 
 plt.show()
