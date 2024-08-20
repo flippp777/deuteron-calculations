@@ -48,7 +48,7 @@ for N1 in range(60):
                              (rsq_Nmax150[:, 6] == 0) &  # T=0
                              (rsq_Nmax150[:, 7] == 0))]  # MT=0
         if  rsqN1N2_element.shape != (0,9):
-            rsq1 += rsqN1N2_element[0,8] * gs_vec[N1] * gs_vec[N2] * 2**2/4
+            rsq1 += rsqN1N2_element[0,8] * gs_vec[N1] * gs_vec[N2] * 2**2
             
 rsq2 = 0
 for N1 in range(60):
@@ -62,7 +62,7 @@ for N1 in range(60):
                              (rsq_Nmax150[:, 6] == 0) &  
                              (rsq_Nmax150[:, 7] == 0))]
         if  rsqN1N2_element.shape != (0,9):
-            rsq2 += rsqN1N2_element[0,8] * gs_vec[61 + N1] * gs_vec[61 + N2] * 2**2/4
+            rsq2 += rsqN1N2_element[0,8] * gs_vec[61 + N1] * gs_vec[61 + N2] * 2**2
         
 
 
