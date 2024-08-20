@@ -79,7 +79,7 @@ def E0(chi, aHO, Nmax):
     elif aHO not in [1.2,1.4,1.6,1.8,2]:
         exit('Es gibt nur aHO 1.2, 1.4, 1.6, 1.8, 2')
     else:
-        E0 = min(np.linalg.eig(mat(chi, Nmax) + mat(trel_Nmax150, Nmax)*1/(aHO**2))[0])
+        E0 = min(np.linalg.eigvalsh(mat(chi, Nmax) + mat(trel_Nmax150, Nmax)*1/(aHO**2)))
         return E0
     
 
