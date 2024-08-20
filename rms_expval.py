@@ -28,8 +28,8 @@ else:
 chi = np.array([chi_Nmax150_aHO12, chi_Nmax150_aHO14, chi_Nmax150_aHO16, chi_Nmax150_aHO18, chi_Nmax150_aHO20])
 aHO = np.array([1.2,1.4,1.6,1.8,2])
 
-chi_mat = mat(chi_Nmax150_aHO20, 60)
-trel_mat = mat(trel_Nmax150, 60) * 1/2**2
+chi_mat = mat(chi_Nmax150_aHO20, 120)
+trel_mat = mat(trel_Nmax150, 120) * 1/2**2
 
 h_eigval, h_eigvec = np.linalg.eig(chi_mat + trel_mat)
 gs_index = np.where(h_eigval == min(h_eigval))[0][0]
@@ -37,8 +37,8 @@ gs_vec = h_eigvec[gs_index]
 
 
 rsq1 = 0
-for N1 in range(60):
-    for N2 in range(60):
+for N1 in range(120):
+    for N2 in range(120):
         rsqN1N2_element = rsq_Nmax150[((rsq_Nmax150[:, 0] == N1) & 
                              (rsq_Nmax150[:, 2] == N2) & 
                              (rsq_Nmax150[:, 1] == 0) &  # L=0
@@ -51,8 +51,8 @@ for N1 in range(60):
             rsq1 += rsqN1N2_element[0,8] * gs_vec[N1] * gs_vec[N2] * 2**2
             
 rsq2 = 0
-for N1 in range(60):
-    for N2 in range(60):
+for N1 in range(120):
+    for N2 in range(120):
         rsqN1N2_element = rsq_Nmax150[((rsq_Nmax150[:, 0] == N1) & 
                              (rsq_Nmax150[:, 2] == N2) & 
                              (rsq_Nmax150[:, 1] == 2) & 
@@ -62,7 +62,7 @@ for N1 in range(60):
                              (rsq_Nmax150[:, 6] == 0) &  
                              (rsq_Nmax150[:, 7] == 0))]
         if  rsqN1N2_element.shape != (0,9):
-            rsq2 += rsqN1N2_element[0,8] * gs_vec[61 + N1] * gs_vec[61 + N2] * 2**2
+            rsq2 += rsqN1N2_element[0,8] * gs_vec[121 + N1] * gs_vec[121 + N2] * 2**2
         
 
 
@@ -105,7 +105,7 @@ for j in range(aHO.shape[0]):
     rms.append(rms_aHO(j,30))
 rms = np.array(rms)
 
-print(rms[4,1])
+print(rms[4,3])
 
 # stop_time = time.time()
 
