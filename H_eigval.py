@@ -9,7 +9,7 @@ if platform == "win32":
     chi_Nmax150_aHO16 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO01.60.meho', skiprows=1)
     chi_Nmax150_aHO18 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO01.80.meho', skiprows=1)
     chi_Nmax150_aHO20 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO02.00.meho', skiprows=1)
-    trel_Nmax150 = np.loadtxt(r'Matrixelemente\trel_NMax150_LMax02.meho', skiprows=1)
+    trel_Nmax150 = np.loadtxt(r'Matrixelemente\trel_NMax150_LMax02_aHO01.00.meho', skiprows=1)
 
 else: 
     chi_Nmax150_aHO12 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO01.20.meho', skiprows=1)
@@ -17,7 +17,7 @@ else:
     chi_Nmax150_aHO16 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO01.60.meho', skiprows=1)
     chi_Nmax150_aHO18 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO01.80.meho', skiprows=1)
     chi_Nmax150_aHO20 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO02.00.meho', skiprows=1)
-    trel_Nmax150 = np.loadtxt(r'Matrixelemente/trel_NMax150_LMax02.meho', skiprows=1)
+    trel_Nmax150 = np.loadtxt(r'Matrixelemente/trel_NMax150_LMax02_aHO01.00.meho', skiprows=1)
 
 
 chi = np.array([chi_Nmax150_aHO12, chi_Nmax150_aHO14, chi_Nmax150_aHO16, chi_Nmax150_aHO18, chi_Nmax150_aHO20])
@@ -86,8 +86,8 @@ def E0(chi, aHO, Nmax):
 testmat = mat(chi_Nmax150_aHO20, 150)
 eigvec, eigval = np.linalg.eig(testmat + mat(trel_Nmax150,150)*1/2**2)
 
-for i in eigval:
-    print(np.sum(i**2))
+# for i in eigval:
+#     print(np.sum(i**2))
     
 
 Nmax_step75 = np.array([75,150])
@@ -230,7 +230,7 @@ def plotsE0aHO():
     plt.ylabel('$E_0$ (MeV)')
     plt.grid(linestyle='--')
 
-# plotsE0Nmax()
+plotsE0Nmax()
 # plotsE0aHO()
 
 plt.show()
