@@ -7,120 +7,103 @@ from math import sqrt
 import time
 from sys import platform
 
-if platform == "win32":
-    chi_Nmax150_aHO12 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO01.20.meho', skiprows=1)
-    chi_Nmax150_aHO14 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO01.40.meho', skiprows=1)
-    chi_Nmax150_aHO16 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO01.60.meho', skiprows=1)
-    chi_Nmax150_aHO18 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO01.80.meho', skiprows=1)
-    chi_Nmax150_aHO20 = np.loadtxt(r'Matrixelemente\chi2bM3A_srg0000_NMax150_LMax02_aHO02.00.meho', skiprows=1)
-    trel_Nmax150 = np.loadtxt(r'Matrixelemente\trel_NMax150_LMax02_aHO01.00.meho', skiprows=1)
-    rsq_Nmax150 = np.loadtxt(r'Matrixelemente\rsq_NMax150_LMax02.meho', skiprows=1)
+chi_Nmax150_aHO20 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO02.00.meho', skiprows=1)
+trel_Nmax150 = np.loadtxt(r'Matrixelemente/trel_NMax150_LMax02_aHO01.00.meho', skiprows=1)
+rsq_Nmax150 = np.loadtxt(r'Matrixelemente/rsq_NMax150_LMax02.meho', skiprows=1)
 
-else: 
-    chi_Nmax150_aHO12 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO01.20.meho', skiprows=1)
-    chi_Nmax150_aHO14 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO01.40.meho', skiprows=1)
-    chi_Nmax150_aHO16 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO01.60.meho', skiprows=1)
-    chi_Nmax150_aHO18 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO01.80.meho', skiprows=1)
-    chi_Nmax150_aHO20 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO02.00.meho', skiprows=1)
-    trel_Nmax150 = np.loadtxt(r'Matrixelemente/trel_NMax150_LMax02_aHO01.00.meho', skiprows=1)
-    rsq_Nmax150 = np.loadtxt(r'Matrixelemente/rsq_NMax150_LMax02.meho', skiprows=1)
+aHO = 2
 
-chi = np.array([chi_Nmax150_aHO12, chi_Nmax150_aHO14, chi_Nmax150_aHO16, chi_Nmax150_aHO18, chi_Nmax150_aHO20])
-aHO = np.array([1.2,1.4,1.6,1.8,2])
+Nmax_lst = np.arange(5,41,5)
 
-chi_mat = mat(chi_Nmax150_aHO20, 120)
-trel_mat = mat(trel_Nmax150, 120) * 1/2**2
+rms2 = []
+for i in Nmax_lst:
+    chi_mat = mat(chi_Nmax150_aHO20, i)
+    trel_mat = mat(trel_Nmax150, i) * 1/(aHO**2)
 
-h_eigval, h_eigvec = np.linalg.eig(chi_mat + trel_mat)
-gs_index = np.where(h_eigval == min(h_eigval))[0][0]
-gs_vec = h_eigvec[gs_index]
+    h_eigval, h_eigvec = np.linalg.eig(chi_mat + trel_mat)
+    gs_index = np.where(h_eigval == min(h_eigval))[0][0]
+    gs_vec = h_eigvec[gs_index]
 
-
-rsq1 = 0
-for N1 in range(120):
-    for N2 in range(120):
-        rsqN1N2_element = rsq_Nmax150[((rsq_Nmax150[:, 0] == N1) & 
-                             (rsq_Nmax150[:, 2] == N2) & 
-                             (rsq_Nmax150[:, 1] == 0) &  # L=0
-                             (rsq_Nmax150[:, 3] == 0) &  # L'=0
-                             (rsq_Nmax150[:, 4] == 1) &  # S=1
-                             (rsq_Nmax150[:, 5] == 1) &  # J=1
-                             (rsq_Nmax150[:, 6] == 0) &  # T=0
-                             (rsq_Nmax150[:, 7] == 0))]  # MT=0
-        if  rsqN1N2_element.shape != (0,9):
-            rsq1 += rsqN1N2_element[0,8] * gs_vec[N1] * gs_vec[N2] * 2**2
-            
-rsq2 = 0
-for N1 in range(120):
-    for N2 in range(120):
-        rsqN1N2_element = rsq_Nmax150[((rsq_Nmax150[:, 0] == N1) & 
-                             (rsq_Nmax150[:, 2] == N2) & 
-                             (rsq_Nmax150[:, 1] == 2) & 
-                             (rsq_Nmax150[:, 3] == 2) & 
-                             (rsq_Nmax150[:, 4] == 1) & 
-                             (rsq_Nmax150[:, 5] == 1) & 
-                             (rsq_Nmax150[:, 6] == 0) &  
-                             (rsq_Nmax150[:, 7] == 0))]
-        if  rsqN1N2_element.shape != (0,9):
-            rsq2 += rsqN1N2_element[0,8] * gs_vec[121 + N1] * gs_vec[121 + N2] * 2**2
-        
-
-
-print(np.sqrt(rsq1 + rsq2))
-
+    rsq_elements_L0 = rsq_Nmax150[((rsq_Nmax150[:, 1] == 0) &  # L=0
+                                (rsq_Nmax150[:, 3] == 0) &  # L'=0
+                                (rsq_Nmax150[:, 4] == 1) &  # S=1
+                                (rsq_Nmax150[:, 5] == 1) &  # J=1
+                                (rsq_Nmax150[:, 6] == 0) &  # T=0
+                                (rsq_Nmax150[:, 7] == 0))]  # MT=0
     
+    rsq_elements_L2 = rsq_Nmax150[((rsq_Nmax150[:, 1] == 2) &  # L=2
+                                (rsq_Nmax150[:, 3] == 2) &  # L'=2
+                                (rsq_Nmax150[:, 4] == 1) &  # S=1
+                                (rsq_Nmax150[:, 5] == 1) &  # J=1
+                                (rsq_Nmax150[:, 6] == 0) &  # T=0
+                                (rsq_Nmax150[:, 7] == 0))]  # MT=0
     
-        
- 
-# print(np.sqrt(rsq))
+    rsq1 = 0
+    for N1 in range(i):
+        for N2 in range(i):
+            rsqN1N2_elements1 = rsq_elements_L0[((rsq_elements_L0[:, 0] == N1) & (rsq_elements_L0[:, 2] == N2))]  
+            if  rsqN1N2_elements1.shape != (0,9):
+                rsq1 += rsqN1N2_elements1[0,8] * gs_vec[N1] * gs_vec[N2] * aHO**2/4
+                
+    rsq2 = 0
+    for N1 in range(i):
+        for N2 in range(i):
+            rsqN1N2_elements2 = rsq_elements_L2[((rsq_elements_L2[:, 0] == N1) & (rsq_elements_L2[:, 2] == N2))]  
+            if  rsqN1N2_elements2.shape != (0,9):
+                rsq2 += rsqN1N2_elements2[0,8] * gs_vec[i + 1 + N1] * gs_vec[i + 1 + N2]  * aHO**2/4
+    rms2.append([i,np.sqrt(rsq1 + rsq2)])
 
-# start_time = time.time()
+rms2 = np.array(rms2)
+plt.figure()
 
-def rms_Nmax(Nmax, j, rsq_Nmax150, aHO_sq, aHO_inv_sq):
+plt.subplot(221)
+plt.plot(rms2[:, 0],rms2[:, 1])
+
+plt.title('$R_{rms}$ bei $a_{HO}$ = 2 fm')
+plt.ylabel("$R_{rms}$ in fm")
+plt.xlabel('$N_{max}$')
+
+
+def rms_Nmax(Nmax, chi, rsq_Nmax150, aHO_sq, aHO_inv_sq):
     rsq = 0
-    h_eigvals, h_eigvecs = np.linalg.eig(mat(chi[j], Nmax) + mat(trel_Nmax150, Nmax) * aHO_inv_sq)
+    h_eigvals, h_eigvecs = np.linalg.eig(mat(chi, Nmax) + mat(trel_Nmax150, Nmax) * aHO_inv_sq)
     gz_index = np.where(h_eigvals == min(h_eigvals))[0][0]
     
-    mat_rsq = mat(rsq_Nmax150, Nmax) * aHO_sq
+    mat_rsq = mat(rsq_Nmax150, Nmax) * aHO_sq/4
     
     rsq = np.dot(h_eigvecs[gz_index], np.dot(mat_rsq, h_eigvecs[gz_index]))
     rms = np.sqrt(rsq)
     
     return [Nmax, rms]
 
-def rms_aHO(j, Nstep):
+def rms_aHO(Nstep):
     rms = []
-    aHO_sq = aHO[j]**2
+    aHO_sq = aHO**2
     aHO_inv_sq = 1 / aHO_sq
     
-    Nmax_lst = np.arange(Nstep, 151, Nstep)
+    Nmax_lst = np.arange(Nstep, 41, Nstep)
     
     for i in Nmax_lst:
-            rms.append(rms_Nmax(i, j, rsq_Nmax150, aHO_sq, aHO_inv_sq))
+            rms.append(rms_Nmax(i, chi_Nmax150_aHO20, rsq_Nmax150, aHO_sq, aHO_inv_sq))
     
     return rms
 
-rms = []
-for j in range(aHO.shape[0]):
-    rms.append(rms_aHO(j,30))
-rms = np.array(rms)
+rms = np.array(rms_aHO(5))
 
-print(rms[4,3])
+plt.subplot(222)
+plt.plot(rms[:, 0],rms[:, 1])
 
-# stop_time = time.time()
-
-# print(stop_time-start_time)
-
-for i in range(rms.shape[0]):
-    plt.scatter(rms[i,::, 0],rms[i,::, 1])
-
-legend = np.array([])
-for i in aHO:
-    legend = np.append(legend,'$a_{HO}$ = '+ str(i) + ' fm')
-
-plt.title('$R_{rms}$ bei verschiedenen $a_{HO}$')
-plt.legend(legend)
-plt.ylabel("$R_{rms}$ fm")
+plt.title('$R_{rms}$ bei $a_{HO}$ = 2 fm')
+plt.ylabel("$R_{rms}$ in fm")
 plt.xlabel('$N_{max}$')
 
-# plt.show()
+plt.subplot(223)
+plt.plot(rms[:, 0],rms[:, 1])
+plt.plot(rms2[:, 0],rms2[:, 1])
+
+plt.title('$R_{rms}$ bei $a_{HO}$ = 2 fm')
+plt.legend(["Matrix", "Elementwise"])
+plt.ylabel("$R_{rms}$ in fm")
+plt.xlabel('$N_{max}$')
+
+plt.show()
