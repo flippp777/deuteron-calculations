@@ -42,15 +42,20 @@ for i in Nmax_lst:
     for N1 in range(i):
         for N2 in range(i):
             rsqN1N2_elements1 = rsq_elements_L0[((rsq_elements_L0[:, 0] == N1) & (rsq_elements_L0[:, 2] == N2))]  
-            if  rsqN1N2_elements1.shape != (0,9):
+            if rsqN1N2_elements1.shape != (0,9) and N1 == N2:
                 rsq1 += rsqN1N2_elements1[0,8] * gs_vec[N1] * gs_vec[N2] * aHO**2/4
+            elif rsqN1N2_elements1.shape != (0,9):
+                rsq1 += 2 * rsqN1N2_elements1[0,8] * gs_vec[N1] * gs_vec[N2] * aHO**2/4
                 
     rsq2 = 0
     for N1 in range(i):
         for N2 in range(i):
             rsqN1N2_elements2 = rsq_elements_L2[((rsq_elements_L2[:, 0] == N1) & (rsq_elements_L2[:, 2] == N2))]  
-            if  rsqN1N2_elements2.shape != (0,9):
+            if  rsqN1N2_elements2.shape != (0,9) and N1 == N2:
                 rsq2 += rsqN1N2_elements2[0,8] * gs_vec[i + 1 + N1] * gs_vec[i + 1 + N2]  * aHO**2/4
+            elif rsqN1N2_elements2.shape != (0,9):
+                rsq1 += 2 * rsqN1N2_elements2[0,8] * gs_vec[i + 1 + N1] * gs_vec[i + 1 + N2] * aHO**2/4
+    
     rms2.append([i,np.sqrt(rsq1 + rsq2)])
 
 rms2 = np.array(rms2)
