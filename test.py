@@ -1,6 +1,6 @@
-import numpy as np
-from create_matrix import mat
+a = 5
 
-for i in range(10):
-        print(i)
+a+= -5
+
+print(a)
 

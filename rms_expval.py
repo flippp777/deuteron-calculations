@@ -43,7 +43,6 @@ for i in Nmax_lst:
                 rsq1 += rsqN1N2_elements1[0,8] * gs_vec[N1] * gs_vec[N2] * aHO**2/4
             elif rsqN1N2_elements1.shape != (0,9):
                 rsq1 += 2 * rsqN1N2_elements1[0,8] * gs_vec[N1] * gs_vec[N2] * aHO**2/4
-                print(rsqN1N2_elements1)
                 
     rsq2 = 0
     for N1 in range(i):
@@ -61,7 +60,7 @@ rms2 = np.array(rms2)
 plt.figure()
 plt.subplot(221)
 plt.plot(rms2[:, 0],rms2[:, 1])
-plt.title('$R_{rms}$ bei $a_{HO}$ = 2 fm')
+plt.title('$R_{rms}$ bei $a_{HO}$ = 2 fm, elemetwise')
 plt.ylabel("$R_{rms}$ in fm")
 plt.xlabel('$N_{max}$')
 
@@ -94,7 +93,7 @@ rms = np.array(rms_aHO(5))
 
 plt.subplot(222)
 plt.plot(rms[:, 0],rms[:, 1])
-plt.title('$R_{rms}$ bei $a_{HO}$ = 2 fm')
+plt.title('$R_{rms}$ bei $a_{HO}$ = 2 fm, matrix')
 plt.ylabel("$R_{rms}$ in fm")
 plt.xlabel('$N_{max}$')
 
