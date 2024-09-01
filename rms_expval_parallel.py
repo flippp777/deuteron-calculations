@@ -46,6 +46,7 @@ def rms_aHO(j, Nstep):
 
 rms = np.array(Parallel(n_jobs=-1)(delayed(rms_aHO)(j, 1) for j in range(aHO.shape[0])))
 Rrms = np.mean(rms[:, 150, 1])
+print(Rrms)
 
 plt.figure()
 
