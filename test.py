@@ -1,6 +1,7 @@
-a = 5
+import numpy as np
+from create_matrix import mat
 
-a+= -5
-
-print(a)
+matrix = np.diag([1, 2, 3])
+eigvals, eigvecs = np.linalg.eigh(matrix)
+print(eigvecs[:,2])
 
