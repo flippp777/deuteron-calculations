@@ -18,29 +18,21 @@ rsq_Nmax150 = np.loadtxt(r'Matrixelemente/rsq_NMax150_LMax02.meho', skiprows=1)
 chi = np.array([chi_Nmax150_aHO12, chi_Nmax150_aHO14, chi_Nmax150_aHO16, chi_Nmax150_aHO18, chi_Nmax150_aHO20])
 aHO = np.array([1.2,1.4,1.6,1.8,2])
 
-# chi_mat = mat(chi_Nmax150_aHO16, 100)
-# trel_mat = mat(trel_Nmax150, 100) * 1/1.6**2
-# rsq_mat = mat(rsq_Nmax150, 100) * 1.6**2
-
-# h_eigval, h_eigvec = np.linalg.eig(chi_mat + trel_mat)
-# gz_index = np.where(h_eigval == min(h_eigval))[0][0]
-
-# rsq = np.dot(h_eigvec[gz_index], np.dot(rsq_mat, h_eigvec[gz_index]))
 
 # start_time = time.time()
 
-def rms_Nmax(i, j, rsq_Nmax150, aHO_sq, aHO_inv_sq):
+def rms_Nmax(Nmax, j, rsq_Nmax150, aHO_sq, aHO_inv_sq):
     rsq = 0
-    h_eigvals, h_eigvecs = np.linalg.eig(mat(chi[j], i) + mat(trel_Nmax150, i) * aHO_inv_sq)
+    h_eigvals, h_eigvecs = np.linalg.eigh(mat(chi[j], Nmax) + mat(trel_Nmax150, Nmax) * aHO_inv_sq)
     gs_index = np.where(h_eigvals == min(h_eigvals))[0][0]
     
-    mat_rsq = mat(rsq_Nmax150, i) * aHO_sq/4
+    mat_rsq = mat(rsq_Nmax150, Nmax) * aHO_sq/4
     
     rsq_intermediate = np.dot(mat_rsq, h_eigvecs[gs_index])
     rsq = np.dot(h_eigvecs[gs_index], rsq_intermediate)
     rms = np.sqrt(rsq)
     
-    return [i, rms]
+    return [Nmax, rms]
 
 def rms_aHO(j, Nstep):
     rms = []
@@ -50,27 +42,22 @@ def rms_aHO(j, Nstep):
     Nmax_lst = np.arange(Nstep, 151, Nstep)
     
     with ThreadPoolExecutor() as executor:
-        futures = [executor.submit(rms_Nmax, i, j, rsq_Nmax150, aHO_sq, aHO_inv_sq) for i in Nmax_lst]
+        futures = [executor.submit(rms_Nmax, Nmax, j, rsq_Nmax150, aHO_sq, aHO_inv_sq) for Nmax in Nmax_lst]
         for future in futures:
             rms.append(future.result())
     
     return rms
 
-rms = np.array(Parallel(n_jobs=-1)(delayed(rms_aHO)(j, 1) for j in range(aHO.shape[0])))
+rms = np.array(rms_aHO(4, 2))
 
 # stop_time = time.time()
 
 # print((stop_time-start_time)/60)
 
-for i in range(rms.shape[0]):
-    plt.plot(rms[i,::, 0],rms[i,::, 1])
+plt.plot(rms[:, 0],rms[:, 1])
 
-legend = np.array([])
-for i in aHO:
-    legend = np.append(legend,'$a_{HO}$ = '+ str(i) + ' fm')
 
-plt.title('$R_{rms}$ bei verschiedenen $a_{HO}$')
-plt.legend(legend)
+plt.title('$R_{rms}$ bei $a_{HO}$ = 2.0 fm')
 plt.ylabel("$R_{rms}$ fm")
 plt.xlabel('$N_{max}$')
 
