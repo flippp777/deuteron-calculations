@@ -6,6 +6,22 @@ chi_Nmax150_aHO20 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_
 trel_Nmax150 = np.loadtxt(r'Matrixelemente/trel_NMax150_LMax02_aHO01.00.meho', skiprows=1)
 rsq_Nmax150 = np.loadtxt(r'Matrixelemente/rsq_NMax150_LMax02.meho', skiprows=1)
 
+rsq_elements_L0 = rsq_Nmax150[((rsq_Nmax150[:, 1] == 0) &   # L=0
+                                (rsq_Nmax150[:, 3] == 0) &  # L'=0
+                                (rsq_Nmax150[:, 4] == 1) &  # S=1
+                                (rsq_Nmax150[:, 5] == 1) &  # J=1
+                                (rsq_Nmax150[:, 6] == 0) &  # T=0
+                                (rsq_Nmax150[:, 7] == 0) &  # MT=0
+                                (rsq_Nmax150[:,8] != 0))]   # rsq !=0
+np.savetxt('rsq_Nmax140_L0.txt', rsq_elements_L0)
+rsq_elements_L2 = rsq_Nmax150[((rsq_Nmax150[:, 1] == 2) &  # L=2
+                                (rsq_Nmax150[:, 3] == 2) &  # L'=2
+                                (rsq_Nmax150[:, 4] == 1) &  # S=1
+                                (rsq_Nmax150[:, 5] == 1) &  # J=1
+                                (rsq_Nmax150[:, 7] == 0) &  # MT=0
+                                (rsq_Nmax150[:,8] != 0))]   # rsq !=0
+np.savetxt('rsq_Nmax140_L2.txt', rsq_elements_L2)
+
 aHO = 2
 
 Nmax_lst = np.arange(5,41,5)
@@ -18,20 +34,6 @@ for i in Nmax_lst:
     h_eigvals, h_eigvecs = np.linalg.eig(chi_mat + trel_mat)
     gs_index = np.where(h_eigvals == min(h_eigvals))[0][0]
     gs_vec = h_eigvecs[gs_index]
-
-    rsq_elements_L0 = rsq_Nmax150[((rsq_Nmax150[:, 1] == 0) &  # L=0
-                                (rsq_Nmax150[:, 3] == 0) &  # L'=0
-                                (rsq_Nmax150[:, 4] == 1) &  # S=1
-                                (rsq_Nmax150[:, 5] == 1) &  # J=1
-                                (rsq_Nmax150[:, 6] == 0) &  # T=0
-                                (rsq_Nmax150[:, 7] == 0))]  # MT=0
-    
-    rsq_elements_L2 = rsq_Nmax150[((rsq_Nmax150[:, 1] == 2) &  # L=2
-                                (rsq_Nmax150[:, 3] == 2) &  # L'=2
-                                (rsq_Nmax150[:, 4] == 1) &  # S=1
-                                (rsq_Nmax150[:, 5] == 1) &  # J=1
-                                (rsq_Nmax150[:, 6] == 0) &  # T=0
-                                (rsq_Nmax150[:, 7] == 0))]  # MT=0
     
     rsq1 = 0
     for N1 in range(i):
@@ -41,6 +43,7 @@ for i in Nmax_lst:
                 rsq1 += rsqN1N2_elements1[0,8] * gs_vec[N1] * gs_vec[N2] * aHO**2/4
             elif rsqN1N2_elements1.shape != (0,9):
                 rsq1 += 2 * rsqN1N2_elements1[0,8] * gs_vec[N1] * gs_vec[N2] * aHO**2/4
+                print(rsqN1N2_elements1)
                 
     rsq2 = 0
     for N1 in range(i):
