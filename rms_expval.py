@@ -33,7 +33,7 @@ for i in Nmax_lst:
 
     h_eigvals, h_eigvecs = np.linalg.eig(chi_mat + trel_mat)
     gs_index = np.where(h_eigvals == min(h_eigvals))[0][0]
-    gs_vec = h_eigvecs[gs_index]
+    gs_vec = h_eigvecs[:, gs_index]
     
     rsq1 = 0
     for N1 in range(i):
@@ -72,7 +72,7 @@ def rms_Nmax(Nmax, chi, rsq_Nmax150, aHO_sq, aHO_inv_sq):
     
     mat_rsq = mat(rsq_Nmax150, Nmax) * aHO_sq/4
     
-    rsq = np.dot(h_eigvecs[gz_index], np.dot(mat_rsq, h_eigvecs[gz_index]))
+    rsq = np.dot(h_eigvecs[:, gz_index], np.dot(mat_rsq, h_eigvecs[:, gz_index]))
     rms = np.sqrt(rsq)
     
     return [Nmax, rms]
