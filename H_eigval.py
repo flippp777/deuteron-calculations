@@ -91,11 +91,11 @@ eigvec, eigval = np.linalg.eig(testmat + mat(trel_Nmax150,150)*1/2**2)
     
 
 Nmax_step75 = np.array([75,150])
-Nmax_step30 = np.arange(30, 180, 30)
-Nmax_step2 = np.arange(2,152,2)
+Nmax_step30 = np.arange(0, 121, 30)
+Nmax_step2 = np.arange(0,152,2)
 
 def plotsE0Nmax():
-    E0_Nmax = np.zeros((2,75))
+    E0_Nmax = np.zeros((2,76))
     for m in range(chi.shape[0]):
         E0_Nmaxm = np.array([])
         for i in Nmax_step2:
@@ -103,6 +103,8 @@ def plotsE0Nmax():
         E0_Nmax = np.append(E0_Nmax, [E0_Nmaxm], axis = 0)
 
     E0_Nmax = np.delete(E0_Nmax,[0,1], axis=0)
+    
+    print(np.mean(E0_Nmax[:, 75]))
 
     # Plot
     plt.figure()
@@ -113,6 +115,7 @@ def plotsE0Nmax():
     plt.title('$E_0$ bei $a_{HO}$=1.2 fm')
     plt.xlabel('$N_{max}$')
     plt.ylabel('$E_0$ (MeV)')
+    plt.yticks([-2.5, E0_Nmax[0,75], -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5, 3])
     plt.grid(linestyle='--')
 
     # aHO = 1.4
@@ -121,6 +124,7 @@ def plotsE0Nmax():
     plt.title('$E_0$ bei $a_{HO}$=1.4 fm')
     plt.xlabel('$N_{max}$')
     plt.ylabel('$E_0$ (MeV)')
+    plt.yticks([-2.5, E0_Nmax[1,75], -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5])
     plt.grid(linestyle='--')
 
     # aHO = 1.6
@@ -129,6 +133,7 @@ def plotsE0Nmax():
     plt.title('$E_0$ bei $a_{HO}$=1.6 fm')
     plt.xlabel('$N_{max}$')
     plt.ylabel('$E_0$ (MeV)')
+    plt.yticks([-2.5, E0_Nmax[2,75], -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5])
     plt.grid(linestyle='--')
 
     # aHO = 1.8
@@ -137,6 +142,7 @@ def plotsE0Nmax():
     plt.title('$E_0$ bei $a_{HO}$=1.8 fm')
     plt.xlabel('$N_{max}$')
     plt.ylabel('$E_0$ (MeV)')
+    plt.yticks([-2.5, E0_Nmax[3,75], -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5])
     plt.grid(linestyle='--')
 
     # aHO = 2.0
@@ -145,6 +151,7 @@ def plotsE0Nmax():
     plt.title('$E_0$ bei $a_{HO}$=2.0 fm')
     plt.xlabel('$N_{max}$')
     plt.ylabel('$E_0$ (MeV)')
+    plt.yticks([-2.5, E0_Nmax[4,75], -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5])
     plt.grid(linestyle='--')
     
     # alle zusammen
@@ -160,6 +167,7 @@ def plotsE0Nmax():
     plt.legend(legend)
     plt.xlabel('$N_{max}$')
     plt.ylabel('$E_0$ (MeV)')
+    plt.yticks([-2.5, np.mean(E0_Nmax[:, 75]), -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5, 3])
     plt.grid(linestyle='--')
 
  
@@ -175,43 +183,43 @@ def plotsE0aHO():
         # Plot
     plt.figure()
 
-    # aHO=1.2
+    # Nmax = 0
     plt.subplot(231)
     plt.plot(aHO,E0_aHO[0], 'x-')
-    plt.title('$E_0$ bei $N_{max}$=30')
-    plt.xlabel('$a_{HO}$')
+    plt.title('$E_0$ bei $N_{max}$=0')
+    plt.xlabel('$a_{HO}$ (fm)')
     plt.ylabel('$E_0$ (MeV)')
     plt.grid(linestyle='--')
 
-    # aHO = 1.4
+    # Nmax = 30
     plt.subplot(232)
     plt.plot(aHO,E0_aHO[1], 'x-')
-    plt.title('$E_0$ bei $N_{max}$=60')
-    plt.xlabel('$a_{HO}$')
+    plt.title('$E_0$ bei $N_{max}$=30')
+    plt.xlabel('$a_{HO}$ (fm)')
     plt.ylabel('$E_0$ (MeV)')
     plt.grid(linestyle='--')
 
-    # aHO = 1.6
+    # Nmax = 60
     plt.subplot(233)
     plt.plot(aHO,E0_aHO[2], 'x-')
-    plt.title('$E_0$ bei $N_{max}$=90')
-    plt.xlabel('$a_{HO}$')
+    plt.title('$E_0$ bei $N_{max}$=60')
+    plt.xlabel('$a_{HO}$ (fm)')
     plt.ylabel('$E_0$ (MeV)')
     plt.grid(linestyle='--')
 
-    # aHO = 1.8
+    # Nmax = 90
     plt.subplot(234)
     plt.plot(aHO,E0_aHO[3], 'x-')
-    plt.title('$E_0$ bei $N_{max}$=120')
-    plt.xlabel('$a_{HO}$')
+    plt.title('$E_0$ bei $N_{max}$=90')
+    plt.xlabel('$a_{HO}$ (fm)')
     plt.ylabel('$E_0$ (MeV)')
     plt.grid(linestyle='--')
 
-    # aHO = 2.0
+    # Nmax = 120
     plt.subplot(235)
     plt.plot(aHO,E0_aHO[4], 'x-')
-    plt.title('$E_0$ bei $N_{max}$=150')
-    plt.xlabel('$a_{HO}$')
+    plt.title('$E_0$ bei $N_{max}$=120')
+    plt.xlabel('$a_{HO}$ (fm)')
     plt.ylabel('$E_0$ (MeV)')
     plt.grid(linestyle='--')
     
@@ -226,7 +234,7 @@ def plotsE0aHO():
 
     plt.title('$E_0$ bei verschiedenen $N_{max}$')
     plt.legend(legend)
-    plt.xlabel('$a_{HO}$')
+    plt.xlabel('$a_{HO}$ (fm)')
     plt.ylabel('$E_0$ (MeV)')
     plt.grid(linestyle='--')
 

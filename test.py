@@ -1,4 +1,6 @@
 import numpy as np
 
-print(np.arange(0, 151, 2))
+a = np.arange(-2, 0.1, 0.2)
 
+
+print(np.round(a,1))
