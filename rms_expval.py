@@ -1,11 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from create_matrix import mat
-from joblib import Parallel, delayed
-from concurrent.futures import ThreadPoolExecutor
-from math import sqrt
-import time
-from sys import platform
 
 chi_Nmax150_aHO20 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO02.00.meho', skiprows=1)
 trel_Nmax150 = np.loadtxt(r'Matrixelemente/trel_NMax150_LMax02_aHO01.00.meho', skiprows=1)
@@ -20,9 +15,9 @@ for i in Nmax_lst:
     chi_mat = mat(chi_Nmax150_aHO20, i)
     trel_mat = mat(trel_Nmax150, i) * 1/(aHO**2)
 
-    h_eigval, h_eigvec = np.linalg.eig(chi_mat + trel_mat)
-    gs_index = np.where(h_eigval == min(h_eigval))[0][0]
-    gs_vec = h_eigvec[gs_index]
+    h_eigvals, h_eigvecs = np.linalg.eig(chi_mat + trel_mat)
+    gs_index = np.where(h_eigvals == min(h_eigvals))[0][0]
+    gs_vec = h_eigvecs[gs_index]
 
     rsq_elements_L0 = rsq_Nmax150[((rsq_Nmax150[:, 1] == 0) &  # L=0
                                 (rsq_Nmax150[:, 3] == 0) &  # L'=0
@@ -59,11 +54,10 @@ for i in Nmax_lst:
     rms2.append([i,np.sqrt(rsq1 + rsq2)])
 
 rms2 = np.array(rms2)
-plt.figure()
 
+plt.figure()
 plt.subplot(221)
 plt.plot(rms2[:, 0],rms2[:, 1])
-
 plt.title('$R_{rms}$ bei $a_{HO}$ = 2 fm')
 plt.ylabel("$R_{rms}$ in fm")
 plt.xlabel('$N_{max}$')
@@ -97,7 +91,6 @@ rms = np.array(rms_aHO(5))
 
 plt.subplot(222)
 plt.plot(rms[:, 0],rms[:, 1])
-
 plt.title('$R_{rms}$ bei $a_{HO}$ = 2 fm')
 plt.ylabel("$R_{rms}$ in fm")
 plt.xlabel('$N_{max}$')
@@ -105,7 +98,6 @@ plt.xlabel('$N_{max}$')
 plt.subplot(223)
 plt.plot(rms[:, 0],rms[:, 1])
 plt.plot(rms2[:, 0],rms2[:, 1])
-
 plt.title('$R_{rms}$ bei $a_{HO}$ = 2 fm')
 plt.legend(["Matrix", "Elementwise"])
 plt.ylabel("$R_{rms}$ in fm")
