@@ -42,7 +42,8 @@ for i in Nmax_lst:
             if rsqN1N2_elements1.shape != (0,9) and N1 == N2:
                 rsq1 += rsqN1N2_elements1[0,8] * gs_vec[N1] * gs_vec[N2] * aHO**2/4
             elif rsqN1N2_elements1.shape != (0,9):
-                rsq1 += 2 * rsqN1N2_elements1[0,8] * gs_vec[N1] * gs_vec[N2] * aHO**2/4
+                rsq1 += 2 * rsqN1N2_elements1[0,8] * gs_vec[N1] * gs_vec[N2] * aHO**2/4 
+                # Warum mal 2 damit der richtige wert raus kommt? sollten die nicht automatisch doppelt gezählt werden und werden die jetzt damit nicht 4 mal gezählt?
                 
     rsq2 = 0
     for N1 in range(i):
@@ -51,7 +52,7 @@ for i in Nmax_lst:
             if  rsqN1N2_elements2.shape != (0,9) and N1 == N2:
                 rsq2 += rsqN1N2_elements2[0,8] * gs_vec[i + 1 + N1] * gs_vec[i + 1 + N2]  * aHO**2/4
             elif rsqN1N2_elements2.shape != (0,9):
-                rsq1 += 2 * rsqN1N2_elements2[0,8] * gs_vec[i + 1 + N1] * gs_vec[i + 1 + N2] * aHO**2/4
+                rsq1 +=  2* rsqN1N2_elements2[0,8] * gs_vec[i + 1 + N1] * gs_vec[i + 1 + N2] * aHO**2/4 # Hier genau so?
     
     rms2.append([i,np.sqrt(rsq1 + rsq2)])
 
