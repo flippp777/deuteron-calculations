@@ -109,7 +109,7 @@ def plotsE0Nmax():
 
     # aHO=1.2
     plt.subplot(231)
-    plt.scatter(Nmax_step2,E0_Nmax[0])
+    plt.plot(Nmax_step2,E0_Nmax[0], 'x-')
     plt.title('$E_0$ bei $a_{HO}$=1.2 fm')
     plt.xlabel('$N_{max}$')
     plt.ylabel('$E_0$ (MeV)')
@@ -117,7 +117,7 @@ def plotsE0Nmax():
 
     # aHO = 1.4
     plt.subplot(232)
-    plt.scatter(Nmax_step2,E0_Nmax[1])
+    plt.plot(Nmax_step2,E0_Nmax[1], 'x-')
     plt.title('$E_0$ bei $a_{HO}$=1.4 fm')
     plt.xlabel('$N_{max}$')
     plt.ylabel('$E_0$ (MeV)')
@@ -125,7 +125,7 @@ def plotsE0Nmax():
 
     # aHO = 1.6
     plt.subplot(233)
-    plt.scatter(Nmax_step2,E0_Nmax[2])
+    plt.plot(Nmax_step2,E0_Nmax[2], 'x-')
     plt.title('$E_0$ bei $a_{HO}$=1.6 fm')
     plt.xlabel('$N_{max}$')
     plt.ylabel('$E_0$ (MeV)')
@@ -133,7 +133,7 @@ def plotsE0Nmax():
 
     # aHO = 1.8
     plt.subplot(234)
-    plt.scatter(Nmax_step2,E0_Nmax[3])
+    plt.plot(Nmax_step2,E0_Nmax[3], 'x-')
     plt.title('$E_0$ bei $a_{HO}$=1.8 fm')
     plt.xlabel('$N_{max}$')
     plt.ylabel('$E_0$ (MeV)')
@@ -141,7 +141,7 @@ def plotsE0Nmax():
 
     # aHO = 2.0
     plt.subplot(235)
-    plt.scatter(Nmax_step2,E0_Nmax[4])
+    plt.plot(Nmax_step2,E0_Nmax[4], 'x-')
     plt.title('$E_0$ bei $a_{HO}$=2.0 fm')
     plt.xlabel('$N_{max}$')
     plt.ylabel('$E_0$ (MeV)')
@@ -150,7 +150,7 @@ def plotsE0Nmax():
     # alle zusammen
     plt.subplot(236)
     for i in range(E0_Nmax.shape[0]):
-        plt.scatter(Nmax_step2,E0_Nmax[i])
+        plt.plot(Nmax_step2,E0_Nmax[i], 'x-')
 
     legend = np.array([])
     for i in aHO:
@@ -177,7 +177,7 @@ def plotsE0aHO():
 
     # aHO=1.2
     plt.subplot(231)
-    plt.scatter(aHO,E0_aHO[0])
+    plt.plot(aHO,E0_aHO[0], 'x-')
     plt.title('$E_0$ bei $N_{max}$=30')
     plt.xlabel('$a_{HO}$')
     plt.ylabel('$E_0$ (MeV)')
@@ -185,7 +185,7 @@ def plotsE0aHO():
 
     # aHO = 1.4
     plt.subplot(232)
-    plt.scatter(aHO,E0_aHO[1])
+    plt.plot(aHO,E0_aHO[1], 'x-')
     plt.title('$E_0$ bei $N_{max}$=60')
     plt.xlabel('$a_{HO}$')
     plt.ylabel('$E_0$ (MeV)')
@@ -193,7 +193,7 @@ def plotsE0aHO():
 
     # aHO = 1.6
     plt.subplot(233)
-    plt.scatter(aHO,E0_aHO[2])
+    plt.plot(aHO,E0_aHO[2], 'x-')
     plt.title('$E_0$ bei $N_{max}$=90')
     plt.xlabel('$a_{HO}$')
     plt.ylabel('$E_0$ (MeV)')
@@ -201,7 +201,7 @@ def plotsE0aHO():
 
     # aHO = 1.8
     plt.subplot(234)
-    plt.scatter(aHO,E0_aHO[3])
+    plt.plot(aHO,E0_aHO[3], 'x-')
     plt.title('$E_0$ bei $N_{max}$=120')
     plt.xlabel('$a_{HO}$')
     plt.ylabel('$E_0$ (MeV)')
@@ -209,7 +209,7 @@ def plotsE0aHO():
 
     # aHO = 2.0
     plt.subplot(235)
-    plt.scatter(aHO,E0_aHO[4])
+    plt.plot(aHO,E0_aHO[4], 'x-')
     plt.title('$E_0$ bei $N_{max}$=150')
     plt.xlabel('$a_{HO}$')
     plt.ylabel('$E_0$ (MeV)')
@@ -218,7 +218,7 @@ def plotsE0aHO():
     # alle zusammen
     plt.subplot(236)
     for i in range(E0_aHO.shape[0]):
-        plt.scatter(aHO,E0_aHO[i])
+        plt.plot(aHO,E0_aHO[i], 'x-')
 
     legend = np.array([])
     for i in Nmax_step30:
@@ -231,6 +231,6 @@ def plotsE0aHO():
     plt.grid(linestyle='--')
 
 plotsE0Nmax()
-# plotsE0aHO()
+plotsE0aHO()
 
 plt.show()
