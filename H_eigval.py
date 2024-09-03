@@ -97,6 +97,9 @@ def plotsE0Nmax():
     E0_Nmax = np.delete(E0_Nmax,[0,1], axis=0)
     
     print(np.mean(E0_Nmax[:, 75]))
+    
+    for i  in range(4):
+        np.savetxt(f'E0(Nmax)_{aHO[i]}.txt', np.array([Nmax_step2, E0_Nmax[i]]))
 
     # Plot
     plt.figure()
@@ -174,6 +177,7 @@ def plotsE0aHO():
     E0_aHO = np.delete(E0_aHO,[0,1], axis=0)
         # Plot
     plt.figure()
+    
 
     # Nmax = 0
     plt.subplot(231)
