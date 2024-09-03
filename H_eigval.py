@@ -1,7 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from sys import exit
-from sys import platform
 
 
 chi_Nmax150_aHO12 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO01.20.meho', skiprows=1)
@@ -77,9 +76,6 @@ def E0(chi, aHO, Nmax):
 
 testmat = mat(chi_Nmax150_aHO20, 150)
 eigvec, eigval = np.linalg.eig(testmat + mat(trel_Nmax150,150)*1/2**2)
-
-# for i in eigval:
-#     print(np.sum(i**2))
     
 
 Nmax_step75 = np.array([75,150])
