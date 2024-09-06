@@ -1,6 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.special import genlaguerre, gamma
+from scipy.integrate import quad
 from create_matrix import mat
 from sys import exit
 
@@ -59,9 +60,15 @@ def deuteron_wavefunc(Nmax, aHO, r):
 
 
 plt.figure()
-x_model = np.linspace(0, 30, 500)
+
+x_model = np.linspace(0, 15, 500)
+x_model_log = np.linspace(0, 30, 500)
 wavefunc = deuteron_wavefunc(15, 1.4, x_model)
 wavefunc_model, wavefunc_L0_model, wavefunc_L2_model = wavefunc[0], wavefunc[1], wavefunc[2]
+wavefunc_log = deuteron_wavefunc(15, 1.4, x_model_log)
+wavefunc_model_log, wavefunc_L0_model_log, wavefunc_L2_model_log = wavefunc_log[0], wavefunc_log[1], wavefunc_log[2]
+
+print(np.sum(wavefunc_L0_model**2))
 
 plt.subplot(221)
 plt.plot(x_model, wavefunc_model)
@@ -73,15 +80,18 @@ plt.xlabel('r/aHO (fm)')
 
 
 plt.subplot(222)
-plt.semilogy(x_model, wavefunc_model)
-plt.semilogy(x_model, wavefunc_L0_model)
-plt.semilogy(x_model, wavefunc_L2_model)
+
+plt.semilogy(x_model_log, wavefunc_model_log)
+plt.semilogy(x_model_log, wavefunc_L0_model_log)
+plt.semilogy(x_model_log, wavefunc_L2_model_log)
 plt.title('Wellenfunctionen bei $a_{HO} = 1.4$ für $N_{max} = 15$ mit logarithmischer x-Achse')
 plt.legend(['$\Phi(r)$', '$\Phi_{L=0}(r)$', '$\Phi_{L=2}(r)$'])
 plt.xlabel('r/aHO (fm)')
 
 wavefunc = deuteron_wavefunc(60, 1.4, x_model)
 wavefunc_model, wavefunc_L0_model, wavefunc_L2_model = wavefunc[0], wavefunc[1], wavefunc[2]
+wavefunc_log = deuteron_wavefunc(60, 1.4, x_model_log)
+wavefunc_model_log, wavefunc_L0_model_log, wavefunc_L2_model_log = wavefunc_log[0], wavefunc_log[1], wavefunc_log[2]
 
 plt.subplot(223)
 plt.plot(x_model, wavefunc_model)
@@ -93,9 +103,9 @@ plt.xlabel('r/aHO (fm)')
 
 
 plt.subplot(224)
-plt.semilogy(x_model, wavefunc_model)
-plt.semilogy(x_model, wavefunc_L0_model)
-plt.semilogy(x_model, wavefunc_L2_model)
+plt.semilogy(x_model_log, wavefunc_model_log)
+plt.semilogy(x_model_log, wavefunc_L0_model_log)
+plt.semilogy(x_model_log, wavefunc_L2_model_log)
 plt.title('Wellenfunctionen bei $a_{HO} = 1.4$ für $N_{max} = 60$ mit logarithmischer x-Achse')
 plt.legend(['$\Phi(r)$', '$\Phi_{L=0}(r)$', '$\Phi_{L=2}(r)$'])
 plt.xlabel('r/aHO (fm)')
