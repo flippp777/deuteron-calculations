@@ -44,8 +44,7 @@ def pos_wavefunc(N, L, aHO, r):
 def pos_wavefunc_norm(N, L):
     return np.sqrt(2 * gamma(N + 1) / gamma(N + L + 1.5))
 
-def create_deuteron_wavefunc(Nmax, aHO, r):
-    # def deuteron_wavefunc(r):
+def deuteron_wavefunc(Nmax, aHO, r):
     gs_vec = gs_eigvec(Nmax, aHO)
         
     deut_wavefunc_L0 = 0
@@ -57,14 +56,11 @@ def create_deuteron_wavefunc(Nmax, aHO, r):
     deut_wavefunc = deut_wavefunc_L0 + deut_wavefunc_L2
     
     return [deut_wavefunc, deut_wavefunc_L0, deut_wavefunc_L2]
-    # return deuteron_wavefunc
-        
-# wavefunc = create_deuteron_wavefunc(60, 1.4)
 
 
 plt.figure()
 x_model = np.linspace(0, 10, 500)
-wavefunc = create_deuteron_wavefunc(60, 1.4, x_model)
+wavefunc = deuteron_wavefunc(60, 1.4, x_model)
 wavefunc_model, wavefunc_L0_model, wavefunc_L2_model = wavefunc[0], wavefunc[1], wavefunc[2]
 
 plt.plot(x_model, wavefunc_model)
