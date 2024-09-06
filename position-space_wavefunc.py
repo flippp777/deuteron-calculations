@@ -51,15 +51,16 @@ def create_deuteron_wavefunc(Nmax, aHO, r):
     deut_wavefunc_L0 = 0
     deut_wavefunc_L2 = 0
     for N in range(Nmax + 1):
-        deut_wavefunc_L0 += gs_vec[N] * pos_wavefunc(N, 0, aHO, r) / pos_wavefunc_norm(N, 0)
+        deut_wavefunc_L0 += gs_vec[N] * pos_wavefunc(N, 0, aHO, r) * pos_wavefunc_norm(N, 0)
     for N in range(Nmax + 1, (Nmax+1) * 2 ):
-        deut_wavefunc_L2 += gs_vec[N] * pos_wavefunc(N, 2, aHO, r) / pos_wavefunc_norm(N, 2)
+        deut_wavefunc_L2 += gs_vec[N] * pos_wavefunc(N, 2, aHO, r) * pos_wavefunc_norm(N, 2)
     deut_wavefunc = deut_wavefunc_L0 + deut_wavefunc_L2
     
     return [deut_wavefunc, deut_wavefunc_L0, deut_wavefunc_L2]
     # return deuteron_wavefunc
         
 # wavefunc = create_deuteron_wavefunc(60, 1.4)
+
 
 plt.figure()
 x_model = np.linspace(0, 10, 500)
@@ -70,5 +71,5 @@ plt.plot(x_model, wavefunc_model)
 plt.plot(x_model, wavefunc_L0_model)
 plt.plot(x_model, wavefunc_L2_model)
 plt.legend(['Wavefunction', 'L=0', 'L=2'])
-plt.ylabel('r/aHO (fm)')
+plt.xlabel('r/aHO (fm)')
 plt.show()
