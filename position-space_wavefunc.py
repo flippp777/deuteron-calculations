@@ -39,7 +39,7 @@ def gs_eigvec(Nmax, aHO):
 def pos_wavefunc(N, L, aHO, r):
     r = r/aHO
     
-    return np.exp(-0.5 * r**2) * r**L * genlaguerre(N, L + 0.5)(r**2) / aHO**(3/2)
+    return np.exp(-0.5 * r**2) * r**L * genlaguerre(N, L + 0.5)(r**2) / (aHO * np.sqrt(aHO))
 
 def pos_wavefunc_norm(N, L):
     return np.sqrt(2 * gamma(N + 1) / gamma(N + L + 1.5))
@@ -59,13 +59,45 @@ def deuteron_wavefunc(Nmax, aHO, r):
 
 
 plt.figure()
-x_model = np.linspace(0, 10, 500)
-wavefunc = deuteron_wavefunc(60, 1.4, x_model)
+x_model = np.linspace(0, 30, 500)
+wavefunc = deuteron_wavefunc(15, 1.4, x_model)
 wavefunc_model, wavefunc_L0_model, wavefunc_L2_model = wavefunc[0], wavefunc[1], wavefunc[2]
 
+plt.subplot(221)
 plt.plot(x_model, wavefunc_model)
 plt.plot(x_model, wavefunc_L0_model)
 plt.plot(x_model, wavefunc_L2_model)
-plt.legend(['Wavefunction', 'L=0', 'L=2'])
+plt.title('Wellenfunctionen bei $a_{HO} = 1.4$ für $N_max = 15$')
+plt.legend(['$\Phi(r)$', '$\Phi_{L=0}(r)$', '$\Phi_{L=2}(r)$'])
 plt.xlabel('r/aHO (fm)')
+
+
+plt.subplot(222)
+plt.semilogy(x_model, wavefunc_model)
+plt.semilogy(x_model, wavefunc_L0_model)
+plt.semilogy(x_model, wavefunc_L2_model)
+plt.title('Wellenfunctionen bei $a_{HO} = 1.4$ für $N_max = 15$ mit logarithmischer x-Achse')
+plt.legend(['$\Phi(r)$', '$\Phi_{L=0}(r)$', '$\Phi_{L=2}(r)$'])
+plt.xlabel('r/aHO (fm)')
+
+wavefunc = deuteron_wavefunc(60, 1.4, x_model)
+wavefunc_model, wavefunc_L0_model, wavefunc_L2_model = wavefunc[0], wavefunc[1], wavefunc[2]
+
+plt.subplot(223)
+plt.plot(x_model, wavefunc_model)
+plt.plot(x_model, wavefunc_L0_model)
+plt.plot(x_model, wavefunc_L2_model)
+plt.title('Wellenfunctionen bei $a_{HO} = 1.4$ für $N_max = 60$')
+plt.legend(['$\Phi(r)$', '$\Phi_{L=0}(r)$', '$\Phi_{L=2}(r)$'])
+plt.xlabel('r/aHO (fm)')
+
+
+plt.subplot(224)
+plt.semilogy(x_model, wavefunc_model)
+plt.semilogy(x_model, wavefunc_L0_model)
+plt.semilogy(x_model, wavefunc_L2_model)
+plt.title('Wellenfunctionen bei $a_{HO} = 1.4$ für $N_max = 60$ mit logarithmischer x-Achse')
+plt.legend(['$\Phi(r)$', '$\Phi_{L=0}(r)$', '$\Phi_{L=2}(r)$'])
+plt.xlabel('r/aHO (fm)')
+
 plt.show()
