@@ -1,7 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
-import scipy
-import scipy.special
+from scipy.special import genlaguerre, gamma
 from create_matrix import mat
 from sys import exit
 
@@ -39,11 +38,28 @@ def gs_eigvec(Nmax, aHO):
 
 def pos_wavefunc(N, L, aHO, r):
     r = r/aHO
-    return np.exp(-0.5 * r**2) * r**L * scipy.special.genlaguerre(N, L)(r) / aHO**(3/2)
+    
+    return np.exp(-0.5 * r**2) * r**L * genlaguerre(N, L)(r) / aHO**(3/2)
 
 def pos_wavefunc_norm(N, L):
-    return np.sqrt(2 * scipy.special.gamma(N + 1) / scipy.special.gamma(N + L + 1.5))
+    return np.sqrt(2 * gamma(N + 1) / gamma(N + L + 1.5))
 
-print(gs_eigvec(10, 1.2))
-print(pos_wavefunc(1,1,1.2,1))
-print(pos_wavefunc_norm(1,1))
+def create_deuteron_wavefunc(Nmax, aHO):
+    def deuteron_wavefunc(r):
+        gs_vec = gs_eigvec(Nmax, aHO)
+         
+        deut_wavefunc = 0
+        for N in range(Nmax + 1):
+            deut_wavefunc += gs_vec[N] * pos_wavefunc(N, 0, aHO, r) / pos_wavefunc_norm(N, 0)
+        for N in range(Nmax + 2, (Nmax+1) * 2):
+            deut_wavefunc += gs_vec[N] * pos_wavefunc(N, 2, aHO, r) / pos_wavefunc_norm(N, 2)
+        return deut_wavefunc
+    return deuteron_wavefunc
+        
+test_func = create_deuteron_wavefunc(40, 1.6)
+
+x = np.linspace(0, 10, 100)
+y = test_func(x)
+
+plt.plot(x, y)
+plt.show()
