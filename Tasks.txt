@@ -2,15 +2,25 @@
 
  - Neue Plots mit besser erkennbarer Rrms konvergenz.									Erledigt
 
- - Gucken ob das mit dem Addieren der einzelnen L-Anteile passt 
+ - Gucken ob das mit dem Addieren der einzelnen L-Anteile passt							Sollte passen, eh nicht so wichtig 
 	(Stichwort: Betragsquadrat).
 
- - Wellenfunktionen mit denen von Lisa vergleichen.
+ - Wellenfunktionen mit denen von Lisa vergleichen.										Stimmen nicht über ein
 
- - Aufenthaltswahrscheinlichkeit korrigieren 
+ - Aufenthaltswahrscheinlichkeit korrigieren											Erledigt
 	(Betragsquadrad nicht Quadrat: (a+b)*(a+b) != (a² +b²)).
 
- - Normierung überprüfen.
+ - Normierung überprüfen.																Normierung passt nicht
+
+ - Für ein aHO mehrere Aufehnthaltswahrscheinlichkeiten für mehrere Nmax in 
+	einen Plot. Auch mit logarithmischer y-Achse.
+
+
+10. Sep. 2024
+
+ - Warum stimmen die Plots nicht über ein?
+
+ - Warum passt die Normierung nicht?
 
  - Für ein aHO mehrere Aufehnthaltswahrscheinlichkeiten für mehrere Nmax in 
 	einen Plot. Auch mit logarithmischer y-Achse.
