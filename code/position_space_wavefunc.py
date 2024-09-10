@@ -1,9 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
-from scipy.special import eval_genlaguerre, gammaln
-from make_matrix import mat
 from make_position_wavefunc import deuteron_wavefunc
-from sys import exit
 from scipy import integrate
 
 print(integrate.quad(lambda x: deuteron_wavefunc(4, 1.4, x)[3], 0, np.inf))
