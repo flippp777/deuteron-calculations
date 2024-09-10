@@ -2,9 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from create_matrix import mat
 
-chi_Nmax150_aHO20 = np.loadtxt(r'Matrixelemente/chi2bM3A_srg0000_NMax150_LMax02_aHO02.00.meho', skiprows=1)
-trel_Nmax150 = np.loadtxt(r'Matrixelemente/trel_NMax150_LMax02_aHO01.00.meho', skiprows=1)
-rsq_Nmax150 = np.loadtxt(r'Matrixelemente/rsq_NMax150_LMax02.meho', skiprows=1)
+chi_Nmax150_aHO20 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO02.00.meho', skiprows=1)
+trel_Nmax150 = np.loadtxt(r'matrix_elements/trel_NMax150_LMax02_aHO01.00.meho', skiprows=1)
+rsq_Nmax150 = np.loadtxt(r'matrix_elements/rsq_NMax150_LMax02.meho', skiprows=1)
 
 rsq_elements_L0 = rsq_Nmax150[((rsq_Nmax150[:, 1] == 0) &   # L=0
                                 (rsq_Nmax150[:, 3] == 0) &  # L'=0
