@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from create_matrix import mat
+from make_matrix import mat
 
 chi_Nmax150_aHO20 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO02.00.meho', skiprows=1)
 trel_Nmax150 = np.loadtxt(r'matrix_elements/trel_NMax150_LMax02_aHO01.00.meho', skiprows=1)
