@@ -23,4 +23,4 @@
  - Warum passt die Normierung nicht?
 
  - Für ein aHO mehrere Aufehnthaltswahrscheinlichkeiten für mehrere Nmax in 
-	einen Plot. Auch mit logarithmischer y-Achse.
+	einen Plot. Auch mit logarithmischer y-Achse. (log y-Achse nur bis 10^-6)
