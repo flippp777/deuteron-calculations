@@ -24,6 +24,8 @@ wavefuncs_aHO12 = [deuteron_wavefunc(5, 1.2, r)[1:3]]
 for Nmax in range(10, 91, 5):
     wavefuncs_aHO12 = np.append(wavefuncs_aHO12, [deuteron_wavefunc(Nmax, 1.2, r)[1:3]], axis=0)
 
+print(wavefuncs_aHO12_comp[1,1])
+print(wavefuncs_aHO12[1,0])
 
 wavefuncs_aHO14 = [deuteron_wavefunc(5, 1.4, r)[1:3]]
 for Nmax in range(10, 91, 5):
@@ -34,3 +36,29 @@ wavefuncs_aHO18 = [deuteron_wavefunc(5, 1.8, r)[1:3]]
 for Nmax in range(10, 91, 5):
     wavefuncs_aHO18 = np.append(wavefuncs_aHO18, [deuteron_wavefunc(Nmax, 1.8, r)[1:3]], axis=0)
 
+
+# aHO = 1.2 fm
+
+label = [[f'Nmax = {i}' for i in range(5,91,5)]]
+label.append([f'Nmax = {i} (Vgl)' for i in range(5,91,5)])
+label = np.array(label).transpose().flatten()
+
+plt.figure()
+for i in range(18):
+    plt.subplot(3,6,i+1)
+    plt.plot(r, np.abs(wavefuncs_aHO12[i,0]))
+    plt.plot(r, np.abs(wavefuncs_aHO12_comp[i,1]))
+    plt.title(f'L = 0, Nmax = {i*5+5}')
+    plt.legend(['Calculated', 'Comparison'])
+
+
+plt.figure()
+for i in range(18):
+    plt.subplot(3,6,i+1)
+    plt.plot(r, np.abs(wavefuncs_aHO12[i,1]))
+    plt.plot(r, np.abs(wavefuncs_aHO12_comp[i,2]))
+    plt.title(f'L = 2, Nmax = {i*5+5}')
+    plt.legend(['Calculated', 'Comparison'])
+
+
+plt.show()
