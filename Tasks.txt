@@ -1,0 +1,16 @@
+9. Sep 2024
+
+ - Neue Plots mit besser erkennbarer Rrms konvergenz.
+
+ - Gucken ob das mit dem Addieren der einzelnen L-Anteile passt 
+	(Stichwort: Betragsquadrat).
+
+ - Wellenfunktionen mit denen von Lisa vergleichen.
+
+ - Aufenthaltswahrscheinlichkeit korrigieren 
+	(Betragsquadrad nicht Quadrat: (a+b)*(a+b) != (a² +b²)).
+
+ - Normierung überprüfen.
+
+ - Für ein aHO mehrere Aufehnthaltswahrscheinlichkeiten für mehrere Nmax in 
+	einen Plot. Auch mit logarithmischer y-Achse.
