@@ -1,6 +1,6 @@
 9. Sep 2024
 
- - Neue Plots mit besser erkennbarer Rrms konvergenz.
+ - Neue Plots mit besser erkennbarer Rrms konvergenz.									Erledigt
 
  - Gucken ob das mit dem Addieren der einzelnen L-Anteile passt 
 	(Stichwort: Betragsquadrat).
