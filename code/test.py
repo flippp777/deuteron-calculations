@@ -1,10 +1,6 @@
 import numpy as np
 from scipy.special import genlaguerre
 
-a = 0
+arr = np.array([[1,1,1], [2,2,2], [3,3,3]])
 
-ar = np.array([1,1,1,1])
-
-for i in range(4):
-    a += ar
-    print(a)
+print(arr[1:3])
