@@ -59,3 +59,36 @@ def deuteron_wavefunc(Nmax, aHO, r):
     deut_density = deut_wavefunc_L0**2 + deut_wavefunc_L2**2
     
     return [deut_wavefunc, deut_wavefunc_L0, deut_wavefunc_L2, deut_density]
+
+    
+def deuteron_wavefunc_single_r(Nmax, aHO, r):
+    gs_vec = gs_eigvec(Nmax, aHO)
+        
+    deut_wavefuncs = np.array([[0,0],[0,0]])
+    for x in r:
+        deut_wavefunc_L0 = 0
+        deut_wavefunc_L2 = 0
+        for N in range(Nmax + 1):
+            deut_wavefunc_L0 += gs_vec[N] * pos_wavefunc(N, 0, aHO, x) * pos_wavefunc_norm(N, 0)
+        for N in range(Nmax + 1):
+            deut_wavefunc_L2 += gs_vec[N + Nmax +1] * pos_wavefunc(N, 2, aHO, x) * pos_wavefunc_norm(N, 2)
+        deut_wavefuncs = np.append(deut_wavefuncs, [[deut_wavefunc_L0,deut_wavefunc_L2]], axis=0)
+    deut_wavefuncs = np.delete(deut_wavefuncs, (0,1), axis=0)
+
+    return deut_wavefuncs 
+
+r_model = np.linspace(0,10,500)
+
+plt.figure()
+plt.subplot(223)
+plt.plot(r_model, deuteron_wavefunc(40, 1.4, r_model)[1])
+plt.plot(r_model, deuteron_wavefunc_single_r(40, 1.4, r_model)[:,0])
+plt.legend(['Normal', 'Single r'])
+
+plt.subplot(221)
+plt.plot(r_model, deuteron_wavefunc(40, 1.4, r_model)[1])
+
+plt.subplot(222)
+plt.plot(r_model, deuteron_wavefunc_single_r(40, 1.4, r_model)[:,0])
+
+# plt.show()
