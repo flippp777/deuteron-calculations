@@ -3,10 +3,10 @@ from matplotlib import pyplot as plt
 from make_position_wavefunc import deuteron_wavefunc
 from scipy import integrate
 
-print(integrate.quad(lambda x: deuteron_wavefunc(4, 1.4, x)[3], 0, np.inf))
-print(integrate.quad(lambda x: deuteron_wavefunc(15, 1.4, x)[3], 0, np.inf))
-print(integrate.quad(lambda x: deuteron_wavefunc(30, 1.4, x)[3], 0, np.inf))
-print(integrate.quad(lambda x: deuteron_wavefunc(40, 1.4, x)[3], 0, np.inf))
+# print(integrate.quad(lambda x: deuteron_wavefunc(4, 1.4, x)[3], 0, np.inf))
+# print(integrate.quad(lambda x: deuteron_wavefunc(15, 1.4, x)[3], 0, np.inf))
+# print(integrate.quad(lambda x: deuteron_wavefunc(30, 1.4, x)[3], 0, np.inf))
+# print(integrate.quad(lambda x: deuteron_wavefunc(40, 1.4, x)[3], 0, np.inf))
 
 
 def plot_wavefunc_Nmax(Nmax, aHO):
@@ -89,8 +89,7 @@ def plots_density_aHO(aHO):
     plt.figure()
     
     # Nmax = 0
-    wavefunc_Nmax0 = deuteron_wavefunc(0, aHO, x_model)[0]
-    density_Nmax0 = wavefunc_Nmax0 * wavefunc_Nmax0
+    density_Nmax0= deuteron_wavefunc(0, aHO, x_model)[3]
     
     plt.subplot(221)
     plt.plot(x_model, density_Nmax0)
@@ -99,8 +98,7 @@ def plots_density_aHO(aHO):
     plt.grid(linestyle='--')
 
     # Nmax = 20
-    wavefunc_Nmax20 = deuteron_wavefunc(20, aHO, x_model)[0]
-    density_Nmax20 = wavefunc_Nmax20 * wavefunc_Nmax20
+    density_Nmax20 = deuteron_wavefunc(20, aHO, x_model)[3]
     
     plt.subplot(222)
     plt.plot(x_model, density_Nmax20)
@@ -109,8 +107,7 @@ def plots_density_aHO(aHO):
     plt.grid(linestyle='--')
     
     # Nmax = 40
-    wavefunc_Nmax40 = deuteron_wavefunc(40, aHO, x_model)[0]
-    density_Nmax40 = wavefunc_Nmax40 * wavefunc_Nmax40
+    density_Nmax40 = deuteron_wavefunc(40, aHO, x_model)[3]
     
     plt.subplot(223)
     plt.plot(x_model, density_Nmax40)
@@ -119,8 +116,7 @@ def plots_density_aHO(aHO):
     plt.grid(linestyle='--')
     
     # Nmax = 60
-    wavefunc_Nmax60 = deuteron_wavefunc(60, aHO, x_model)[0]
-    density_Nmax60 = wavefunc_Nmax60 * wavefunc_Nmax60
+    density_Nmax60 = deuteron_wavefunc(60, aHO, x_model)[3]
     
     plt.subplot(224)
     plt.plot(x_model, density_Nmax60)
@@ -134,8 +130,7 @@ def logplots_density_aHO(aHO):
     plt.figure()
     
     # Nmax = 0
-    wavefunc_Nmax0_log = deuteron_wavefunc(0, aHO, x_model_log)[0]
-    density_Nmax0_log = wavefunc_Nmax0_log * wavefunc_Nmax0_log
+    density_Nmax0_log = deuteron_wavefunc(0, aHO, x_model_log)[3]
     
     plt.subplot(221)
     plt.semilogy(x_model_log, density_Nmax0_log)
@@ -144,8 +139,7 @@ def logplots_density_aHO(aHO):
     plt.grid(linestyle='--')
 
     # Nmax = 20
-    wavefunc_Nmax20_log = deuteron_wavefunc(20, aHO, x_model_log)[0]
-    density_Nmax20_log = wavefunc_Nmax20_log * wavefunc_Nmax20_log
+    density_Nmax20_log = deuteron_wavefunc(20, aHO, x_model_log)[3]
     
     plt.subplot(222)
     plt.semilogy(x_model_log, density_Nmax20_log)
@@ -154,8 +148,7 @@ def logplots_density_aHO(aHO):
     plt.grid(linestyle='--')
     
     # Nmax = 40
-    wavefunc_Nmax40_log = deuteron_wavefunc(40, aHO, x_model_log)[0]
-    density_Nmax40_log = wavefunc_Nmax40_log * wavefunc_Nmax40_log
+    density_Nmax40_log = deuteron_wavefunc(40, aHO, x_model_log)[3]
     
     plt.subplot(223)
     plt.semilogy(x_model_log, density_Nmax40_log)
@@ -164,8 +157,7 @@ def logplots_density_aHO(aHO):
     plt.grid(linestyle='--')
     
     # Nmax = 60
-    wavefunc_Nmax60_log = deuteron_wavefunc(60, aHO, x_model_log)[0]
-    density_Nmax60_log = wavefunc_Nmax60_log * wavefunc_Nmax60_log
+    density_Nmax60_log = deuteron_wavefunc(60, aHO, x_model_log)[3]
     
     plt.subplot(224)
     plt.semilogy(x_model_log, density_Nmax60_log)
@@ -181,16 +173,16 @@ def logplots_density_aHO(aHO):
 # plots_wavefunc_aHO(1.8)
 # plots_wavefunc_aHO(2.0)
 
-# plots_density_aHO(1.2)
-# plots_density_aHO(1.4)
-# plots_density_aHO(1.6)
-# plots_density_aHO(1.8)
-# plots_density_aHO(2.0)
+plots_density_aHO(1.2)
+plots_density_aHO(1.4)
+plots_density_aHO(1.6)
+plots_density_aHO(1.8)
+plots_density_aHO(2.0)
 
-# logplots_density_aHO(1.2)
-# logplots_density_aHO(1.4)
-# logplots_density_aHO(1.6)
-# logplots_density_aHO(1.8)
-# logplots_density_aHO(2.0)
+logplots_density_aHO(1.2)
+logplots_density_aHO(1.4)
+logplots_density_aHO(1.6)
+logplots_density_aHO(1.8)
+logplots_density_aHO(2.0)
 
-# plt.show()
+plt.show()
