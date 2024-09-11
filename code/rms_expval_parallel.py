@@ -114,6 +114,19 @@ plt.xlabel('$N_{max}$')
 plt.xlim(0, 60)
 plt.grid(linestyle='--')
 
+plt.figure()
+for i in range(rms.shape[0]):
+    plt.plot(rms[i,::, 0],rms[i,::, 1], 'x-')
+legend = np.array([])
+for i in aHO:
+    legend = np.append(legend,'$a_{HO}$ = '+ str(i) + ' fm')
+plt.title('$R_{rms}$ bei verschiedenen $a_{HO}$')
+plt.legend(legend)
+plt.ylabel("$R_{rms}$ (fm)")
+plt.yticks([1.2, 1.4, 1.6, 1.8, Rrms, 2.0, 2.2])
+plt.xlabel('$N_{max}$')
+plt.xlim(0, 60)
+plt.grid(linestyle='--')
 
 plt.figure()
 
