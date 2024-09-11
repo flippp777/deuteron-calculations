@@ -26,163 +26,69 @@ def plot_wavefunc_Nmax(Nmax, aHO):
     plt.xlabel('r/aHO')
     plt.grid(linestyle='--')
 
-def plots_wavefunc_aHO(aHO):
+def plots_wavefunc_aHO(aHO, NmaxMax, step):
     x_model = np.linspace(0, 15, 500)
     
     plt.figure()
     
-    # Nmax = 0
-    wavefuncs_Nmax0 = deuteron_wavefunc(0, aHO, x_model)
-    wavefunc_Nmax0, wavefunc_Nmax0_L0, wavefunc_Nmax0_L2 = wavefuncs_Nmax0[0], wavefuncs_Nmax0[1], wavefuncs_Nmax0[2]
-    
-    plt.subplot(221)
-    plt.plot(x_model, wavefunc_Nmax0)
-    plt.plot(x_model, wavefunc_Nmax0_L0)
-    plt.plot(x_model, wavefunc_Nmax0_L2)
-    plt.title('Wellenfunctionen bei $a_{HO} = $' + str(aHO) +' fm für $N_{max} = 0$')
-    plt.legend(['$\Phi(r)$', '$\Phi_{L=0}(r)$', '$\Phi_{L=2}(r)$'])
-    plt.xlabel('r/aHO')
-    plt.grid(linestyle='--')
-
-    # Nmax = 20
-    wavefuncs_Nmax20 = deuteron_wavefunc(20, aHO, x_model)
-    wavefunc_Nmax20, wavefunc_Nmax20_L0, wavefunc_Nmax20_L2 = wavefuncs_Nmax20[0], wavefuncs_Nmax20[1], wavefuncs_Nmax20[2]
-
-    plt.subplot(222)
-    plt.plot(x_model, wavefunc_Nmax20)
-    plt.plot(x_model, wavefunc_Nmax20_L0)
-    plt.plot(x_model, wavefunc_Nmax20_L2)
-    plt.title('Wellenfunctionen bei $a_{HO} = $' + str(aHO) +' fm für $N_{max} = 20$')
-    plt.legend(['$\Phi(r)$', '$\Phi_{L=0}(r)$', '$\Phi_{L=2}(r)$'])
-    plt.xlabel('r/aHO')
+    for N in range(0, NmaxMax + 1, step):
+        wavefunc_L0 = np.abs(deuteron_wavefunc(N, aHO, x_model)[1])
+        plt.plot(x_model, wavefunc_L0) 
+    for N in range(0, NmaxMax + 1, step):
+        wavefunc_L2 = np.abs(deuteron_wavefunc(N, aHO, x_model)[2])
+        plt.plot(x_model, wavefunc_L2) 
+    plt.xlim(right=10)
+    plt.title('Wellenfunktionen bei $a_{HO} =$' + str(aHO) + ' und verschiedenen $N_{max}$')
+    plt.xlabel('r/aHO ')
+    plt.legend(np.array([['$\Phi_{L=0}(r)$, $N_{max} = $' + str(N) for N in range(0, NmaxMax + 1, step)], ['$\Phi_{L=2}(r)$, $N_{max} = $' + str(N) for N in range(0, NmaxMax + 1, step)]]).flatten())
     plt.grid(linestyle='--')
     
-    # Nmax = 40
-    wavefuncs_Nmax40 = deuteron_wavefunc(40, aHO, x_model)
-    wavefunc_Nmax40, wavefunc_Nmax40_L0, wavefunc_Nmax40_L2 = wavefuncs_Nmax40[0], wavefuncs_Nmax40[1], wavefuncs_Nmax40[2]
-    
-    plt.subplot(223)
-    plt.plot(x_model, wavefunc_Nmax40)
-    plt.plot(x_model, wavefunc_Nmax40_L0)
-    plt.plot(x_model, wavefunc_Nmax40_L2)
-    plt.title('Wellenfunctionen bei $a_{HO} = $' + str(aHO) +' fm für $N_{max} = 40$')
-    plt.legend(['$\Phi(r)$', '$\Phi_{L=0}(r)$', '$\Phi_{L=2}(r)$'])
-    plt.xlabel('r/aHO')
-    plt.grid(linestyle='--')
-    
-    # Nmax = 60
-    wavefuncs_Nmax60 = deuteron_wavefunc(60, aHO, x_model)
-    wavefunc_Nmax60, wavefunc_Nmax60_L0, wavefunc_Nmax60_L2 = wavefuncs_Nmax60[0], wavefuncs_Nmax60[1], wavefuncs_Nmax60[2]
-    
-    plt.subplot(224)
-    plt.plot(x_model, wavefunc_Nmax60)
-    plt.plot(x_model, wavefunc_Nmax60_L0)
-    plt.plot(x_model, wavefunc_Nmax60_L2)
-    plt.title('Wellenfunctionen bei $a_{HO} = $' + str(aHO) +' fm für $N_{max} = 60$')
-    plt.legend(['$\Phi(r)$', '$\Phi_{L=0}(r)$', '$\Phi_{L=2}(r)$'])
-    plt.xlabel('r/aHO')
-    plt.grid(linestyle='--')
-    
-def plots_density_aHO(aHO):
+def plots_density_aHO(aHO, NmaxMax, step):
     x_model = np.linspace(0, 15, 500)
     
     plt.figure()
     
-    # Nmax = 0
-    density_Nmax0= deuteron_wavefunc(0, aHO, x_model)[3]
-    
-    plt.subplot(221)
-    plt.plot(x_model, density_Nmax0)
-    plt.title('Aufenthaltswahrscheinlichkeit bei $a_{HO} = $' + str(aHO) +' fm für $N_{max} = 0$')
-    plt.xlabel('r/aHO')
+    for N in range(0, NmaxMax + 1, step):
+        plt.plot(x_model, deuteron_wavefunc(N, aHO, x_model)[3])
+    plt.xlim(right=10)
+    plt.title('Aufenthaltswahrscheinlichkeit bei $a_{HO} =$' + str(aHO) + ' und verschiedenen $N_{max}$')
+    plt.xlabel('r/aHO ')
+    plt.legend(['$N_{max} = $' + str(N) for N in range(0, NmaxMax + 1, step)])
     plt.grid(linestyle='--')
 
-    # Nmax = 20
-    density_Nmax20 = deuteron_wavefunc(20, aHO, x_model)[3]
-    
-    plt.subplot(222)
-    plt.plot(x_model, density_Nmax20)
-    plt.title('Aufenthaltswahrscheinlichkeit bei $a_{HO} = $' + str(aHO) +' fm für $N_{max} = 20$')
-    plt.xlabel('r/aHO')
-    plt.grid(linestyle='--')
-    
-    # Nmax = 40
-    density_Nmax40 = deuteron_wavefunc(40, aHO, x_model)[3]
-    
-    plt.subplot(223)
-    plt.plot(x_model, density_Nmax40)
-    plt.title('Aufenthaltswahrscheinlichkeit bei $a_{HO} = $' + str(aHO) +' fm für $N_{max} = 40$')
-    plt.xlabel('r/aHO')
-    plt.grid(linestyle='--')
-    
-    # Nmax = 60
-    density_Nmax60 = deuteron_wavefunc(60, aHO, x_model)[3]
-    
-    plt.subplot(224)
-    plt.plot(x_model, density_Nmax60)
-    plt.title('Aufenthaltswahrscheinlichkeit bei $a_{HO} = $' + str(aHO) +' fm für $N_{max} = 60$')
-    plt.xlabel('r/aHO')
-    plt.grid(linestyle='--')
-
-def logplots_density_aHO(aHO):
-    x_model_log = np.linspace(0, 30, 500)
+def logplots_density_aHO(aHO, NmaxMax, step):
+    x_model_log = np.linspace(0, 15, 500)
     
     plt.figure()
     
-    # Nmax = 0
-    density_Nmax0_log = deuteron_wavefunc(0, aHO, x_model_log)[3]
-    
-    plt.subplot(221)
-    plt.semilogy(x_model_log, density_Nmax0_log)
-    plt.title('Aufenthaltswahrscheinlichkeit bei $a_{HO} = $' + str(aHO) +'  für $N_{max} = 0$ mit logarithmischer x-Achse')
+    for N in range(0, NmaxMax + 1, step):
+        plt.semilogy(x_model_log, deuteron_wavefunc(N, aHO, x_model_log)[3])
+    plt.ylim(bottom=10**(-6))
+    plt.title('Aufenthaltswahrscheinlichkeit bei $a_{HO} =$' + str(aHO) + ' und verschiedenen $N_{max}$ mit logarithmischer x-Achse')
     plt.xlabel('r/aHO ')
+    plt.legend(['$N_{max} = $' + str(N) for N in range(0, NmaxMax + 1, step)])
     plt.grid(linestyle='--')
 
-    # Nmax = 20
-    density_Nmax20_log = deuteron_wavefunc(20, aHO, x_model_log)[3]
     
-    plt.subplot(222)
-    plt.semilogy(x_model_log, density_Nmax20_log)
-    plt.title('Aufenthaltswahrscheinlichkeit bei $a_{HO} = $' + str(aHO) +'  für $N_{max} = 20$ mit logarithmischer x-Achse')
-    plt.xlabel('r/aHO ')
-    plt.grid(linestyle='--')
-    
-    # Nmax = 40
-    density_Nmax40_log = deuteron_wavefunc(40, aHO, x_model_log)[3]
-    
-    plt.subplot(223)
-    plt.semilogy(x_model_log, density_Nmax40_log)
-    plt.title('Aufenthaltswahrscheinlichkeit bei $a_{HO} = $' + str(aHO) +'  für $N_{max} = 40$ mit logarithmischer x-Achse')
-    plt.xlabel('r/aHO ')
-    plt.grid(linestyle='--')
-    
-    # Nmax = 60
-    density_Nmax60_log = deuteron_wavefunc(60, aHO, x_model_log)[3]
-    
-    plt.subplot(224)
-    plt.semilogy(x_model_log, density_Nmax60_log)
-    plt.title('Aufenthaltswahrscheinlichkeit bei $a_{HO} = $' + str(aHO) +'  für $N_{max} = 60$ mit logarithmischer x-Achse')
-    plt.xlabel('r/aHO ')
-    plt.grid(linestyle='--')
     
 
 
-# plots_wavefunc_aHO(1.2)
-# plots_wavefunc_aHO(1.4)
-# plots_wavefunc_aHO(1.6)
-# plots_wavefunc_aHO(1.8)
-# plots_wavefunc_aHO(2.0)
+plots_wavefunc_aHO(1.2, 60, 10)
+plots_wavefunc_aHO(1.4, 60, 10)
+plots_wavefunc_aHO(1.6, 60, 10)
+plots_wavefunc_aHO(1.8, 60, 10)
+plots_wavefunc_aHO(2.0, 60, 10)
 
-plots_density_aHO(1.2)
-plots_density_aHO(1.4)
-plots_density_aHO(1.6)
-plots_density_aHO(1.8)
-plots_density_aHO(2.0)
+# plots_density_aHO(1.2, 60, 10)
+# plots_density_aHO(1.4, 60, 10)
+# plots_density_aHO(1.6, 60, 10)
+# plots_density_aHO(1.8, 60, 10)
+# plots_density_aHO(2.0, 60, 10)
 
-logplots_density_aHO(1.2)
-logplots_density_aHO(1.4)
-logplots_density_aHO(1.6)
-logplots_density_aHO(1.8)
-logplots_density_aHO(2.0)
+# logplots_density_aHO(1.2, 60, 10)
+# logplots_density_aHO(1.4, 60, 10)
+# logplots_density_aHO(1.6, 60, 10)
+# logplots_density_aHO(1.8, 60, 10)
+# logplots_density_aHO(2.0, 60, 10)
 
 plt.show()
