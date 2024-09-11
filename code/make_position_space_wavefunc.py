@@ -36,13 +36,14 @@ def gs_eigvec(Nmax, aHO):
 
 
 def pos_wavefunc(N, L, aHO, r):
-    r = r/aHO
-    return  np.exp(-0.5 * r**2) * r**L * eval_genlaguerre(N, L + 0.5, r**2) / (aHO * np.sqrt(aHO))
+    aHOrel = np.sqrt(2) * aHO
+    r = r/aHOrel
+    return  np.exp(-0.5 * r**2) * r**L * eval_genlaguerre(N, L + 0.5, r**2) / (aHOrel * np.sqrt(aHOrel))
 
 
 def pos_wavefunc_norm(N, L):
-    # return np.sqrt(2) * np.exp(0.5 * (gammaln(N + 1) - gammaln(N + L + 1.5)))
-    return np.sqrt(2 * gamma(N+1) / gamma(N + L + 1.5))
+    return np.sqrt(2) * np.exp(0.5 * (gammaln(N + 1) - gammaln(N + L + 1.5)))
+    # return np.sqrt(2 * gamma(N+1) / gamma(N + L + 1.5))
 
 
 def deuteron_wavefunc(Nmax, aHO, r):
