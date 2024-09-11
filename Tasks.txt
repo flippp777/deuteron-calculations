@@ -12,7 +12,7 @@
 
  - Normierung überprüfen.																Normierung passt nicht
 
- - Für ein aHO mehrere Aufehnthaltswahrscheinlichkeiten für mehrere Nmax in 
+ - Für ein aHO mehrere Aufehnthaltswahrscheinlichkeiten für mehrere Nmax in 			Erledigt
 	einen Plot. Auch mit logarithmischer y-Achse.
 
 
@@ -22,5 +22,5 @@
 
  - Warum passt die Normierung nicht?
 
- - Für ein aHO mehrere Aufehnthaltswahrscheinlichkeiten für mehrere Nmax in 
+ - Für ein aHO mehrere Aufehnthaltswahrscheinlichkeiten für mehrere Nmax in 			Erledigt
 	einen Plot. Auch mit logarithmischer y-Achse. (log y-Achse nur bis 10^-6)
