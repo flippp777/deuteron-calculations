@@ -74,10 +74,10 @@ def logplots_density_aHO(aHO, NmaxMax, step):
 
 
 plots_wavefunc_aHO(1.2, 60, 10)
-plots_wavefunc_aHO(1.4, 60, 10)
-plots_wavefunc_aHO(1.6, 60, 10)
-plots_wavefunc_aHO(1.8, 60, 10)
-plots_wavefunc_aHO(2.0, 60, 10)
+# plots_wavefunc_aHO(1.4, 60, 10)
+# plots_wavefunc_aHO(1.6, 60, 10)
+# plots_wavefunc_aHO(1.8, 60, 10)
+# plots_wavefunc_aHO(2.0, 60, 10)
 
 # plots_density_aHO(1.2, 60, 10)
 # plots_density_aHO(1.4, 60, 10)
