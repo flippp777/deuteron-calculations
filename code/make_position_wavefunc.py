@@ -60,7 +60,8 @@ def deuteron_wavefunc(Nmax, aHO, r):
     
     return [deut_wavefunc, deut_wavefunc_L0, deut_wavefunc_L2, deut_density]
 
-    
+# Alternative way to calculate the the wavefunction at different r with one r at a time. 
+# It is the same as before 
 def deuteron_wavefunc_single_r(Nmax, aHO, r):
     gs_vec = gs_eigvec(Nmax, aHO)
         
@@ -76,19 +77,3 @@ def deuteron_wavefunc_single_r(Nmax, aHO, r):
     deut_wavefuncs = np.delete(deut_wavefuncs, (0,1), axis=0)
 
     return deut_wavefuncs 
-
-r_model = np.linspace(0,10,500)
-
-plt.figure()
-plt.subplot(223)
-plt.plot(r_model, deuteron_wavefunc(40, 1.4, r_model)[1])
-plt.plot(r_model, deuteron_wavefunc_single_r(40, 1.4, r_model)[:,0])
-plt.legend(['Normal', 'Single r'])
-
-plt.subplot(221)
-plt.plot(r_model, deuteron_wavefunc(40, 1.4, r_model)[1])
-
-plt.subplot(222)
-plt.plot(r_model, deuteron_wavefunc_single_r(40, 1.4, r_model)[:,0])
-
-# plt.show()
