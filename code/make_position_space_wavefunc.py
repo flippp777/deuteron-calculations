@@ -45,10 +45,10 @@ def pos_wavefunc_norm(N, L):
     return np.sqrt(2) * np.exp(0.5 * (gammaln(N + 1) - gammaln(N + L + 1.5)))
     # return np.sqrt(2 * gamma(N+1) / gamma(N + L + 1.5))
 
-plt.figure()
-for i in range(40,50):
-    plt.plot(pos_wavefunc(i,0, 1.8, np.linspace(0, 10, 100)) * pos_wavefunc_norm(i, 0))
-plt.legend([i for i in range(10)])
+# plt.figure()
+# for i in range(40,50):
+#     plt.plot(pos_wavefunc(i,0, 1.8, np.linspace(0, 10, 100)) * pos_wavefunc_norm(i, 0))
+# plt.legend([i for i in range(10)])
 
 def deuteron_wavefunc(Nmax, aHO, r):
     # print('Nmax = ' + str(Nmax))
@@ -63,16 +63,16 @@ def deuteron_wavefunc(Nmax, aHO, r):
         deut_wavefunc_L2 = gs_vec[1 + Nmax] * pos_wavefunc(Nmax, 2, aHO, r) * pos_wavefunc_norm(Nmax, 2)
         # print('Nmax == 0 case, L=2: Nmax + 1 = ' + str(Nmax +1))
     else:
-        plt.figure()
+        # plt.figure()
         for N in range(Nmax + 1):
             deut_wavefunc_L0 += gs_vec[N] * pos_wavefunc(N, 0, aHO, r) * pos_wavefunc_norm(N, 0)
             # print('L = 0, N = ' + str(N))
-            plt.plot(r, deut_wavefunc_L0)
+            # plt.plot(r, deut_wavefunc_L0)
         for N in range(Nmax + 1):
             deut_wavefunc_L2 += gs_vec[N + Nmax + 1] * pos_wavefunc(N, 2, aHO, r) * pos_wavefunc_norm(N, 2)
             # print('L = 2, N = ' + str(N))
             # print('L = 2, N + Nmax + 1= ' + str(N + Nmax + 1))
-        plt.legend([i for i in range(Nmax+1)])
+        # plt.legend([i for i in range(Nmax+1)])
         
     deut_wavefunc = deut_wavefunc_L0 + deut_wavefunc_L2
     deut_density = deut_wavefunc_L0**2 + deut_wavefunc_L2**2
