@@ -48,24 +48,29 @@ def pos_wavefunc_norm(N, L):
 
 def deuteron_wavefunc(Nmax, aHO, r):
     # print('Nmax = ' + str(Nmax))
+    
     gs_vec = gs_eigvec(Nmax, aHO)
     # print('dim(gs_eigvec) = ' + str(gs_vec.shape))
+
     deut_wavefunc_L0 = 0
     deut_wavefunc_L2 = 0
     
     if Nmax == 0:
         deut_wavefunc_L0 = gs_vec[Nmax] * pos_wavefunc(Nmax, 0, aHO, r) * pos_wavefunc_norm(Nmax, 0)
         # print('Nmax == 0 case, L=0: Nmax = ' + str(Nmax))
+
         deut_wavefunc_L2 = gs_vec[1 + Nmax] * pos_wavefunc(Nmax, 2, aHO, r) * pos_wavefunc_norm(Nmax, 2)
         # print('Nmax == 0 case, L=2: Nmax + 1 = ' + str(Nmax +1))
+
     else:
         for N in range(Nmax + 1):
             deut_wavefunc_L0 += gs_vec[N] * pos_wavefunc(N, 0, aHO, r) * pos_wavefunc_norm(N, 0)
             # print('L = 0, N = ' + str(N))
+
         for N in range(Nmax + 1):
             deut_wavefunc_L2 += gs_vec[N + Nmax + 1] * pos_wavefunc(N, 2, aHO, r) * pos_wavefunc_norm(N, 2)
             # print('L = 2, N = ' + str(N))
-            # print('L = 2, N + Nmax + 1= ' + str(N + Nmax + 1))
+            # print('L = 2, N + Nmax + 1 = ' + str(N + Nmax + 1))
         
     deut_wavefunc = deut_wavefunc_L0 + deut_wavefunc_L2
     deut_density = deut_wavefunc_L0**2 + deut_wavefunc_L2**2
@@ -91,4 +96,4 @@ def deuteron_wavefunc_single_r(Nmax, aHO, r):
     return deut_wavefuncs 
 
 # print(deuteron_wavefunc(0, 1.8, np.array([0,1])))
-# print(deuteron_wavefunc(9, 1.8, np.linspace(0,10, 100)))
+# deuteron_wavefunc(20, 1.8, np.linspace(0,10, 100))
