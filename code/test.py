@@ -1,6 +1,8 @@
 import numpy as np
-from scipy.special import genlaguerre
 
-arr = np.array([[1,1,1], [2,2,2], [3,3,3]])
+sum = 0
 
-print(arr[1:3])
+sum += np.array([[1,1], [1,1]])
+
+sum += np.array([[2,2],[2,2]])
+print(sum)
