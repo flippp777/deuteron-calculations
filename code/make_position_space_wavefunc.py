@@ -31,7 +31,7 @@ def gs_eigvec(Nmax, aHO):
         
     h_eigvals, h_eigvecs = np.linalg.eig(mat(chi, Nmax) + mat(trel_Nmax150, Nmax) * 1/aHO**2)
     gs_index = np.where(h_eigvals == min(h_eigvals))[0][0]
-    
+
     return h_eigvecs[:, gs_index]
 
 
@@ -92,3 +92,5 @@ def deuteron_wavefunc_single_r(Nmax, aHO, r):
 
 # print(deuteron_wavefunc(0, 1.8, np.array([0,1])))
 # print(deuteron_wavefunc(9, 1.8, np.array([0,1])))
+# for i in range(0, 91, 10):
+    # print(np.dot(gs_eigvec(i, 1.2), gs_eigvec(i, 1.2)))
