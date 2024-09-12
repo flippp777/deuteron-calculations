@@ -71,6 +71,7 @@ def integral_approx(r, wavefunc_L0, wavefunc_L2, plot=False):
         plt.legend(['Density', 'Lower bound', 'Upper bound'])
     return [L * 2, U * 2]
 
+
 # Normelization approximation for the comparison wave functions
 # print('aHO = 1.2')
 # for i in range(18):
@@ -82,9 +83,6 @@ def integral_approx(r, wavefunc_L0, wavefunc_L2, plot=False):
 # for i in range(18):
 #     print(integral_approx(r, wavefuncs_aHO18_comp[i, 1], wavefuncs_aHO18_comp[i,2]))
 
-label = [[f'Nmax = {i}' for i in range(5,91,5)]]
-label.append([f'Nmax = {i} (Vgl)' for i in range(5,91,5)])
-label = np.array(label).transpose().flatten()
 
 # plt.figure()
 # for i in range(18):
@@ -94,13 +92,13 @@ label = np.array(label).transpose().flatten()
 #     plt.title(f'aHO = 1.2 fm, L = 0, Nmax = {i*5+5}')
 #     plt.legend(['Comparison', 'Calculated'])
 
-# plt.figure()
-# for i in range(18):
-#     plt.subplot(3,6,i+1)
-#     plt.plot(r, np.abs(wavefuncs_aHO12[i,1]))
-#     plt.plot(r, np.abs(wavefuncs_aHO12_comp[i,2]))
-#     plt.title(f'aHO = 1.2 fm, L = 2, Nmax = {i*5+5}')
-#     plt.legend(['Calculated', 'Comparison'])
+plt.figure()
+for i in range(18):
+    plt.subplot(3,6,i+1)
+    plt.plot(r, np.abs(wavefuncs_aHO12[i,1]))
+    plt.plot(r, np.abs(wavefuncs_aHO12_comp[i,2]))
+    plt.title(f'aHO = 1.2 fm, L = 2, Nmax = {i*5+5}')
+    plt.legend(['Calculated', 'Comparison'])
 
 # plt.figure()
 # for i in range(18):
