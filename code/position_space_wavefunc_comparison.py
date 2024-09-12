@@ -3,20 +3,20 @@ from matplotlib import pyplot as plt
 from make_position_space_wavefunc import deuteron_wavefunc
 
 
-wavefuncs_aHO12_comp = [np.loadtxt('comparative_wave_functions/chi2b_srg0000_NMax05_aHO01.20_JLLST10210.txt', skiprows=12, delimiter=',')]
+wavefuncs_aHO12_comp = [np.loadtxt('comparative_wave_functions/H2_chi2bM3A_srg0000_NMax/chi2bM3A_srg0000_NMax05_aHO01.20_JLLST10210.txt', skiprows=12, delimiter=',')]
 for Nmax in range(10,91,5):
     wavefuncs_aHO12_comp = np.append(wavefuncs_aHO12_comp, 
-                                [np.loadtxt(f'comparative_wave_functions/chi2b_srg0000_NMax{Nmax}_aHO01.20_JLLST10210.txt', skiprows=12, delimiter=',')], axis=0)
+                                [np.loadtxt(f'comparative_wave_functions/H2_chi2bM3A_srg0000_NMax/chi2bM3A_srg0000_NMax{Nmax}_aHO01.20_JLLST10210.txt', skiprows=12, delimiter=',')], axis=0)
 
-wavefuncs_aHO14_comp = np.array([np.loadtxt('comparative_wave_functions/chi2b_srg0000_NMax05_aHO01.40_JLLST10210.txt', skiprows=12, delimiter=',')])
+wavefuncs_aHO14_comp = np.array([np.loadtxt('comparative_wave_functions/H2_chi2bM3A_srg0000_NMax/chi2bM3A_srg0000_NMax05_aHO01.40_JLLST10210.txt', skiprows=12, delimiter=',')])
 for Nmax in range(10,91,5):
     wavefuncs_aHO14_comp = np.append(wavefuncs_aHO14_comp, 
-                                [np.loadtxt(f'comparative_wave_functions/chi2b_srg0000_NMax{Nmax}_aHO01.40_JLLST10210.txt', skiprows=12, delimiter=',')], axis=0)
+                                [np.loadtxt(f'comparative_wave_functions/H2_chi2bM3A_srg0000_NMax/chi2bM3A_srg0000_NMax{Nmax}_aHO01.40_JLLST10210.txt', skiprows=12, delimiter=',')], axis=0)
 
-wavefuncs_aHO18_comp= np.array([np.loadtxt('comparative_wave_functions/chi2b_srg0000_NMax05_aHO01.80_JLLST10210.txt', skiprows=12, delimiter=',')])
+wavefuncs_aHO18_comp= np.array([np.loadtxt('comparative_wave_functions/H2_chi2bM3A_srg0000_NMax/chi2bM3A_srg0000_NMax05_aHO01.80_JLLST10210.txt', skiprows=12, delimiter=',')])
 for Nmax in range(10,91,5):
     wavefuncs_aHO18_comp = np.append(wavefuncs_aHO18_comp, 
-                                [np.loadtxt(f'comparative_wave_functions/chi2b_srg0000_NMax{Nmax}_aHO01.80_JLLST10210.txt', skiprows=12, delimiter=',')], axis=0)
+                                [np.loadtxt(f'comparative_wave_functions/H2_chi2bM3A_srg0000_NMax/chi2bM3A_srg0000_NMax{Nmax}_aHO01.80_JLLST10210.txt', skiprows=12, delimiter=',')], axis=0)
 
 r = wavefuncs_aHO12_comp[0,0]
 
@@ -26,12 +26,12 @@ for Nmax in range(10, 91, 5):
 
 # print(np.abs(wavefuncs_aHO12_comp[1,1]))
 # print(np.abs(wavefuncs_aHO12[1,0]))
-# plt.figure()
-# plt.title('L = 0, /')
-# plt.plot(r, np.abs(wavefuncs_aHO12[1,0]/wavefuncs_aHO12_comp[1,1]))
-# plt.figure()
-# plt.title('L = 0, -')
-# plt.plot(r, np.abs(wavefuncs_aHO12[1,0]+wavefuncs_aHO12_comp[1,1]))
+plt.figure()
+plt.title('L = 0, /')
+plt.plot(r, np.abs(wavefuncs_aHO12[1,0]/wavefuncs_aHO12_comp[1,1]))
+plt.figure()
+plt.title('L = 0, -')
+plt.plot(r, np.abs(wavefuncs_aHO12[1,0]+wavefuncs_aHO12_comp[1,1]))
 # plt.figure()
 # plt.title('L = 2, /')
 # plt.plot(r, np.abs(wavefuncs_aHO12[1,1]/wavefuncs_aHO12_comp[1,2]))
@@ -56,19 +56,19 @@ label = np.array(label).transpose().flatten()
 
 plt.figure()
 for i in range(18):
-    # plt.subplot(3,6,i+1)
-    plt.plot(r, np.abs(wavefuncs_aHO12[i,0]))
+    plt.subplot(3,6,i+1)
     plt.plot(r, np.abs(wavefuncs_aHO12_comp[i,1]))
-    # plt.title(f'aHO = 1.2 fm, L = 0, Nmax = {i*5+5}')
-    # plt.legend(['Calculated', 'Comparison'])
+    plt.plot(r, np.abs(wavefuncs_aHO12[i,0]))
+    plt.title(f'aHO = 1.2 fm, L = 0, Nmax = {i*5+5}')
+    plt.legend(['Comparison', 'Calculated'])
 
 plt.figure()
 for i in range(18):
-    # plt.subplot(3,6,i+1)
+    plt.subplot(3,6,i+1)
     plt.plot(r, np.abs(wavefuncs_aHO12[i,1]))
     plt.plot(r, np.abs(wavefuncs_aHO12_comp[i,2]))
-    # plt.title(f'aHO = 1.2 fm, L = 2, Nmax = {i*5+5}')
-    # plt.legend(['Calculated', 'Comparison'])
+    plt.title(f'aHO = 1.2 fm, L = 2, Nmax = {i*5+5}')
+    plt.legend(['Calculated', 'Comparison'])
 
 # plt.figure()
 # for i in range(18):
