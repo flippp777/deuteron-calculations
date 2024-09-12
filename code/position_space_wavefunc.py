@@ -3,10 +3,10 @@ from matplotlib import pyplot as plt
 from make_position_space_wavefunc import deuteron_wavefunc
 from scipy import integrate
 
-print(integrate.quad(lambda x: deuteron_wavefunc(4, 1.4, x)[3], 0, np.inf))
-print(integrate.quad(lambda x: deuteron_wavefunc(15, 1.4, x)[3], 0, np.inf))
-print(integrate.quad(lambda x: deuteron_wavefunc(30, 1.4, x)[3], 0, np.inf))
-print(integrate.quad(lambda x: deuteron_wavefunc(40, 1.4, x)[3], 0, np.inf))
+# print(integrate.quad(lambda x: deuteron_wavefunc(4, 1.4, x)[3], -np.inf, np.inf))
+# print(integrate.quad(lambda x: deuteron_wavefunc(15, 1.4, x)[3], -np.inf, np.inf))
+# print(integrate.quad(lambda x: deuteron_wavefunc(30, 1.4, x)[3], -np.inf, np.inf))
+# print(integrate.quad(lambda x: deuteron_wavefunc(40, 1.4, x)[3], -np.inf, np.inf))
 
 
 def plot_wavefunc_Nmax(Nmax, aHO):
@@ -26,7 +26,7 @@ def plot_wavefunc_Nmax(Nmax, aHO):
     plt.xlabel('r (fm)')
     plt.grid(linestyle='--')
 
-def plots_wavefunc_aHO(aHO, NmaxMax, step):
+def plots_wavefunc_Nmax(aHO, NmaxMax, step):
     x_model = np.linspace(0, 15, 500)
     
     plt.figure()
@@ -43,7 +43,7 @@ def plots_wavefunc_aHO(aHO, NmaxMax, step):
     plt.legend(np.array([['$\Phi_{L=0}(r)$, $N_{max} = $' + str(N) for N in range(0, NmaxMax + 1, step)], ['$\Phi_{L=2}(r)$, $N_{max} = $' + str(N) for N in range(0, NmaxMax + 1, step)]]).flatten())
     plt.grid(linestyle='--')
     
-def plots_density_aHO(aHO, NmaxMax, step):
+def plots_density_Nmax(aHO, NmaxMax, step):
     x_model = np.linspace(0, 15, 500)
     
     plt.figure()
@@ -56,7 +56,7 @@ def plots_density_aHO(aHO, NmaxMax, step):
     plt.legend(['$N_{max} = $' + str(N) for N in range(0, NmaxMax + 1, step)])
     plt.grid(linestyle='--')
 
-def logplots_density_aHO(aHO, NmaxMax, step):
+def logplots_density_Nmax(aHO, NmaxMax, step):
     x_model_log = np.linspace(0, 15, 500)
     
     plt.figure()
@@ -73,22 +73,22 @@ def logplots_density_aHO(aHO, NmaxMax, step):
     
 
 
-# plots_wavefunc_aHO(1.2, 60, 10)
-# plots_wavefunc_aHO(1.4, 60, 10)
-# plots_wavefunc_aHO(1.6, 60, 10)
-# plots_wavefunc_aHO(1.8, 60, 10)
-# plots_wavefunc_aHO(2.0, 60, 10)
+plots_wavefunc_Nmax(1.2, 60, 10)
+# plots_wavefunc_Nmax(1.4, 60, 10)
+# plots_wavefunc_Nmax(1.6, 60, 10)
+# plots_wavefunc_Nmax(1.8, 60, 10)
+# plots_wavefunc_Nmax(2.0, 60, 10)
 
-# plots_density_aHO(1.2, 60, 10)
-# plots_density_aHO(1.4, 60, 10)
-# plots_density_aHO(1.6, 60, 10)
-# plots_density_aHO(1.8, 60, 10)
-# plots_density_aHO(2.0, 60, 10)
+# plots_density_Nmax(1.2, 60, 10)
+# plots_density_Nmax(1.4, 60, 10)
+# plots_density_Nmax(1.6, 60, 10)
+# plots_density_Nmax(1.8, 60, 10)
+# plots_density_Nmax(2.0, 60, 10)
 
-# logplots_density_aHO(1.2, 60, 10)
-# logplots_density_aHO(1.4, 60, 10)
-# logplots_density_aHO(1.6, 60, 10)
-# logplots_density_aHO(1.8, 60, 10)
-# logplots_density_aHO(2.0, 60, 10)
+# logplots_density_Nmax(1.2, 60, 10)
+# logplots_density_Nmax(1.4, 60, 10)
+# logplots_density_Nmax(1.6, 60, 10)
+# logplots_density_Nmax(1.8, 60, 10)
+# logplots_density_Nmax(2.0, 60, 10)
 
 plt.show()
