@@ -3,10 +3,15 @@ from matplotlib import pyplot as plt
 from make_position_space_wavefunc import deuteron_wavefunc
 from scipy import integrate
 
-# print(integrate.quad(lambda x: deuteron_wavefunc(4, 1.4, x)[3], -np.inf, np.inf))
-# print(integrate.quad(lambda x: deuteron_wavefunc(15, 1.4, x)[3], -np.inf, np.inf))
-# print(integrate.quad(lambda x: deuteron_wavefunc(30, 1.4, x)[3], -np.inf, np.inf))
-# print(integrate.quad(lambda x: deuteron_wavefunc(40, 1.4, x)[3], -np.inf, np.inf))
+print('density integral aHO = 1.2')
+for i in range(0,60,10):
+    print(integrate.quad(lambda x: 2*deuteron_wavefunc(i, 1.2, x)[3], 0, np.inf))
+print('density integral aHO = 1.4')
+for i in range(0,60,10):
+    print(integrate.quad(lambda x: 2*deuteron_wavefunc(i, 1.4, x)[3], 0, np.inf))
+print('density integral aHO = 1.8')
+for i in range(0,60,10):
+    print(integrate.quad(lambda x: 2*deuteron_wavefunc(i, 1.8, x)[3], 0, np.inf))
 
 
 def plot_wavefunc_Nmax(Nmax, aHO):
