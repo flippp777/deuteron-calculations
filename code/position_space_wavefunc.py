@@ -3,10 +3,10 @@ from matplotlib import pyplot as plt
 from make_position_space_wavefunc import deuteron_wavefunc
 from scipy import integrate
 
-# print(integrate.quad(lambda x: deuteron_wavefunc(4, 1.4, x)[3], 0, np.inf))
-# print(integrate.quad(lambda x: deuteron_wavefunc(15, 1.4, x)[3], 0, np.inf))
-# print(integrate.quad(lambda x: deuteron_wavefunc(30, 1.4, x)[3], 0, np.inf))
-# print(integrate.quad(lambda x: deuteron_wavefunc(40, 1.4, x)[3], 0, np.inf))
+print(integrate.quad(lambda x: deuteron_wavefunc(4, 1.4, x)[3], 0, np.inf))
+print(integrate.quad(lambda x: deuteron_wavefunc(15, 1.4, x)[3], 0, np.inf))
+print(integrate.quad(lambda x: deuteron_wavefunc(30, 1.4, x)[3], 0, np.inf))
+print(integrate.quad(lambda x: deuteron_wavefunc(40, 1.4, x)[3], 0, np.inf))
 
 
 def plot_wavefunc_Nmax(Nmax, aHO):
@@ -73,7 +73,7 @@ def logplots_density_aHO(aHO, NmaxMax, step):
     
 
 
-plots_wavefunc_aHO(1.2, 60, 10)
+# plots_wavefunc_aHO(1.2, 60, 10)
 # plots_wavefunc_aHO(1.4, 60, 10)
 # plots_wavefunc_aHO(1.6, 60, 10)
 # plots_wavefunc_aHO(1.8, 60, 10)
