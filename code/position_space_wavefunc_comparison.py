@@ -84,13 +84,13 @@ def integral_approx(r, wavefunc_L0, wavefunc_L2, plot=False):
 #     print(integral_approx(r, wavefuncs_aHO18_comp[i, 1], wavefuncs_aHO18_comp[i,2]))
 
 
-# plt.figure()
-# for i in range(18):
-#     plt.subplot(3,6,i+1)
-#     plt.plot(r, np.abs(wavefuncs_aHO12_comp[i,1]))
-#     plt.plot(r, np.abs(wavefuncs_aHO12[i,0]))
-#     plt.title(f'aHO = 1.2 fm, L = 0, Nmax = {i*5+5}')
-#     plt.legend(['Comparison', 'Calculated'])
+plt.figure()
+for i in range(18):
+    plt.subplot(3,6,i+1)
+    plt.plot(r, np.abs(wavefuncs_aHO12_comp[i,1]))
+    plt.plot(r, np.abs(wavefuncs_aHO12[i,0]))
+    plt.title(f'aHO = 1.2 fm, L = 0, Nmax = {i*5+5}')
+    plt.legend(['Comparison', 'Calculated'])
 
 plt.figure()
 for i in range(18):
