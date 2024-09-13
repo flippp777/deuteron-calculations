@@ -203,6 +203,6 @@ def logplots_density_aHO():
 
 # plots_wavefunc_aHO()
 # plots_density_aHO()
-logplots_density_aHO()
+# logplots_density_aHO()
 
 plt.show()
