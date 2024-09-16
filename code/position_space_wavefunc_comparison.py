@@ -100,37 +100,37 @@ for i in range(18):
     plt.title(f'aHO = 1.2 fm, L = 2, Nmax = {i*5+5}')
     plt.legend(['Calculated', 'Comparison'])
 
-# plt.figure()
-# for i in range(18):
-#     plt.subplot(3,6,i+1)
-#     plt.plot(r, np.abs(wavefuncs_aHO14[i,0]))
-#     plt.plot(r, np.abs(wavefuncs_aHO14_comp[i,1]))
-#     plt.title(f'aHO = 1.4 fm, L = 0, Nmax = {i*5+5}')
-#     plt.legend(['Calculated', 'Comparison'])
+plt.figure()
+for i in range(18):
+    plt.subplot(3,6,i+1)
+    plt.plot(r, np.abs(wavefuncs_aHO14[i,0]))
+    plt.plot(r, np.abs(wavefuncs_aHO14_comp[i,1]))
+    plt.title(f'aHO = 1.4 fm, L = 0, Nmax = {i*5+5}')
+    plt.legend(['Calculated', 'Comparison'])
 
-# plt.figure()
-# for i in range(18):
-#     plt.subplot(3,6,i+1)
-#     plt.plot(r, np.abs(wavefuncs_aHO14[i,1]))
-#     plt.plot(r, np.abs(wavefuncs_aHO14_comp[i,2]))
-#     plt.title(f'aHO = 1.4 fm, L = 2, Nmax = {i*5+5}')
-#     plt.legend(['Calculated', 'Comparison'])
+plt.figure()
+for i in range(18):
+    plt.subplot(3,6,i+1)
+    plt.plot(r, np.abs(wavefuncs_aHO14[i,1]))
+    plt.plot(r, np.abs(wavefuncs_aHO14_comp[i,2]))
+    plt.title(f'aHO = 1.4 fm, L = 2, Nmax = {i*5+5}')
+    plt.legend(['Calculated', 'Comparison'])
 
-# plt.figure()
-# for i in range(18):
-#     plt.subplot(3,6,i+1)
-#     plt.plot(r, np.abs(wavefuncs_aHO18[i,0]))
-#     plt.plot(r, np.abs(wavefuncs_aHO18_comp[i,1]))
-#     plt.title(f'aHO = 1.8 fm, L = 0, Nmax = {i*5+5}')
-#     plt.legend(['Calculated', 'Comparison'])
+plt.figure()
+for i in range(18):
+    plt.subplot(3,6,i+1)
+    plt.plot(r, np.abs(wavefuncs_aHO18[i,0]))
+    plt.plot(r, np.abs(wavefuncs_aHO18_comp[i,1]))
+    plt.title(f'aHO = 1.8 fm, L = 0, Nmax = {i*5+5}')
+    plt.legend(['Calculated', 'Comparison'])
 
-# plt.figure()
-# for i in range(18):
-#     plt.subplot(3,6,i+1)
-#     plt.plot(r, np.abs(wavefuncs_aHO18[i,1]))
-#     plt.plot(r, np.abs(wavefuncs_aHO18_comp[i,2]))
-#     plt.title(f'aHO = 1.8 fm, L = 2, Nmax = {i*5+5}')
-#     plt.legend(['Calculated', 'Comparison'])
+plt.figure()
+for i in range(18):
+    plt.subplot(3,6,i+1)
+    plt.plot(r, np.abs(wavefuncs_aHO18[i,1]))
+    plt.plot(r, np.abs(wavefuncs_aHO18_comp[i,2]))
+    plt.title(f'aHO = 1.8 fm, L = 2, Nmax = {i*5+5}')
+    plt.legend(['Calculated', 'Comparison'])
 
 
 
