@@ -2,29 +2,23 @@ import numpy as np
 from matplotlib import pyplot as plt
 from make_position_space_wavefunc import deuteron_wavefunc
 from scipy import integrate
-import time
 
-start1 = time.time()
-print('density integral aHO = 1.2')
-for i in range(0,60,10):
-    print(integrate.quad(lambda x: 2*deuteron_wavefunc(i, 1.2, x)[3], 0, np.inf))
-stop1_start2 = time.time()
-print('density integral aHO = 1.4')
-for i in range(0,60,10):
-    print(integrate.quad(lambda x: deuteron_wavefunc(i, 1.4, x)[3], -np.inf, np.inf))
-stop2 = time.time()
-print('density integral aHO = 1.6')
-for i in range(0,60,10):
-    print(integrate.quad(lambda x: 2*deuteron_wavefunc(i, 1.6, x)[3], 0, np.inf))
-print('density integral aHO = 1.8')
-for i in range(0,60,10):
-    print(integrate.quad(lambda x: 2*deuteron_wavefunc(i, 1.8, x)[3], 0, np.inf))
-print('density integral aHO = 2.0')
-for i in range(0,60,10):
-    print(integrate.quad(lambda x: 2*deuteron_wavefunc(i, 2.0, x)[3], 0, np.inf))
+# print('density integral aHO = 1.2')
+# for i in range(0,60,10):
+#     print(integrate.quad(lambda x: 2*deuteron_wavefunc(i, 1.2, x)[3], 0, np.inf))
+# print('density integral aHO = 1.4')
+# for i in range(0,60,10):
+#     print(integrate.quad(lambda x: 2*deuteron_wavefunc(i, 1.4, x)[3], 0, np.inf))
+# print('density integral aHO = 1.6')
+# for i in range(0,60,10):
+#     print(integrate.quad(lambda x: 2*deuteron_wavefunc(i, 1.6, x)[3], 0, np.inf))
+# print('density integral aHO = 1.8')
+# for i in range(0,60,10):
+#     print(integrate.quad(lambda x: 2*deuteron_wavefunc(i, 1.8, x)[3], 0, np.inf))
+# print('density integral aHO = 2.0')
+# for i in range(0,60,10):
+#     print(integrate.quad(lambda x: 2*deuteron_wavefunc(i, 2.0, x)[3], 0, np.inf))
 
-print(stop1_start2 - start1)
-print(stop2 - stop1_start2)
 
 def plot_wavefunc_Nmax(Nmax, aHO):
     x_model = np.linspace(0, 15, 500)
