@@ -100,7 +100,6 @@ rrms_operator = np.array(Parallel(n_jobs=-1)(delayed(rrms_aHO)(j, 1) for j in ra
 Rrms = 1.9635 
 rrms_wavefunc = np.array(Parallel(n_jobs=-1)(delayed(rrms_integral_trapz)(60, aHO, 1, 100, 0.1) for aHO in aHO_lst))
 
-# aHO = 1.2
 for i in range(aHO_lst.shape[0]):
     plt.figure()
     plt.plot(rrms_operator[i, 0], rrms_operator[i, 1], 'x-')
