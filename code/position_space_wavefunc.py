@@ -3,21 +3,21 @@ from matplotlib import pyplot as plt
 from make_position_space_wavefunc import deuteron_wavefunc
 from scipy import integrate
 
-print('density integral aHO = 1.2')
-for i in range(0,40,10):
-    print(integrate.quad(lambda r: deuteron_wavefunc(i, 1.2, r)[3] * r**2, 0, np.inf))
-print('density integral aHO = 1.4')
-for i in range(0,40,10):
-    print(integrate.quad(lambda r: deuteron_wavefunc(i, 1.4, r)[3] * r**2, 0, np.inf))
-print('density integral aHO = 1.6')
-for i in range(0,40,10):
-    print(integrate.quad(lambda r: deuteron_wavefunc(i, 1.6, r)[3] * r**2, 0, np.inf))
-print('density integral aHO = 1.8')
-for i in range(0,40,10):
-    print(integrate.quad(lambda r: deuteron_wavefunc(i, 1.8, r)[3] * r**2, 0, np.inf))
-print('density integral aHO = 2.0')
-for i in range(0,40,10):
-    print(integrate.quad(lambda r: deuteron_wavefunc(i, 2.0, r)[3] * r**2, 0, np.inf))
+# print('density integral aHO = 1.2')
+# for i in range(0,40,10):
+#     print(integrate.quad(lambda r: deuteron_wavefunc(i, 1.2, r)[3] * r**2, 0, np.inf))
+# print('density integral aHO = 1.4')
+# for i in range(0,40,10):
+#     print(integrate.quad(lambda r: deuteron_wavefunc(i, 1.4, r)[3] * r**2, 0, np.inf))
+# print('density integral aHO = 1.6')
+# for i in range(0,40,10):
+#     print(integrate.quad(lambda r: deuteron_wavefunc(i, 1.6, r)[3] * r**2, 0, np.inf))
+# print('density integral aHO = 1.8')
+# for i in range(0,40,10):
+#     print(integrate.quad(lambda r: deuteron_wavefunc(i, 1.8, r)[3] * r**2, 0, np.inf))
+# print('density integral aHO = 2.0')
+# for i in range(0,40,10):
+#     print(integrate.quad(lambda r: deuteron_wavefunc(i, 2.0, r)[3] * r**2, 0, np.inf))
 
 
 def plot_wavefunc_Nmax(Nmax, aHO):
@@ -95,6 +95,7 @@ def plot_wavefunc_aHO_L2(Nmax, aHO):
     plt.plot(x_model, np.abs(deuteron_wavefunc(Nmax, aHO, x_model)[2]))
     plt.title('Wellenfunktionsanteile für $N_{max} = $' + str(Nmax))
     plt.xlabel('r (fm)')
+
 def plots_wavefunc_aHO():
     plt.figure()
     
@@ -188,6 +189,31 @@ def logplots_density_aHO():
         logplot_denstiy_aHO(30, i)
     plt.legend(['$a_{HO} = $' + str(i) + ' fm' for i in aHO])
 
+def logplots_density_rpow2_Nmax(aHO, NmaxMax, step):
+    x_model_log = np.linspace(0, 30, 1000)
+    
+    plt.figure()
+    
+    for N in range(0, NmaxMax + 1, step):
+        plt.semilogy(x_model_log, deuteron_wavefunc(N, aHO, x_model_log)[3] * x_model_log**2)
+    plt.ylim(bottom=10**(-6), top=1)
+    plt.title('$|\Phi(r)|^2 r^2$ bei $a_{HO} =$' + str(aHO) + ' und verschiedenen $N_{max}$ mit logarithmischer y-Achse')
+    plt.xlabel('r (fm)')
+    plt.legend(['$N_{max} = $' + str(N) for N in range(0, NmaxMax + 1, step)])
+    plt.grid(linestyle='--')
+
+def logplots_density_rpow4_Nmax(aHO, NmaxMax, step):
+    x_model_log = np.linspace(0, 45, 1000)
+    
+    plt.figure()
+    
+    for N in range(0, NmaxMax + 1, step):
+        plt.semilogy(x_model_log, deuteron_wavefunc(N, aHO, x_model_log)[3] * x_model_log**4)
+    plt.ylim(bottom=10**(-6), top=10)
+    plt.title('$|\Phi(r)|^2 r^4$ bei $a_{HO} =$' + str(aHO) + ' und verschiedenen $N_{max}$ mit logarithmischer y-Achse')
+    plt.xlabel('r (fm)')
+    plt.legend(['$N_{max} = $' + str(N) for N in range(0, NmaxMax + 1, step)])
+    plt.grid(linestyle='--')
 
 # plots_wavefunc_Nmax(1.2, 60, 10)
 # plots_wavefunc_Nmax(1.4, 60, 10)
@@ -210,5 +236,17 @@ def logplots_density_aHO():
 # plots_wavefunc_aHO()
 # plots_density_aHO()
 # logplots_density_aHO()
+
+# logplots_density_rpow2_Nmax(1.2, 60, 2)
+# logplots_density_rpow2_Nmax(1.4, 60, 2)
+# logplots_density_rpow2_Nmax(1.6, 60, 2)
+# logplots_density_rpow2_Nmax(1.8, 60, 2)
+# logplots_density_rpow2_Nmax(2.0, 60, 2)
+
+logplots_density_rpow4_Nmax(1.2, 60, 2)
+logplots_density_rpow4_Nmax(1.4, 60, 2)
+logplots_density_rpow4_Nmax(1.6, 60, 2)
+logplots_density_rpow4_Nmax(1.8, 60, 2)
+logplots_density_rpow4_Nmax(2.0, 60, 2)
 
 plt.show()
