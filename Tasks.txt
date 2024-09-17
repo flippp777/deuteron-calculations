@@ -1,26 +1,5 @@
-9. Sep 2024
+17. Sep 2024
 
- - Neue Plots mit besser erkennbarer Rrms konvergenz.									Erledigt
+ - Radien mit Wellenfunction berechnen (Integral über |Psi(r)|^2 * r^2 dr)
 
- - Gucken ob das mit dem Addieren der einzelnen L-Anteile passt							Sollte passen, eh nicht so wichtig 
-	(Stichwort: Betragsquadrat).
-
- - Wellenfunktionen mit denen von Lisa vergleichen.										Stimmen nicht über ein
-
- - Aufenthaltswahrscheinlichkeit korrigieren											Erledigt
-	(Betragsquadrad nicht Quadrat: (a+b)*(a+b) != (a² +b²)).
-
- - Normierung überprüfen.																Normierung passt nicht
-
- - Für ein aHO mehrere Aufehnthaltswahrscheinlichkeiten für mehrere Nmax in 			Erledigt
-	einen Plot. Auch mit logarithmischer y-Achse.
-
-
-10. Sep. 2024
-
- - Warum stimmen die Plots nicht über ein?
-
- - Warum passt die Normierung nicht?
-
- - Für ein aHO mehrere Aufehnthaltswahrscheinlichkeiten für mehrere Nmax in 			Erledigt
-	einen Plot. Auch mit logarithmischer y-Achse. (log y-Achse nur bis 10^-6)
+ - Funktion an exponentiellen tail der Wellenfunktion (Gerade in Darstellung mit logarythmischer x-Achse) für verschiedene Nmax stetig differenzierbar anbinden und Radiusvorgersage treffen.
