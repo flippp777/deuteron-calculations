@@ -89,6 +89,6 @@ def first_plots(NNmax, dNmax, rmax, dr, cut):
         plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
         plt.grid(linestyle='--')
 
-first_plots(60, 2, 100, 0.1, 4)
+first_plots(60, 2, 100, 0.1, 5)
 
 plt.show()
