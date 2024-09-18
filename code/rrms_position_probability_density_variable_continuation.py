@@ -3,9 +3,6 @@ from scipy.optimize import curve_fit
 
 from make_position_space_wavefunc import deuteron_wavefunc
 
-aHO_lst = [1.2, 1.4, 1.6, 1.8, 2.0]
-
-r_model = np.linspace(0, 15, 500)
 
 def deut_density(r, Nmax, aHO):
     return deuteron_wavefunc(Nmax, aHO, r)[3]
@@ -18,7 +15,7 @@ def find_fit_points_and_cut(r, Nmax, aHO, delta_d2_dr2):
     plot_points = []
     for i in range(log_density.size):
         if d2_dr2[i] < delta_d2_dr2 and -delta_d2_dr2 < d2_dr2[i] and d_dr[i] < 0:
-            plot_points.append([r_model[i], log_density[i]])
+            plot_points.append([r[i], log_density[i]])
     
     plot_points = np.array(plot_points)
     cut = (max(plot_points[:, 0]) - min(plot_points[:, 0])) / 2
