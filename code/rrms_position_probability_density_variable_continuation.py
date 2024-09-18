@@ -26,7 +26,7 @@ def log_model(x, a, b):
     return a * x + b
 
 def log_cont_par_and_cut(r, Nmax, aHO, delta_d2_dr2):
-    fit_points, cut = find_fit_points_and_cut(r, Nmax, aHO, delta_d2_dr2)[0]
+    fit_points, cut = find_fit_points_and_cut(r, Nmax, aHO, delta_d2_dr2)
     
     popt = curve_fit(log_model, fit_points[:, 0], fit_points[:, 1])[0]
     
