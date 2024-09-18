@@ -47,7 +47,7 @@ def norm_cont_density(r, Nmax, aHO, delta_d2_dr2):
     
     return norm_factor
 
-def rrms_cont_denstity(r, Nmax, aHO, delta_d2_dr2):
+def rrms_and_cut_cont_denstity(r, Nmax, aHO, delta_d2_dr2):
     popt, cut = log_cont_par_and_cut(r, Nmax, aHO, delta_d2_dr2)
     
     r_wave = r[r <= cut]
@@ -67,4 +67,4 @@ def rrms_cont_denstity(r, Nmax, aHO, delta_d2_dr2):
     
     rrms = np.sqrt(rsq_wave + rsq_cont)
     
-    return rrms
+    return rrms, cut
