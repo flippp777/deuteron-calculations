@@ -1,5 +1,7 @@
 import numpy as np
 from scipy.optimize import curve_fit
+import matplotlib.pyplot as plt
+from concurrent.futures import ThreadPoolExecutor
 
 from make_position_space_wavefunc import deuteron_wavefunc
 
@@ -7,64 +9,141 @@ from make_position_space_wavefunc import deuteron_wavefunc
 def deut_density(r, Nmax, aHO):
     return deuteron_wavefunc(Nmax, aHO, r)[3]
 
-def find_fit_points_and_cut(r, Nmax, aHO, delta_d2_dr2):
+def find_fit_log_points_and_cut(r, Nmax, aHO, delta_d2_dr2):
     log_density = np.log(deut_density(r, Nmax, aHO))
     d_dr = np.gradient(log_density)
     d2_dr2 = np.gradient(d_dr)
 
-    plot_points = []
+    log_points = []
     for i in range(log_density.size):
         if d2_dr2[i] < delta_d2_dr2 and -delta_d2_dr2 < d2_dr2[i] and d_dr[i] < 0:
-            plot_points.append([r[i], log_density[i]])
+            log_points.append([r[i], log_density[i]])
     
-    plot_points = np.array(plot_points)
-    cut = (max(plot_points[:, 0]) - min(plot_points[:, 0])) / 2
+    log_points = np.array(log_points)
+    if log_points.size != 0:
+        cut = (max(log_points[:, 0]) - min(log_points[:, 0])) / 2
     
-    return plot_points, cut
+        return log_points, cut
+    else: 
+        return np.array([]), np.array([])
 
 def log_model(x, a, b):
     return a * x + b
 
 def log_cont_par_and_cut(r, Nmax, aHO, delta_d2_dr2):
-    fit_points, cut = find_fit_points_and_cut(r, Nmax, aHO, delta_d2_dr2)
-    
-    popt = curve_fit(log_model, fit_points[:, 0], fit_points[:, 1])[0]
-    
-    return popt, cut
+    fit_points, cut = find_fit_log_points_and_cut(r, Nmax, aHO, delta_d2_dr2)
+    if fit_points.size != 0:
+        popt = curve_fit(log_model, fit_points[:, 0], fit_points[:, 1])[0]
+        
+        return popt, cut
+    else:
+        return np.array([]), np.array([])
 
 def norm_cont_density(r, Nmax, aHO, delta_d2_dr2):
     popt, cut = log_cont_par_and_cut(r, Nmax, aHO, delta_d2_dr2)
     
-    r_wave = r[r <= cut]
-    r_cont = r[r > cut]
-    
-    norm_integ_wave = np.trapz(deut_density(r_wave, Nmax, aHO) * r_wave**2, r_wave)
-    norm_integ_cont = np.trapz(np.exp(log_model(r_cont, popt[0], popt[1])) * r_cont**2, r_cont)
-    
-    norm_integ = norm_integ_wave + norm_integ_cont
-    
-    norm_factor = 1 / norm_integ
-    
-    return norm_factor
+    if popt.size != 0:
+        r_wave = r[r <= cut]
+        r_cont = r[r > cut]
+        
+        norm_integ_wave = np.trapz(deut_density(r_wave, Nmax, aHO) * r_wave**2, r_wave)
+        norm_integ_cont = np.trapz(np.exp(log_model(r_cont, popt[0], popt[1])) * r_cont**2, r_cont)
+        
+        norm_integ = norm_integ_wave + norm_integ_cont
+        
+        norm_factor = 1 / norm_integ
+        
+        return norm_factor
+    else: 
+        return np.array([])
 
-def rrms_and_cut_cont_denstity(r, Nmax, aHO, delta_d2_dr2):
+def rrms_cont_denstity(r, Nmax, aHO, delta_d2_dr2):
     popt, cut = log_cont_par_and_cut(r, Nmax, aHO, delta_d2_dr2)
-    
-    r_wave = r[r <= cut]
-    r_cont = r[r > cut]
-    
-    density_lst = deut_density(r_wave, Nmax, aHO)
-    cont_lst = np.exp(log_model(r_cont, popt[0], popt[1])) 
-    
-    norm_integ_wave = np.trapz(density_lst * r_wave**2, r_wave)
-    norm_integ_cont = np.trapz(cont_lst * r_cont**2, r_cont)
-    
-    norm_integ = norm_integ_wave + norm_integ_cont
-    norm_factor = 1 / norm_integ
+    if popt.size != 0:
+        r_wave = r[r <= cut]
+        r_cont = r[r > cut]
+        
+        density_lst = deut_density(r_wave, Nmax, aHO)
+        cont_lst = np.exp(log_model(r_cont, popt[0], popt[1])) 
+        
+        norm_integ_wave = np.trapz(density_lst * r_wave**2, r_wave)
+        norm_integ_cont = np.trapz(cont_lst * r_cont**2, r_cont)
+        
+        norm_integ = norm_integ_wave + norm_integ_cont
+        norm_factor = 1 / norm_integ
 
-    rsq_wave = np.trapz(density_lst * norm_factor, r_wave**4, r_wave)
-    rsq_cont = np.trapz(cont_lst * norm_factor, r_cont**4, r_cont)
+        rsq_wave = np.trapz(density_lst * norm_factor, r_wave**4, r_wave) / 4
+        rsq_cont = np.trapz(cont_lst * norm_factor, r_cont**4, r_cont) / 4
+        
+        rrms = np.sqrt(rsq_wave + rsq_cont)
+        
+        return rrms
+    else: 
+        return np.array([])
+
+
+
+
+
+def rsq_integral_trapz(Nmax, aHO, rmax, dr):
+    r_size = int(np.round(rmax / dr))
+    r = np.linspace(0, rmax + 1, r_size)
+    integr = deut_density(r, Nmax, aHO)[3] * r**4
+    return np.trapz(integr, r, dr) / 4      # Warum Faktor 4?
+
+def rrms_integral_trapz(Nmax, aHO, Nstep, rmax, dr):
+    rrms = []
+    Nmax_lst = np.arange(0, Nmax + 1, Nstep)
     
-    rrms = np.sqrt(rsq_wave + rsq_cont)
+    with ThreadPoolExecutor() as executor:
+        futures = [executor.submit(rsq_integral_trapz, Nmax, aHO, rmax, dr) for Nmax in Nmax_lst]
+        for future in futures:
+            rrms.append(future.result())
     
-    return rrms, cut
+    rrms = np.sqrt(np.array(rrms))
+    
+    return np.array([Nmax_lst, rrms])
+
+aHO_lst = np.arange(1.2, 2.2, 0.2)
+Nmax_lst = np.arange(0, 62, 2)
+r = np.linspace(0, 15, 500)
+
+def test(Nmax, aHO, d):
+    rrms = []
+    plt.figure()
+    # plt.subplot(121)
+    
+    popt , cut = log_cont_par_and_cut(r, Nmax, aHO, d)
+    r_cont = r[r>cut]
+    fit_points = find_fit_log_points_and_cut(r, Nmax, aHO, d)[0]
+    # print(fit_points)
+    norm = norm_cont_density(r, Nmax, aHO, d)
+    
+    plt.plot(r, deut_density(r, Nmax, aHO) * norm, "b")
+    plt.plot(r_cont, np.exp(log_model(r_cont, popt[0], popt[1])) * norm, "r")
+    # plt.figure()
+    plt.scatter(fit_points[:,0], np.exp(fit_points[:,1]))
+    plt.semilogy()
+    
+    rrms.append(rrms_cont_denstity(r, Nmax, aHO, d))
+    print(rrms)
+    plt.title("Wellenfunktionen und exponentielle Fortzetzung für aHO = " + str(aHO) + " fm (logaryhtmische y-Axhse)") 
+    # plt.ylim(10**(-6), 1)
+    # plt.xlim(0, 15)
+    plt.legend(["Wellenfunktion", "Fortsetzung"])
+    
+    # rmax, dr = max(r), r[1]-r[0]
+    # rrms_full_wave = rrms_integral_trapz(60, 1.4, 2, rmax, dr)
+    # plt.subplot(122)
+    # plt.plot(rrms_full_wave[0], rrms_full_wave[1], 'x-')
+    # plt.plot(Nmax_lst, rrms, 'x-')
+    # plt.title('$R_{rms}$ bei $a_{HO} = $' + str(1.4) + ' fm aus Wellenfunktion und exponentieller Fortsetzung bei r = 4 fm')
+    # plt.legend(["Wellenfunktion", 'Wellenfunktion + Fortsetzung'])
+    # plt.xlabel('$N_{max}$')
+    # plt.ylabel("$R_{rms}$ (fm)")
+    # plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
+    # plt.grid(linestyle='--')
+    
+test(60, 1.8, 10**(-5))
+
+plt.show()
