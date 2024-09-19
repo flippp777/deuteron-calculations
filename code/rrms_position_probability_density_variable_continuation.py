@@ -13,6 +13,9 @@ def deut_density(r, Nmax, aHO):
     return deuteron_wavefunc(Nmax, aHO, r)[3]
 
 
+def log_model(x, a, b):
+    return a * x + b
+
 def find_cont_par_cut(r, Nmax, aHO):
     r = np.arange(5, 16, 0.5)
     log_density = np.log(deut_density(r, Nmax, aHO))
@@ -23,46 +26,13 @@ def find_cont_par_cut(r, Nmax, aHO):
     d2_dr2_min = d2_dr2[d2_dr2[:,1] == min(d2_dr2[:,1])]
 
     r2 = np.arange(0, d2_dr2_min[0,0] + 0.1, 0.1)
-    r2 = r2[np.abs(np.gradient(np.gradient(np.log(deut_density(r2, Nmax, aHO))))) < 0.001]
+    r2 = r2[np.abs(np.gradient(np.gradient(np.log(deut_density(r2, Nmax, aHO))))) < 0.005]
     max_r2 = max(r2)
     
     fit_points = [max_r2, max_r2 + 0.01]
     popt = curve_fit(log_model, fit_points, np.log(deut_density(fit_points, Nmax, aHO)))[0]
     
     return popt, max_r2 + 0.005,
-        
-
-def find_fit_log_points_and_cut(r, Nmax, aHO, delta_d2_dr2):
-    log_density = np.log(deut_density(r, Nmax, aHO))
-    d_dr = np.gradient(log_density)
-    d2_dr2 = np.gradient(d_dr)
-
-    log_points = []
-    for i in range(log_density.size):
-        if d2_dr2[i] < delta_d2_dr2 and -delta_d2_dr2 < d2_dr2[i] and d_dr[i] < 0:
-            log_points.append([r[i], log_density[i]])
-    
-    log_points = np.array(log_points)
-    if log_points.size != 0:
-        cut = (max(log_points[:, 0]) - min(log_points[:, 0])) / 2
-    
-        return log_points, cut
-    else: 
-        return np.array([]), np.array([])
-
-
-def log_model(x, a, b):
-    return a * x + b
-
-def log_cont_par_and_cut(r, Nmax, aHO, delta_d2_dr2):
-    fit_points, cut = find_fit_log_points_and_cut(r, Nmax, aHO, delta_d2_dr2)
-    if fit_points.size != 0:
-        popt = curve_fit(log_model, fit_points[:, 0], fit_points[:, 1])[0]
-        
-        return popt, cut
-    else:
-        return np.array([]), np.array([])
-
 
 def norm_cont_density(r, Nmax, aHO):
     popt, cut = find_cont_par_cut(r, Nmax, aHO)
@@ -133,7 +103,7 @@ def rrms_integral_trapezoid(Nmax, aHO, Nstep, rmax, dr):
 
 
 def test_plots(r, NNmax, dNmax):
-    Nmax_lst = np.arange(0, NNmax + dNmax, dNmax)
+    Nmax_lst = np.arange(2, NNmax + dNmax, dNmax)
     
     for j in range(aHO_lst.size):
         rrms = []
@@ -156,12 +126,6 @@ def test_plots(r, NNmax, dNmax):
         plt.xlim(0, 15)
         plt.legend(["Wellenfunktion", "Fortsetzung"])
         
-        # plt.figure()
-        # plt.plot(r, np.gradient(np.log(deut_density(r, Nmax, aHO))) * 100)
-        # plt.plot(r, np.gradient(np.gradient(np.log(deut_density(r, Nmax, aHO)))) * 1000)
-        # plt.title('aHO = ' + str(aHO))
-        # plt.grid(linestyle='--')
-        
         rmax, dr = max(r), r[1]-r[0]
         rrms_full_wave = rrms_integral_trapezoid(60, 1.4, 2, rmax, dr)
         plt.subplot(122)
@@ -174,6 +138,22 @@ def test_plots(r, NNmax, dNmax):
         plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
         plt.grid(linestyle='--')
 
-test_plots(r, 60, 5)
+
+def test_d(r, NNmax, dNmax):
+    Nmax_lst = np.arange(1, NNmax + dNmax, dNmax)
+    
+    for j in range(aHO_lst.size):
+        plt.figure()
+        for Nmax in Nmax_lst:
+            plt.plot(r, np.log(deut_density(r, Nmax, aHO_lst[j])), 'b')
+            plt.plot(r, np.gradient(np.log(deut_density(r, Nmax, aHO_lst[j]))) * 100, 'r')
+            plt.plot(r, np.gradient(np.gradient(np.log(deut_density(r, Nmax, aHO_lst[j])))) * 10000, 'g')
+            plt.title('aHO = ' + str(aHO_lst[j]))
+            plt.grid(linestyle='--')
+            
+
+# test_plots(r, 6, 2)
+
+test_d(r, 6, 6)
 
 plt.show()
