@@ -44,10 +44,10 @@ def norm_cont(Nmax, aHO, cut, rmax, dr):
     r_wave = np.arange(0, cut + dr, dr)
     r_cont = np.arange(cut, rmax + dr, dr)
     
-    int_wave = np.trapz(deuteron_wavefunc(Nmax, aHO, r_wave)[3] * r_wave**2, r_wave, dr)
+    int_wave = np.trapz(deuteron_wavefunc(Nmax, aHO, r_wave)[3] * r_wave**2, x=r_wave)
     
     cont_par = cont_at4(Nmax, aHO, cut)
-    int_cont = np.trapz(np.exp(lin_log_model(r_cont, cont_par[0], cont_par[1])) * r_cont**2, r_cont, dr)
+    int_cont = np.trapz(np.exp(lin_log_model(r_cont, cont_par[0], cont_par[1])) * r_cont**2, x=r_cont)
     
     integral = int_wave + int_cont
     
@@ -59,10 +59,10 @@ def rrms_int_cont_at4(Nmax, aHO, cut, rmax, dr):
     r_wave = np.arange(0, cut + dr, dr)
     r_cont = np.arange(cut, rmax + dr, dr)
     
-    rsq_wave = np.trapz(deuteron_wavefunc(Nmax, aHO, r_wave)[3] * norm_cont(Nmax, aHO, cut, rmax, dr) * r_wave**4, r_wave, dr) / 4
+    rsq_wave = np.trapz(deuteron_wavefunc(Nmax, aHO, r_wave)[3] * norm_cont(Nmax, aHO, cut, rmax, dr) * r_wave**4, x=r_wave) / 4
     
     cont_par = cont_at4(Nmax, aHO, cut)
-    rsq_cont = np.trapz(np.exp(lin_log_model(r_cont, cont_par[0], cont_par[1])) * norm_cont(Nmax, aHO, cut, rmax, dr) * r_cont**4, r_cont, dr) / 4
+    rsq_cont = np.trapz(np.exp(lin_log_model(r_cont, cont_par[0], cont_par[1])) * norm_cont(Nmax, aHO, cut, rmax, dr) * r_cont**4, x=r_cont) / 4
     
     rrms = np.sqrt(rsq_wave + rsq_cont)
     
