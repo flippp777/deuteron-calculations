@@ -6,17 +6,15 @@ def x_squared(x):
 
 dx = 0.1
 x = np.arange(-2,2 + dx, dx)
+print(x)
 
-x_sq = x_squared(x)
+def derivative(x, f, n):
+    dx = abs(x[0] - x[1])
+    
+    for i in range(n):
+        f = np.gradient(f) / dx
+        
+    return f
 
-d_x_sq_dx = np.gradient(x_sq)/dx
+print(derivative(x, x, 2))
 
-plt.figure()
-plt.plot(x, x_sq)
-plt.plot(x, d_x_sq_dx)
-plt.plot(x, np.gradient(d_x_sq_dx)/dx)
-
-plt.figure()
-plt.plot(x, x)
-plt.plot(x, np.gradient(x)/dx)
-plt.show()
