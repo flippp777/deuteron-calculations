@@ -42,7 +42,6 @@ def find_cont_par_cut(Nmax, aHO):
     fit_points = fit_points[fit_points[:, 1] > 10**(-6)]
     fit_points = fit_points.transpose()
     fit_points = np.array([fit_points[0], np.log(fit_points[1])])
-    plt.scatter(fit_points[0], np.exp(fit_points[1]))
     
     slope = curve_fit(log_model, fit_points[0], fit_points[1])[0][0]
 
@@ -150,14 +149,14 @@ def test_plots(r, NNmax, dNmax):
         plt.title("Wellenfunktionen und exponentielle Fortzetzung für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)") 
         plt.ylim(10**(-6), 1)
         plt.xlim(0, 20)
-        plt.legend(['fit punkte', "Wellenfunktion", "Fortsetzung"])
+        plt.legend(["Wellenfunktion", "Fortsetzung"])
         
         rmax, dr = max(r), r[1]-r[0]
         rrms_full_wave = rrms_integral_trapezoid(60, 1.4, 2, rmax, dr)
         plt.subplot(122)
         plt.plot(rrms_full_wave[0], rrms_full_wave[1], 'x-')
         plt.plot(Nmax_lst, rrms, 'x-')
-        plt.title('$R_{rms}$ bei $a_{HO} = $' + str(1.4) + ' fm aus Wellenfunktion und exponentieller Fortsetzung bei r = 4 fm')
+        plt.title('$R_{rms}$ bei $a_{HO} = $' + str(aHO_lst[j]) + ' fm aus Wellenfunktion und exponentieller Fortsetzung')
         plt.legend(["Wellenfunktion", 'Wellenfunktion + Fortsetzung'])
         plt.xlabel('$N_{max}$')
         plt.ylabel("$R_{rms}$ (fm)")
@@ -203,7 +202,7 @@ def test_d(r, NNmax, dNmax):
         plt.title('aHO = ' + str(aHO_lst[j])+ ', d3/dr3')
         plt.grid(linestyle='--')
             
-test_plots(r, 60, 10)
+test_plots(r, 60, 2)
 
 # test_d(np.arange(0,15,0.1), 5, 1)
 
