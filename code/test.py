@@ -1,18 +1,22 @@
 import numpy as np
-from make_matrix import mat
-from make_position_space_wavefunc import deuteron_wavefunc
+import matplotlib.pyplot as plt
 
-deuteron_wavefunc(2, 1.3, 1)
+def x_squared(x):
+    return x**2
 
-chi_Nmax150_aHO12 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.20.meho', skiprows=1)
-chi_Nmax150_aHO14 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.40.meho', skiprows=1)
-chi_Nmax150_aHO16 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.60.meho', skiprows=1)
-chi_Nmax150_aHO18 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.80.meho', skiprows=1)
-chi_Nmax150_aHO20 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO02.00.meho', skiprows=1)
-trel_Nmax150 = np.loadtxt(r'matrix_elements/trel_NMax150_LMax02_aHO01.00.meho', skiprows=1)
+dx = 0.1
+x = np.arange(-2,2 + dx, dx)
 
-print(mat(chi_Nmax150_aHO12,1))
+x_sq = x_squared(x)
 
-arr = np.array([[1,2,3], [4,5,6], [7,8,9]])
+d_x_sq_dx = np.gradient(x_sq)/dx
 
-print(arr[1,0])
+plt.figure()
+plt.plot(x, x_sq)
+plt.plot(x, d_x_sq_dx)
+plt.plot(x, np.gradient(d_x_sq_dx)/dx)
+
+plt.figure()
+plt.plot(x, x)
+plt.plot(x, np.gradient(x)/dx)
+plt.show()
