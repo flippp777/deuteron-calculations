@@ -202,7 +202,7 @@ def test_d(r, NNmax, dNmax):
         plt.title('aHO = ' + str(aHO_lst[j])+ ', d3/dr3')
         plt.grid(linestyle='--')
             
-test_plots(r, 60, 5)
+test_plots(r, 60, 2)
 
 # test_d(np.arange(0,15,0.1), 5, 1)
 
