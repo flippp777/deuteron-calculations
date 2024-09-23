@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 from joblib import Parallel, delayed
 from concurrent.futures import ThreadPoolExecutor
 
-from rrms_position_probability_density_variable_continuation import deut_density, log_model, log_cont_par_and_cut, rrms_cont_denstity, find_fit_log_points_and_cut, norm_cont_density
+from rrms_position_probability_density_continuation_variable import deut_density, log_model, log_cont_par_and_cut, rrms_cont_denstity, find_fit_log_points_and_cut, norm_cont_density
 
 aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0])
 Nmax_lst = np.arange(2, 62, 2)
