@@ -61,11 +61,11 @@ def find_cont_par_cut(NNmax, aHO):
     fit_points_indices = np.unique(fit_points_indices).astype(int)
     
     # use only the fit_point_num number of points in the middle of the list
-    fit_point_num = 10
-    two_third_index = int(fit_points_indices.size * 2 / 3)
+    fit_point_num = 40
     if fit_points_indices.size > fit_point_num:
         # middle_index = int(fit_points_indices.size / 2)
         # three_quater_index = middle_index + int(fit_points_indices.size / 4)
+        two_third_index = int(fit_points_indices.size * 2 / 3)
         fit_points_indices = fit_points_indices[two_third_index - int(fit_point_num / 2):two_third_index + int(fit_point_num / 2)]
 
     
