@@ -78,11 +78,11 @@ def find_cont_par_cut(NNmax, aHO):
     slope = curve_fit(log_model, r_fit, log_density_fit)[0][0]
     
     # Finding a point that has the same slope as the fitted one 
-    d_dr = derivative(r, log_density[2, start_linear_index:], 1)
+    d_dr = derivative(r, log_density[2, min(fit_points_indices):max(fit_points_indices) + 1], 1)
     connection_point = np.array([])
     delta = 10**(-6)
     while connection_point.size == 0:
-        connection_point = r[start_linear_index:][((d_dr > slope - delta) & (d_dr < slope + delta))]
+        connection_point = r[min(fit_points_indices):max(fit_points_indices) + 1][((d_dr > slope - delta) & (d_dr < slope + delta))]
         delta += 10**(-6)
     connection_point = connection_point[0]
     
