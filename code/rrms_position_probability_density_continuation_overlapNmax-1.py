@@ -165,7 +165,7 @@ def test_plots(r, NNmax, dNmax):
 
 
             
-test_plots(r, 40, 2)
+test_plots(r, 60, 5)
 
 
 plt.show()
