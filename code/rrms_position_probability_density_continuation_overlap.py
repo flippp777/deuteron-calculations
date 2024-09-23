@@ -31,7 +31,7 @@ def find_cont_par_cut(NNmax, dNmax, aHO):
 
     # Define r range
     dr = 0.1
-    r = np.arange(0, 50 + dr, dr)
+    r = np.arange(0, 100 + dr, dr)
    
     # create first list with Nmax=1 and then compute all other lists in parallel. Nmax goes from 2 to the closest number below NNmax that can be reached in steps the size of dNmax
     density = np.array([deut_density(r, 1, aHO)])
@@ -94,7 +94,7 @@ def find_cont_par_cut(NNmax, dNmax, aHO):
         connection_lst = np.append(connection_lst, connection_point)
         
         # Finding the y intersection
-        y_intersect = np.log(deut_density(connection_point, 2 + dNmax + dNmax * i , aHO)) - slope * connection_point
+        y_intersect = np.log(deut_density(connection_point, Nmax_i , aHO)) - slope * connection_point
         
 
         r_wave = r[r <= connection_point]
@@ -179,7 +179,7 @@ def test_plots(r, NNmax, dNmax):
         plt.legend(["Wellenfunktion", "Fortsetzung"])
         
         rmax, dr = max(r), r[1]-r[0]
-        rrms_full_wave = rrms_integral_trapz(60, 1.4, 2, rmax, dr)
+        rrms_full_wave = rrms_integral_trapz(60, aHO_lst[j], 2, rmax, dr)
         plt.subplot(122)
         plt.plot(rrms_full_wave[0], rrms_full_wave[1], 'x-')
         plt.plot(rrms[0], rrms[1], 'x-')

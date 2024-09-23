@@ -58,11 +58,13 @@ def norm_cont(Nmax, aHO, cut, rmax, dr):
 def rrms_int_cont_at4(Nmax, aHO, cut, rmax, dr):
     r_wave = np.arange(0, cut + dr, dr)
     r_cont = np.arange(cut, rmax + dr, dr)
+
+    norm = norm_cont(Nmax, aHO, cut, rmax, dr)
     
-    rsq_wave = np.trapz(deuteron_wavefunc(Nmax, aHO, r_wave)[3] * norm_cont(Nmax, aHO, cut, rmax, dr) * r_wave**4, x=r_wave) / 4
+    rsq_wave = np.trapz(deuteron_wavefunc(Nmax, aHO, r_wave)[3] * norm_cont(Nmax, aHO, cut, rmax, dr) * r_wave**4 * norm, x=r_wave) / 4
     
     cont_par = cont_at4(Nmax, aHO, cut)
-    rsq_cont = np.trapz(np.exp(lin_log_model(r_cont, cont_par[0], cont_par[1])) * norm_cont(Nmax, aHO, cut, rmax, dr) * r_cont**4, x=r_cont) / 4
+    rsq_cont = np.trapz(np.exp(lin_log_model(r_cont, cont_par[0], cont_par[1])) * norm_cont(Nmax, aHO, cut, rmax, dr) * r_cont**4 * norm, x=r_cont) / 4
     
     rrms = np.sqrt(rsq_wave + rsq_cont)
     

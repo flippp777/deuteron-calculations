@@ -152,7 +152,7 @@ def test_plots(r, NNmax, dNmax):
         plt.legend(["Wellenfunktion", "Fortsetzung"])
         
         rmax, dr = max(r), r[1]-r[0]
-        rrms_full_wave = rrms_integral_trapz(60, 1.4, 2, rmax, dr)
+        rrms_full_wave = rrms_integral_trapz(60, aHO_lst[j], 2, rmax, dr)
         plt.subplot(122)
         plt.plot(rrms_full_wave[0], rrms_full_wave[1], 'x-')
         plt.plot(Nmax_lst, rrms, 'x-')
@@ -202,7 +202,7 @@ def test_d(r, NNmax, dNmax):
         plt.title('aHO = ' + str(aHO_lst[j])+ ', d3/dr3')
         plt.grid(linestyle='--')
             
-test_plots(r, 10, 2)
+test_plots(r, 60, 5)
 
 # test_d(np.arange(0,15,0.1), 5, 1)
 
