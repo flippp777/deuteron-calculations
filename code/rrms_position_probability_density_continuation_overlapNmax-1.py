@@ -47,7 +47,7 @@ def find_cont_par_cut(NNmax, aHO):
     diff_log_density = np.abs(log_density[1, start_linear_index:] - log_density[2, start_linear_index:])
     
     # Indiexes are at the points, where the difference in log densities is smaller 0.1
-    distance = 0.05
+    distance = 0.01
     fit_points_indices = np.where(diff_log_density < distance)[0] + start_linear_index
     
     # condition to have two differen points in order to fit a straight
@@ -62,10 +62,12 @@ def find_cont_par_cut(NNmax, aHO):
     
     # use only the fit_point_num number of points in the middle of the list
     fit_point_num = 10
+    two_third_index = int(fit_points_indices.size * 2 / 3)
     if fit_points_indices.size > fit_point_num:
-        middle_index = int(fit_points_indices.size / 2)
-        three_quater_index = middle_index + int(fit_points_indices.size / 4)
-        fit_points_indices = fit_points_indices[three_quater_index - int(fit_point_num / 2):three_quater_index + int(fit_point_num / 2)]
+        # middle_index = int(fit_points_indices.size / 2)
+        # three_quater_index = middle_index + int(fit_points_indices.size / 4)
+        fit_points_indices = fit_points_indices[two_third_index - int(fit_point_num / 2):two_third_index + int(fit_point_num / 2)]
+
     
     # fit points from fit_pint_indexes
     r_fit = r[fit_points_indices]
@@ -157,7 +159,7 @@ def test_plots(r, NNmax, dNmax):
         plt.title("Wellenfunktionen und exponentielle Fortzetzung für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)") 
         plt.ylim(10**(-6), 1)
         plt.xlim(0, 20)
-        plt.legend(["Wellenfunktion", "Fortsetzung"])
+        plt.legend(["Wellenfunktion", "Fortsetzung", "Anpassungspunkte"])
         
         rmax, dr = max(r), r[1]-r[0]
         rrms_full_wave = rrms_integral_trapz(60, aHO_lst[j], 2, rmax, dr)
