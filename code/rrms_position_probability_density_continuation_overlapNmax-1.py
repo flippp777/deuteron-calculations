@@ -61,12 +61,12 @@ def find_cont_par_cut(NNmax, aHO):
     fit_points_indices = np.unique(fit_points_indices).astype(int)
     
     # use only the fit_point_num number of points in the middle of the list
-    fit_point_num = 40
+    fit_point_num = 4
     if fit_points_indices.size > fit_point_num:
-        # middle_index = int(fit_points_indices.size / 2)
-        # three_quater_index = middle_index + int(fit_points_indices.size / 4)
-        two_third_index = int(fit_points_indices.size * 2 / 3)
-        fit_points_indices = fit_points_indices[two_third_index - int(fit_point_num / 2):two_third_index + int(fit_point_num / 2)]
+        middle_index = int(fit_points_indices.size / 2)
+        # two_third_index = int(fit_points_indices.size * 2 / 3)
+        three_quater_index = middle_index + int(fit_points_indices.size / 4)
+        fit_points_indices = fit_points_indices[three_quater_index - int(fit_point_num / 2):three_quater_index + int(fit_point_num / 2)]
 
     
     # fit points from fit_pint_indexes
@@ -146,12 +146,13 @@ def test_plots(r, NNmax, dNmax):
         plt.subplot(121)
 
         rrms_lst = []
+        rrms_mean_lst = []
         for Nmax in Nmax_lst:
             slope , y_sect, connect, rrms, norm, fit_points = find_cont_par_cut(Nmax, aHO_lst[j])
             r_cont = np.array([connect, 20])
             plt.plot(r, deut_density(r, Nmax, aHO_lst[j]) * norm, 'b')
             plt.plot(r_cont, np.exp(log_model(r_cont, slope, y_sect)) * norm, "r")
-            plt.scatter(fit_points[0], np.exp(fit_points[1]))
+            # plt.scatter(fit_points[0], np.exp(fit_points[1]))
             plt.semilogy()
             plt.grid(linestyle='--')
             rrms_lst.append(rrms)
@@ -159,7 +160,7 @@ def test_plots(r, NNmax, dNmax):
         plt.title("Wellenfunktionen und exponentielle Fortzetzung für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)") 
         plt.ylim(10**(-6), 1)
         plt.xlim(0, 20)
-        plt.legend(["Wellenfunktion", "Fortsetzung", "Anpassungspunkte"])
+        plt.legend(["Wellenfunktion", "Fortsetzung"])
         
         rmax, dr = max(r), r[1]-r[0]
         rrms_full_wave = rrms_integral_trapz(60, aHO_lst[j], 2, rmax, dr)
