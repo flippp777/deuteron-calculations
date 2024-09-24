@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from concurrent.futures import ThreadPoolExecutor
+from joblib import Parallel, delayed
 
 from rrms_density_continuation_overlap_Nmax_minus_1 import find_cont_par_cut, deut_density, log_model
 
@@ -25,7 +26,6 @@ def rrms_integral_trapz(Nmax, Nmin, aHO, Nstep, rmax, dr):
     return np.array([Nmax_lst, rrms])
 
 aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0]) 
-Nmax_lst = np.arange(0, 62, 2)
 r = np.linspace(0, 100, 1000)
 
 
@@ -33,12 +33,10 @@ def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
     Nmax_lst = np.arange(NNmin, NNmax + 1, dNmax)
     
     for j in range(aHO_lst.size):
-        rrms = []
         plt.figure()
         plt.subplot(121)
 
         rrms_lst = []
-        rrms_mean_lst = []
         for Nmax in Nmax_lst:
             slope , y_sect, connect, rrms, norm, fit_points = find_cont_par_cut(Nmax, aHO_lst[j])
             r_cont = np.array([connect, 20])
@@ -67,9 +65,44 @@ def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
         plt.grid(linestyle='--')
 
 
+def plot_norm_comparison(r, NNmax, NNmin, dNmax):
+    for aHO in aHO_lst:
+        Nmax_lst =  np.arange(NNmin, NNmax + 1, dNmax)
 
-            
-plot_wavefunc_continuation_rrms(r, 10, 3, 1)
+        rrms_lst_norm = []
+        norm_lst = []
+        rrms_lst_nonorm = []
+        
+        for Nmax in Nmax_lst:
+            rrms, norm = find_cont_par_cut(Nmax, aHO)[3:5]
+
+            rrms_lst_norm.append(rrms)
+            norm_lst.append(norm)
+        
+            rrms_nonorm = find_cont_par_cut(Nmax, aHO, norm=False)[3]
+            rrms_lst_nonorm.append(rrms_nonorm)
+        
+        deviation = np.abs(np.array(rrms_lst_nonorm) - np.array(rrms_lst_norm)) / np.array(rrms_lst_nonorm)
+
+        plt.figure()
+        plt.subplot(211)
+        plt.plot(Nmax_lst, norm_lst, 'x-')
+        plt.title("Norm der fortgesetzten Wellenfunktion für $a_{HO} = $" + str(aHO))
+        plt.xlabel('$N_{max}$')
+        plt.grid(linestyle="--")
+
+        plt.subplot(212)
+        plt.plot(Nmax_lst, rrms_lst_nonorm, 'x-')
+        plt.plot(Nmax_lst, rrms_lst_norm, 'x-')
+        plt.title('$R_{rms}$ aus nicht normierter und normierter forgesetzten Wellenfunktion für $a_{HO} = $' + str(aHO))
+        plt.legend(["Ohne Normierung", 'Mit Normierung'])
+        plt.xlabel('$N_{max}$')
+        plt.ylabel("$R_{rms}$ (fm)")
+        plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
+        plt.grid(linestyle='--')
+   
+        
+plot_norm_comparison(r, 40, 3, 1)
 
 
 plt.show()
