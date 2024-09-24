@@ -210,6 +210,7 @@ def logplots_density_rpow4_Nmax(aHO, NmaxMax, step):
     for N in range(0, NmaxMax + 1, step):
         plt.semilogy(x_model_log, deuteron_wavefunc(N, aHO, x_model_log)[3] * x_model_log**4)
     plt.ylim(bottom=10**(-6), top=10)
+    plt.xlim(0,20)
     plt.title('$|\Phi(r)|^2 r^4$ bei $a_{HO} =$' + str(aHO) + ' und verschiedenen $N_{max}$ mit logarithmischer y-Achse')
     plt.xlabel('r (fm)')
     plt.legend(['$N_{max} = $' + str(N) for N in range(0, NmaxMax + 1, step)])
@@ -243,10 +244,10 @@ def logplots_density_rpow4_Nmax(aHO, NmaxMax, step):
 # logplots_density_rpow2_Nmax(1.8, 60, 2)
 # logplots_density_rpow2_Nmax(2.0, 60, 2)
 
-logplots_density_rpow4_Nmax(1.2, 60, 2)
-logplots_density_rpow4_Nmax(1.4, 60, 2)
-logplots_density_rpow4_Nmax(1.6, 60, 2)
-logplots_density_rpow4_Nmax(1.8, 60, 2)
-logplots_density_rpow4_Nmax(2.0, 60, 2)
+logplots_density_rpow4_Nmax(1.2, 6, 1)
+logplots_density_rpow4_Nmax(1.4, 6, 1)
+logplots_density_rpow4_Nmax(1.6, 6, 1)
+logplots_density_rpow4_Nmax(1.8, 6, 1)
+logplots_density_rpow4_Nmax(2.0, 6, 1)
 
 plt.show()
