@@ -6,13 +6,14 @@
 
 21. Sep 2024
 
- - Unterschied im Radius mit normiertrer und unnormierter Wellenfunktion
+ - Unterschied im Radius mit normiertrer und unnormierter Wellenfunktion    Erledigt
 
- - kleinere Schritte im Nmax: 1er Schritte bis Nmax = 10
+ - kleinere Schritte im Nmax: 1er Schritte bis Nmax = 10    Erledigt
+
+ - Verhalten der fitpunkte in abhängigkeit von Nmax
 
  - Steigung in log-Darstellung mit Energie herausfinden
 
  - Ableitung Plotten
- 
 
  - Fit mit |Psi(r)|**2 r**4 für Radiusberechnung
