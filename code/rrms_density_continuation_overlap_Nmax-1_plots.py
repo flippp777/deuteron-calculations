@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from rrms_position_probability_density_continuation_overlapNmax_minus_1 import find_cont_par_cut, deut_density, log_model, rrms_integral_trapz
+from rrms_density_continuation_overlap_Nmax_minus_1 import find_cont_par_cut, deut_density, log_model, rrms_integral_trapz
 
 aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0]) 
 Nmax_lst = np.arange(0, 62, 2)
