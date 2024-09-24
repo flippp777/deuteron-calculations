@@ -22,7 +22,7 @@ def log_model(x, a, b):
 
 def find_cont_par_cut(NNmax, aHO, norm=True):
     # NNmax has to be bigger than 3 because Nmax=2 is the firts referece point to check for same densities
-    if NNmax < 3:
+    if NNmax < 5:
         exit("NNmax muss mindestens 3 sein / NNmin darf nicht kleiner als 3 sein")
 
     # Define r range
@@ -30,15 +30,14 @@ def find_cont_par_cut(NNmax, aHO, norm=True):
     r = np.arange(0, 100 + dr, dr)
    
     # create first list with Nmax=1 and then compute all other lists in parallel. Nmax goes from 2 to the closest number below NNmax that can be reached in steps the size of dNmax
-    density_powr4 = np.array([deut_density(r, 1, aHO) * r**4, deut_density(r, NNmax-1, aHO) * r**4, deut_density(r, NNmax, aHO) * r**4])
+    density_powr4 = np.array([deut_density(r, 3, aHO) * r**4, deut_density(r, NNmax-1, aHO) * r**4, deut_density(r, NNmax, aHO) * r**4])
 
     log_density = np.log(density_powr4)
     
     # Finding the starting point of the linear range. It is chosen as the closest point to Nmax=1 density after r=3
     r3_index = int(3/dr)
-    diff_log_density_Nmax1 = np.abs(log_density[0, r3_index:] - log_density[-1, r3_index:])
-    start_linear_index = max(np.where(diff_log_density_Nmax1 < min(diff_log_density_Nmax1) + 0.1)[0]) + r3_index
-    start_linear_index = np.where(r ==7)[0][0]
+    diff_log_density_Nmax3 = np.abs(log_density[0, r3_index:] - log_density[-1, r3_index:])
+    start_linear_index = max(np.where(diff_log_density_Nmax3 < min(diff_log_density_Nmax3) + 0.1)[0]) + r3_index
    
     # Difference between log density at Nmax_j to Nmax_i starting from the start point of the linear range
     diff_log_density = np.abs(log_density[1, start_linear_index:] - log_density[2, start_linear_index:])
@@ -48,17 +47,17 @@ def find_cont_par_cut(NNmax, aHO, norm=True):
     fit_points_indices = np.where(diff_log_density < distance)[0] + start_linear_index
     
     # condition to have two differen points in order to fit a straight
-    if np.unique(fit_points_indices).size < 2:
-        delta = distance + 10**(-6)
-        while np.unique(fit_points_indices).size < 2:
+    fit_point_num = 10
+    if np.unique(fit_points_indices).size < fit_point_num:
+        delta = distance + 10**(-3)
+        while np.unique(fit_points_indices).size < fit_point_num:
             fit_points_indices = np.append(fit_points_indices, np.where(diff_log_density < delta)[0] + start_linear_index)
-            delta += 10**(-6)
+            delta += 10**(-3)
     
     # Removing duplicates
     fit_points_indices = np.unique(fit_points_indices).astype(int)
     
     # use only the fit_point_num number of points in the middle of the list
-    fit_point_num = 4
     if fit_points_indices.size > fit_point_num:
         middle_index = int(fit_points_indices.size / 2)
         # two_third_index = int(fit_points_indices.size * 2 / 3)

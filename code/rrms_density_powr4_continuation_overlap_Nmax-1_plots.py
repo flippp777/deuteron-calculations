@@ -102,7 +102,7 @@ def plot_norm_comparison(r, NNmax, NNmin, dNmax):
         plt.grid(linestyle='--')
    
         
-plot_density_continuation_rrms(r, 60, 3, 10)
+plot_density_continuation_rrms(r, 60, 5, 5)
 
 
 plt.show()
