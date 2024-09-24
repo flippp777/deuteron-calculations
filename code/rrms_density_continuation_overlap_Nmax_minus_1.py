@@ -20,10 +20,10 @@ def derivative(x, f, n):
 def log_model(x, a, b):
     return a * x + b
 
-def find_cont_par_cut(NNmax, aHO):
+def find_cont_par_cut(NNmax, aHO, norm=True):
     # NNmax has to be bigger than 3 because Nmax=2 is the firts referece point to check for same densities
     if NNmax < 3:
-        exit("Nmax muss mindestens 3 sein")
+        exit("NNmax muss mindestens 3 sein / NNmin darf nicht kleiner als 3 sein")
 
     # Define r range
     dr = 0.1
@@ -90,44 +90,27 @@ def find_cont_par_cut(NNmax, aHO):
     r_cont = r[r > connection_point]
     
     density_lst = deut_density(r_wave, NNmax, aHO)
-    cont_lst = np.exp(log_model(r_cont, slope, y_intersect)) 
+    cont_lst = np.exp(log_model(r_cont, slope, y_intersect))
+    
+    if norm:    
+        norm_integ_wave = np.trapz(density_lst * r_wave**2, x=r_wave)
+        norm_integ_cont = np.trapz(cont_lst * r_cont**2, x=r_cont)
         
-    norm_integ_wave = np.trapz(density_lst * r_wave**2, x=r_wave)
-    norm_integ_cont = np.trapz(cont_lst * r_cont**2, x=r_cont)
-    
-    norm_integ = norm_integ_wave + norm_integ_cont
-    
-    norm_factor = 1 / norm_integ
+        norm_integ = norm_integ_wave + norm_integ_cont
+        
+        norm_factor = 1 / norm_integ
 
-    rsq_wave = np.trapz(density_lst * norm_factor * r_wave**4, x=r_wave) / 4
-    rsq_cont = np.trapz(cont_lst * norm_factor * r_cont**4, x=r_cont) / 4
-    
-    rrms = np.sqrt(rsq_wave + rsq_cont)
-    
-    return slope, y_intersect, connection_point, rrms, norm_factor, fit_points
+        rsq_wave = np.trapz(density_lst * norm_factor * r_wave**4, x=r_wave) / 4
+        rsq_cont = np.trapz(cont_lst * norm_factor * r_cont**4, x=r_cont) / 4
 
+        rrms = np.sqrt(rsq_wave + rsq_cont)
 
+        return slope, y_intersect, connection_point, rrms, norm_factor, fit_points
+        
+    else:
+        rsq_wave = np.trapz(density_lst * r_wave**4, x=r_wave) / 4
+        rsq_cont = np.trapz(cont_lst * r_cont**4, x=r_cont) / 4
+        
+        rrms = np.sqrt(rsq_wave + rsq_cont)
 
-
-
-
-
-def rsq_integral_trapz(Nmax, aHO, rmax, dr):
-    r_size = int(np.round(rmax / dr))
-    r = np.linspace(0, rmax + 1, r_size)
-    integr = deut_density(r, Nmax, aHO) * r**4
-    return np.trapz(integr, r, dr) / 4      # Warum Faktor 4?
-
-
-def rrms_integral_trapz(Nmax, aHO, Nstep, rmax, dr):
-    rrms = []
-    Nmax_lst = np.arange(0, Nmax + 1, Nstep)
-    
-    with ThreadPoolExecutor() as executor:
-        futures = [executor.submit(rsq_integral_trapz, Nmax, aHO, rmax, dr) for Nmax in Nmax_lst]
-        for future in futures:
-            rrms.append(future.result())
-    
-    rrms = np.sqrt(np.array(rrms))
-    
-    return np.array([Nmax_lst, rrms])
+        return slope, y_intersect, connection_point, rrms, fit_points
