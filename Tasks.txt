@@ -3,3 +3,13 @@
  - Radien mit Wellenfunction berechnen (Integral über |Psi(r)|^2 * r^2 dr)
 
  - Funktion an exponentiellen tail der Wellenfunktion (Gerade in Darstellung mit logarythmischer x-Achse) für verschiedene Nmax stetig differenzierbar anbinden und Radiusvorgersage treffen.
+
+21. Sep 2024
+
+ - Unterschied im Radius mit normiertrer und unnormierter Wellenfunktion
+
+ - kleinere Schritte im Nmax: 1er Schritte bis Nmax = 10
+
+ - Steigung in log-Darstellung mit Energie herausfinden
+
+ - Fit mit |Psi(r)|**2 r**4 für Radiusberechnung
