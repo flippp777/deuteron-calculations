@@ -1,15 +1,36 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from concurrent.futures import ThreadPoolExecutor
 
-from rrms_density_continuation_overlap_Nmax_minus_1 import find_cont_par_cut, deut_density, log_model, rrms_integral_trapz
+from rrms_density_continuation_overlap_Nmax_minus_1 import find_cont_par_cut, deut_density, log_model
+
+def rsq_integral_trapz(Nmax, aHO, rmax, dr):
+    r_size = int(np.round(rmax / dr))
+    r = np.linspace(0, rmax + 1, r_size)
+    integr = deut_density(r, Nmax, aHO) * r**4
+    return np.trapz(integr, r, dr) / 4      # Warum Faktor 4?
+
+
+def rrms_integral_trapz(Nmax, Nmin, aHO, Nstep, rmax, dr):
+    rrms = []
+    Nmax_lst = np.arange(Nmin, Nmax + 1, Nstep)
+    
+    with ThreadPoolExecutor() as executor:
+        futures = [executor.submit(rsq_integral_trapz, Nmax, aHO, rmax, dr) for Nmax in Nmax_lst]
+        for future in futures:
+            rrms.append(future.result())
+    
+    rrms = np.sqrt(np.array(rrms))
+    
+    return np.array([Nmax_lst, rrms])
 
 aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0]) 
 Nmax_lst = np.arange(0, 62, 2)
 r = np.linspace(0, 100, 1000)
 
 
-def test_plots(r, NNmax, dNmax):
-    Nmax_lst = np.arange(3, NNmax + 1, dNmax)
+def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
+    Nmax_lst = np.arange(NNmin, NNmax + 1, dNmax)
     
     for j in range(aHO_lst.size):
         rrms = []
@@ -34,7 +55,7 @@ def test_plots(r, NNmax, dNmax):
         plt.legend(["Wellenfunktion", "Fortsetzung"])
         
         rmax, dr = max(r), r[1]-r[0]
-        rrms_full_wave = rrms_integral_trapz(60, aHO_lst[j], 2, rmax, dr)
+        rrms_full_wave = rrms_integral_trapz(NNmax, NNmin-3, aHO_lst[j], dNmax, rmax, dr)
         plt.subplot(122)
         plt.plot(rrms_full_wave[0], rrms_full_wave[1], 'x-')
         plt.plot(Nmax_lst, rrms_lst, 'x-')
@@ -48,7 +69,7 @@ def test_plots(r, NNmax, dNmax):
 
 
             
-test_plots(r, 61, 2)
+plot_wavefunc_continuation_rrms(r, 10, 3, 1)
 
 
 plt.show()
