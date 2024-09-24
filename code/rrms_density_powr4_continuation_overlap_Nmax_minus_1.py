@@ -38,6 +38,7 @@ def find_cont_par_cut(NNmax, aHO, norm=True):
     r3_index = int(3/dr)
     diff_log_density_Nmax1 = np.abs(log_density[0, r3_index:] - log_density[-1, r3_index:])
     start_linear_index = max(np.where(diff_log_density_Nmax1 < min(diff_log_density_Nmax1) + 0.1)[0]) + r3_index
+    start_linear_index = np.where(r ==7)[0][0]
    
     # Difference between log density at Nmax_j to Nmax_i starting from the start point of the linear range
     diff_log_density = np.abs(log_density[1, start_linear_index:] - log_density[2, start_linear_index:])
@@ -114,3 +115,5 @@ def find_cont_par_cut(NNmax, aHO, norm=True):
         rrms = np.sqrt(rsq_wave + rsq_cont)
 
         return slope, y_intersect, connection_point, rrms, fit_points
+    
+# print(find_cont_par_cut(10, 1.4, norm=False))

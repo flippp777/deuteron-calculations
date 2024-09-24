@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from concurrent.futures import ThreadPoolExecutor
 from joblib import Parallel, delayed
 
-from rrms_density_continuation_overlap_Nmax_minus_1 import find_cont_par_cut, deut_density, log_model
+from rrms_density_powr4_continuation_overlap_Nmax_minus_1 import find_cont_par_cut, deut_density, log_model
 
 def rsq_integral_trapz(Nmax, aHO, rmax, dr):
     r_size = int(np.round(rmax / dr))
@@ -29,7 +29,7 @@ aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0])
 r = np.linspace(0, 100, 1000)
 
 
-def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
+def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
     Nmax_lst = np.arange(NNmin, NNmax + 1, dNmax)
     
     for j in range(aHO_lst.size):
@@ -38,18 +38,18 @@ def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
 
         rrms_lst = []
         for Nmax in Nmax_lst:
-            slope , y_sect, connect, rrms, norm, fit_points = find_cont_par_cut(Nmax, aHO_lst[j])
-            r_cont = np.array([connect, 20])
-            plt.plot(r, deut_density(r, Nmax, aHO_lst[j]) * norm, 'b')
-            plt.plot(r_cont, np.exp(log_model(r_cont, slope, y_sect)) * norm, "r")
-            # plt.scatter(fit_points[0], np.exp(fit_points[1]))
+            slope , y_sect, connect, rrms, fit_points = find_cont_par_cut(Nmax, aHO_lst[j], norm=False)
+            r_cont = np.array([connect, 45])
+            plt.plot(r, deut_density(r, Nmax, aHO_lst[j]) * r**4, 'b')
+            plt.plot(r_cont, np.exp(log_model(r_cont, slope, y_sect)), "r")
+            plt.scatter(fit_points[0], np.exp(fit_points[1]))
             plt.semilogy()
             plt.grid(linestyle='--')
             rrms_lst.append(rrms)
         
         plt.title("Wellenfunktionen und exponentielle Fortzetzung für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)") 
-        plt.ylim(10**(-6), 1)
-        plt.xlim(0, 20)
+        plt.ylim(10**(-6), 10)
+        plt.xlim(0, 45)
         plt.legend(["Wellenfunktion", "Fortsetzung"])
         
         rmax, dr = max(r), r[1]-r[0]
@@ -102,7 +102,7 @@ def plot_norm_comparison(r, NNmax, NNmin, dNmax):
         plt.grid(linestyle='--')
    
         
-plot_norm_comparison(r, 40, 3, 1)
+plot_density_continuation_rrms(r, 60, 3, 10)
 
 
 plt.show()
