@@ -27,12 +27,12 @@ def find_cont_par_cut(NNmax, aHO, norm=True):
 
     # Define r range
     dr = 0.1
-    r = np.arange(0, 50 + dr, dr)
+    r = np.arange(0, 100 + dr, dr)
    
     # create first list with Nmax=1 and then compute all other lists in parallel. Nmax goes from 2 to the closest number below NNmax that can be reached in steps the size of dNmax
-    density = np.array([deut_density(r, 1, aHO), deut_density(r, NNmax-1, aHO), deut_density(r, NNmax, aHO)])
+    density_powr4 = np.array([deut_density(r, 1, aHO) * r**4, deut_density(r, NNmax-1, aHO) * r**4, deut_density(r, NNmax, aHO) * r**4])
 
-    log_density = np.log(density)
+    log_density = np.log(density_powr4)
     
     # Finding the starting point of the linear range. It is chosen as the closest point to Nmax=1 density after r=3
     r3_index = int(3/dr)
@@ -83,33 +83,33 @@ def find_cont_par_cut(NNmax, aHO, norm=True):
     connection_point = connection_point[0]
     
     # Finding the y intersection
-    y_intersect = np.log(deut_density(connection_point, NNmax , aHO)) - slope * connection_point
+    y_intersect = np.log(deut_density(connection_point, NNmax , aHO) * connection_point**4) - slope * connection_point
     
 
     r_wave = r[r <= connection_point]
     r_cont = r[r > connection_point]
     
-    density_lst = deut_density(r_wave, NNmax, aHO)
+    density_powr4_lst = deut_density(r_wave, NNmax, aHO) * r_wave**4
     cont_lst = np.exp(log_model(r_cont, slope, y_intersect))
     
     if norm:    
-        norm_integ_wave = np.trapz(density_lst * r_wave**2, x=r_wave)
-        norm_integ_cont = np.trapz(cont_lst * r_cont**2, x=r_cont)
+        norm_integ_wave = np.trapz(density_powr4_lst * r_wave**(-2), x=r_wave)
+        norm_integ_cont = np.trapz(cont_lst * r_cont**(-2), x=r_cont)
         
         norm_integ = norm_integ_wave + norm_integ_cont
         
         norm_factor = 1 / norm_integ
 
-        rsq_wave = np.trapz(density_lst * norm_factor * r_wave**4, x=r_wave) / 4
-        rsq_cont = np.trapz(cont_lst * norm_factor * r_cont**4, x=r_cont) / 4
+        rsq_wave = np.trapz(density_powr4_lst * norm_factor, x=r_wave) / 4
+        rsq_cont = np.trapz(cont_lst * norm_factor, x=r_cont) / 4
 
         rrms = np.sqrt(rsq_wave + rsq_cont)
 
         return slope, y_intersect, connection_point, rrms, norm_factor, fit_points
         
     else:
-        rsq_wave = np.trapz(density_lst * r_wave**4, x=r_wave) / 4
-        rsq_cont = np.trapz(cont_lst * r_cont**4, x=r_cont) / 4
+        rsq_wave = np.trapz(density_powr4_lst, x=r_wave) / 4
+        rsq_cont = np.trapz(cont_lst, x=r_cont) / 4
         
         rrms = np.sqrt(rsq_wave + rsq_cont)
 
