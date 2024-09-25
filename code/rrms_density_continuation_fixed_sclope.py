@@ -17,8 +17,11 @@ def derivative(x, f, n):
         
     return f
 
-def exp_model(x, A, kappa):
-    return A * np.exp(kappa * x)
+def exp_model(x, a, b):
+    return a * np.exp(b * x)
+
+def log_model(x, a, c):
+    return a * x + c
 
 def find_cont_par_cut(NNmax, aHO, norm=True):
     # NNmax has to be bigger than 3 because Nmax=2 is the firts referece point to check for same densities
@@ -30,49 +33,54 @@ def find_cont_par_cut(NNmax, aHO, norm=True):
     r = np.arange(0, 50 + dr, dr)
    
     # create first list with Nmax=1 and then compute all other lists in parallel. Nmax goes from 2 to the closest number below NNmax that can be reached in steps the size of dNmax
-    density = np.array([deut_density(r, 1, aHO), deut_density(r, NNmax, aHO)])
+    density = np.array([deut_density(r, 1, aHO), deut_density(r, NNmax-1, aHO), deut_density(r, NNmax, aHO)])
 
     log_density = np.log(density)
     
     # Finding the starting point of the exponential range. It is chosen as the closest point to Nmax=1 density after r=3
     r3_index = int(3/dr)
-    diff_log_density_Nmax1 = np.abs(log_density[0, r3_index:] - log_density[1, r3_index:])
+    diff_log_density_Nmax1 = np.abs(log_density[0, r3_index:] - log_density[-1, r3_index:])
     start_exp_index = max(np.where(diff_log_density_Nmax1 < min(diff_log_density_Nmax1) + 0.1)[0]) + r3_index
-   
-    # Exponential fit to determine the constant factor
-    A, kappa = curve_fit(exp_model, r[start_exp_index:], density[1, start_exp_index:])[0]
     
-    plt.plot(r[start_exp_index:], density[1,start_exp_index:])
-    
-    
-    print(A, kappa)
-    print(-kappa * 2 * np.log(2 * A))
-    # A ist negativ! Wahrscheinliche lösung ist ende des exponentiellen bereich wieder mit überlappenden Nmax densities bestimmen und daran dann fitten.
-    
-    
-    # # Indiexes are at the points, where the difference in log densities is smaller 0.1
-    # distance = 0.01
-    # fit_points_indices = np.where(diff_log_density < distance)[0] + start_exp_index
-    
-    # # condition to have two differen points in order to fit a straight
-    # if np.unique(fit_points_indices).size < 2:
-    #     delta = distance + 10**(-6)
-    #     while np.unique(fit_points_indices).size < 2:
-    #         fit_points_indices = np.append(fit_points_indices, np.where(diff_log_density < delta)[0] + start_exp_index)
-    #         delta += 10**(-6)
-    
-    # # Removing duplicates
-    # fit_points_indices = np.unique(fit_points_indices).astype(int)
-    
-    # # use only the fit_point_num number of points in the middle of the list
-    # fit_point_num = 4
-    # if fit_points_indices.size > fit_point_num:
-    #     middle_index = int(fit_points_indices.size / 2)
-    #     # two_third_index = int(fit_points_indices.size * 2 / 3)
-    #     three_quater_index = middle_index + int(fit_points_indices.size / 4)
-    #     fit_points_indices = fit_points_indices[three_quater_index - int(fit_point_num / 2):three_quater_index + int(fit_point_num / 2)]
+    # Difference between log density at Nmax_j to Nmax_i starting from the start point of the linear range
+    diff_log_density = np.abs(log_density[1, start_exp_index:] - log_density[2, start_exp_index:])
 
+    # Indiexes are at the points, where the difference in log densities is smaller 0.1
+    distance = 0.01
+    fit_points_indices = np.where(diff_log_density < distance)[0] + start_exp_index
     
+    # condition to have two differen points in order to fit a straight
+    if np.unique(fit_points_indices).size < 10:
+        delta = distance + 10**(-6)
+        while np.unique(fit_points_indices).size < 10:
+            fit_points_indices = np.append(fit_points_indices, np.where(diff_log_density < delta)[0] + start_exp_index)
+            delta += 10**(-6)
+    
+    # Removing duplicates
+    fit_points_indices = np.unique(fit_points_indices).astype(int)
+    
+    # use only the fit_point_num number of points in the middle of the list
+    fit_point_num = 10
+    if fit_points_indices.size > fit_point_num:
+        middle_index = int(fit_points_indices.size / 2)
+        two_third_index = int(fit_points_indices.size * 2 / 3)
+        three_quater_index = middle_index + int(fit_points_indices.size / 4)
+        fit_points_indices = fit_points_indices[three_quater_index - int(fit_point_num / 2):three_quater_index + int(fit_point_num / 2)]
+
+    # Exponential fit to determine the constant factor
+    a, b= curve_fit(exp_model, r[fit_points_indices], density[2, fit_points_indices])[0]
+    slope, sect = curve_fit(log_model, r[fit_points_indices], log_density[2, fit_points_indices])[0]
+    plt.figure()
+    plt.title('aHO = '+ str(aHO))
+    plt.scatter(r[fit_points_indices], density[1, fit_points_indices])
+    plt.plot(r, density[2])
+    plt.plot(r, exp_model(r, a, b), 'r')
+    plt.xlim(r[min(fit_points_indices)-20], r[max(fit_points_indices+20)])
+    plt.semilogy()
+    
+    print(b)
+    print(slope)
+
     # # fit points from fit_pint_indexes
     # r_fit = r[fit_points_indices]
     # log_density_fit = log_density[2, fit_points_indices]
@@ -122,6 +130,9 @@ def find_cont_par_cut(NNmax, aHO, norm=True):
     #     rrms = np.sqrt(rsq_wave + rsq_cont)
 
     #     return slope, y_intersect, connection_point, rrms, fit_points
-    
-find_cont_par_cut(60, 1.4)
+
+aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0]) 
+
+for aHO in aHO_lst:    
+    find_cont_par_cut(60, aHO)
 plt.show()
