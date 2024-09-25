@@ -29,7 +29,7 @@ aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0])
 r = np.linspace(0, 100, 1000)
 
 
-def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
+def plot_density_powr4_continuation_rrms(r, NNmax, NNmin, dNmax):
     Nmax_lst = np.arange(NNmin, NNmax + 1, dNmax)
     
     for j in range(aHO_lst.size):
@@ -42,7 +42,7 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
             r_cont = np.array([connect, 45])
             plt.plot(r, deut_density(r, Nmax, aHO_lst[j]) * r**4, 'b')
             plt.plot(r_cont, np.exp(log_model(r_cont, slope, y_sect)), "r")
-            plt.scatter(fit_points[0], np.exp(fit_points[1]))
+            # plt.scatter(fit_points[0], np.exp(fit_points[1]))
             plt.semilogy()
             plt.grid(linestyle='--')
             rrms_lst.append(rrms)
@@ -102,7 +102,7 @@ def plot_norm_comparison(r, NNmax, NNmin, dNmax):
         plt.grid(linestyle='--')
    
         
-plot_density_continuation_rrms(r, 60, 5, 5)
+plot_density_powr4_continuation_rrms(r, 10, 5, 1)
 
 
 plt.show()
