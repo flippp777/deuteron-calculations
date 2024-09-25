@@ -14,6 +14,6 @@
 
  - Steigung in log-Darstellung mit Energie herausfinden
 
- - Ableitung Plotten
+ - Ableitung Plotten    Erledigt
 
  - Fit mit |Psi(r)|**2 r**4 für Radiusberechnung
