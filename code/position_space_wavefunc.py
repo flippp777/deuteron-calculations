@@ -19,6 +19,13 @@ from scipy import integrate
 # for i in range(0,40,10):
 #     print(integrate.quad(lambda r: deuteron_wavefunc(i, 2.0, r)[3] * r**2, 0, np.inf))
 
+def derivative(x, f, n):
+    dx = abs(x[0] - x[1])
+    
+    for i in range(n):
+        f = np.gradient(f) / dx
+        
+    return f
 
 def plot_wavefunc_Nmax(Nmax, aHO):
     x_model = np.linspace(0, 15, 500)
@@ -67,15 +74,30 @@ def plots_density_Nmax(aHO, NmaxMax, step):
     plt.legend(['$N_{max} = $' + str(N) for N in range(0, NmaxMax + 1, step)])
     plt.grid(linestyle='--')
 
-def logplots_density_Nmax(aHO, NmaxMax, step):
-    x_model_log = np.linspace(0, 15, 500)
+def logplots_density_Nmax(aHO, NmaxMax, step, xlim):
+    x_model_log = np.linspace(0, 20, 500)
     
     plt.figure()
     
     for N in range(0, NmaxMax + 1, step):
         plt.semilogy(x_model_log, deuteron_wavefunc(N, aHO, x_model_log)[3])
     plt.ylim(bottom=10**(-6))
+    plt.xlim(0, xlim)
     plt.title('Aufenthaltswahrscheinlichkeit bei $a_{HO} =$' + str(aHO) + ' und verschiedenen $N_{max}$ mit logarithmischer y-Achse')
+    plt.xlabel('r (fm)')
+    plt.legend(['$N_{max} = $' + str(N) for N in range(0, NmaxMax + 1, step)])
+    plt.grid(linestyle='--')
+
+def logplots_ddensity_dr_Nmax(aHO, NmaxMax, step, xlim):
+    x_model_log = np.linspace(0, xlim, 1000)
+   
+    plt.figure()
+    
+    for N in range(0, NmaxMax + 1, step):
+        plt.plot(x_model_log, derivative(x_model_log, np.log(deuteron_wavefunc(N, aHO, x_model_log)[3]), 1))
+    # plt.ylim(bottom=10**(-6))
+    plt.xlim(0, xlim)
+    plt.title('Ableitung Aufenthaltswahrscheinlichkeit nach r bei $a_{HO} =$' + str(aHO) + ' und verschiedenen $N_{max}$')
     plt.xlabel('r (fm)')
     plt.legend(['$N_{max} = $' + str(N) for N in range(0, NmaxMax + 1, step)])
     plt.grid(linestyle='--')
@@ -202,7 +224,7 @@ def logplots_density_rpow2_Nmax(aHO, NmaxMax, step):
     plt.legend(['$N_{max} = $' + str(N) for N in range(0, NmaxMax + 1, step)])
     plt.grid(linestyle='--')
 
-def logplots_density_rpow4_Nmax(aHO, NmaxMax, step):
+def logplots_density_rpow4_Nmax(aHO, NmaxMax, step, xlim):
     x_model_log = np.linspace(0, 45, 1000)
     
     plt.figure()
@@ -210,7 +232,7 @@ def logplots_density_rpow4_Nmax(aHO, NmaxMax, step):
     for N in range(0, NmaxMax + 1, step):
         plt.semilogy(x_model_log, deuteron_wavefunc(N, aHO, x_model_log)[3] * x_model_log**4)
     plt.ylim(bottom=10**(-6), top=10)
-    plt.xlim(0,20)
+    plt.xlim(0,xlim)
     plt.title('$|\Phi(r)|^2 r^4$ bei $a_{HO} =$' + str(aHO) + ' und verschiedenen $N_{max}$ mit logarithmischer y-Achse')
     plt.xlabel('r (fm)')
     plt.legend(['$N_{max} = $' + str(N) for N in range(0, NmaxMax + 1, step)])
@@ -228,11 +250,17 @@ def logplots_density_rpow4_Nmax(aHO, NmaxMax, step):
 # plots_density_Nmax(1.8, 60, 10)
 # plots_density_Nmax(2.0, 60, 10)
 
-# logplots_density_Nmax(1.2, 60, 10)
-# logplots_density_Nmax(1.4, 60, 10)
-# logplots_density_Nmax(1.6, 60, 10)
-# logplots_density_Nmax(1.8, 60, 10)
-# logplots_density_Nmax(2.0, 60, 10)
+# logplots_density_Nmax(1.2, 10, 1, 12)
+# logplots_density_Nmax(1.4, 10, 1, 13)
+# logplots_density_Nmax(1.6, 10, 1, 15)
+# logplots_density_Nmax(1.8, 10, 1, 16)
+# logplots_density_Nmax(2.0, 10, 1, 17.5)
+
+logplots_ddensity_dr_Nmax(1.2, 60, 5, 30)
+logplots_ddensity_dr_Nmax(1.4, 60, 5, 30)
+logplots_ddensity_dr_Nmax(1.6, 60, 5, 35)
+logplots_ddensity_dr_Nmax(1.8, 60, 5, 40)
+logplots_ddensity_dr_Nmax(2.0, 60, 5, 45)
 
 # plots_wavefunc_aHO()
 # plots_density_aHO()
@@ -244,10 +272,10 @@ def logplots_density_rpow4_Nmax(aHO, NmaxMax, step):
 # logplots_density_rpow2_Nmax(1.8, 60, 2)
 # logplots_density_rpow2_Nmax(2.0, 60, 2)
 
-logplots_density_rpow4_Nmax(1.2, 6, 1)
-logplots_density_rpow4_Nmax(1.4, 6, 1)
-logplots_density_rpow4_Nmax(1.6, 6, 1)
-logplots_density_rpow4_Nmax(1.8, 6, 1)
-logplots_density_rpow4_Nmax(2.0, 6, 1)
+# logplots_density_rpow4_Nmax(1.2, 10, 1, 14)
+# logplots_density_rpow4_Nmax(1.4, 10, 1, 16)
+# logplots_density_rpow4_Nmax(1.6, 10, 1, 19)
+# logplots_density_rpow4_Nmax(1.8, 10, 1, 21)
+# logplots_density_rpow4_Nmax(2.0, 10, 1, 24)
 
 plt.show()
