@@ -29,7 +29,7 @@ aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0])
 r = np.linspace(0, 100, 1000)
 
 
-def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
+def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
     Nmax_lst = np.arange(NNmin, NNmax + 1, dNmax)
     
     for j in range(aHO_lst.size):
@@ -102,7 +102,7 @@ def plot_norm_comparison(r, NNmax, NNmin, dNmax):
         plt.grid(linestyle='--')
    
         
-plot_norm_comparison(r, 40, 3, 1)
+plot_density_continuation_rrms(r, 40, 3, 5)
 
 
 plt.show()
