@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from concurrent.futures import ThreadPoolExecutor
 from joblib import Parallel, delayed
+from scipy.integrate import trapezoid 
 
 from  rrms_density_continuation_fixed_slope import find_cont_par_cut, deut_density, log_model
 
@@ -9,7 +10,7 @@ def rsq_integral_trapz(Nmax, aHO, rmax, dr):
     r_size = int(np.round(rmax / dr))
     r = np.linspace(0, rmax + 1, r_size)
     integr = deut_density(r, Nmax, aHO) * r**4
-    return np.trapz(integr, r, dr) / 4      # Warum Faktor 4?
+    return trapezoid(integr, r, dr) / 4      # Warum Faktor 4?
 
 
 def rrms_integral_trapz(Nmax, Nmin, aHO, Nstep, rmax, dr):
@@ -102,8 +103,8 @@ def plot_norm_comparison(r, NNmax, NNmin, dNmax):
         plt.grid(linestyle='--')
    
         
-plot_wavefunc_continuation_rrms(r, 60, 3, 2)
-# plot_norm_comparison(r, 40, 3,)
+plot_wavefunc_continuation_rrms(r, 10, 3, 1)
+# plot_norm_comparison(r, 60, 3, 2)
 
 
 plt.show()

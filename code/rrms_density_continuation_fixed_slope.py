@@ -2,6 +2,7 @@ import numpy as np
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 from concurrent.futures import ThreadPoolExecutor
+from scipy.integrate import trapezoid
 from sys import exit
 
 
@@ -27,7 +28,7 @@ def find_slope(aHO):
     dr = 0.1
     r = np.arange(0, 50 + dr, dr)
     
-    density = np.array([deut_density(r, 1, aHO), deut_density(r, 60-1, aHO), deut_density(r, 60, aHO)])
+    density = np.array([deut_density(r, 1, aHO), deut_density(r, 150-1, aHO), deut_density(r, 150, aHO)])
     log_density = np.log(density)
     # Finding the starting point of the exponential range. It is chosen as the closest point to Nmax=1 density after r=3
 
@@ -58,7 +59,7 @@ def find_slope(aHO):
         middle_index = int(fit_points_indices.size / 2)
         two_third_index = int(fit_points_indices.size * 2 / 3)
         three_quater_index = middle_index + int(fit_points_indices.size / 4)
-        fit_points_indices = fit_points_indices[three_quater_index - int(fit_point_num / 2):three_quater_index + int(fit_point_num / 2)]
+        fit_points_indices = fit_points_indices[two_third_index - int(fit_point_num / 2):two_third_index + int(fit_point_num / 2)]
 
     # fit points from fit_pint_indexes
     r_fit = r[fit_points_indices]
@@ -120,7 +121,7 @@ def find_cont_par_cut(NNmax, aHO, norm=True):
     connect_point_num = 10
     if linear_range_indices.size > connect_point_num:
         middle_index = int(linear_range_indices.size / 2)
-        # two_third_index = int(fit_points_indices.size * 2 / 3)
+        two_third_index = int(linear_range_indices.size * 2 / 3)
         three_quater_index = middle_index + int(linear_range_indices.size / 4)
         linear_range_indices = linear_range_indices[-connect_point_num:]
     
@@ -157,23 +158,23 @@ def find_cont_par_cut(NNmax, aHO, norm=True):
     cont_lst = np.exp(log_model(r_cont, slope, y_intersect))
     
     if norm:    
-        norm_integ_wave = np.trapz(density_lst * r_wave**2, x=r_wave)
-        norm_integ_cont = np.trapz(cont_lst * r_cont**2, x=r_cont)
+        norm_integ_wave = trapezoid(density_lst * r_wave**2, x=r_wave)
+        norm_integ_cont = trapezoid(cont_lst * r_cont**2, x=r_cont)
         
         norm_integ = norm_integ_wave + norm_integ_cont
         
         norm_factor = 1 / norm_integ
 
-        rsq_wave = np.trapz(density_lst * norm_factor * r_wave**4, x=r_wave) / 4
-        rsq_cont = np.trapz(cont_lst * norm_factor * r_cont**4, x=r_cont) / 4
+        rsq_wave = trapezoid(density_lst * norm_factor * r_wave**4, x=r_wave) / 4
+        rsq_cont = trapezoid(cont_lst * norm_factor * r_cont**4, x=r_cont) / 4
 
         rrms = np.sqrt(rsq_wave + rsq_cont)
 
         return slope, y_intersect, connection_point, rrms, norm_factor, np.array([r[linear_range_indices], density[2, linear_range_indices]])
         
     else:
-        rsq_wave = np.trapz(density_lst * r_wave**4, x=r_wave) / 4
-        rsq_cont = np.trapz(cont_lst * r_cont**4, x=r_cont) / 4
+        rsq_wave = trapezoid(density_lst * r_wave**4, x=r_wave) / 4
+        rsq_cont = trapezoid(cont_lst * r_cont**4, x=r_cont) / 4
         
         rrms = np.sqrt(rsq_wave + rsq_cont)
 
