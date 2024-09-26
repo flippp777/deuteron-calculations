@@ -94,35 +94,35 @@ def find_cont_par_cut(NNmax, aHO, norm=True):
     # Finding the starting point of the exponential range. It is chosen as the closest point to Nmax=1 density after r=3
     r3_index = int(3/dr)
     diff_log_density_Nmax1 = np.abs(log_density[0, r3_index:] - log_density[-1, r3_index:])
-    start_exp_index = max(np.where(diff_log_density_Nmax1 < min(diff_log_density_Nmax1) + 0.1)[0]) + r3_index
+    start_linear_index = max(np.where(diff_log_density_Nmax1 < min(diff_log_density_Nmax1) + 0.1)[0]) + r3_index
     
     # Difference between log density at Nmax_j to Nmax_i starting from the start point of the linear range
-    diff_log_density = np.abs(log_density[1, start_exp_index:] - log_density[2, start_exp_index:])
+    diff_log_density = np.abs(log_density[1, start_linear_index:] - log_density[2, start_linear_index:])
 
     # Indiexes are at the points, where the difference in log densities is smaller 0.1
     distance = 0.01
-    linear_range_indices = np.where(diff_log_density < distance)[0] + start_exp_index
+    linear_range_indices = np.where(diff_log_density < distance)[0] + start_linear_index
     
     # Removing duplicates
     linear_range_indices = np.unique(linear_range_indices).astype(int)
 
     # condition to have two differen points in order to fit a straight
-    if np.unique(linear_range_indices).size < 2:
-        delta = distance + 10**(-6)
-        while np.unique(linear_range_indices).size < 2:
-            linear_range_indices = np.append(linear_range_indices, np.where(diff_log_density < delta)[0] + linear_range_indices)
-            delta += 10**(-6)
+    if np.unique(linear_range_indices).size < 20:
+        delta = distance + 10**(-3)
+        while np.unique(linear_range_indices).size < 20:
+            linear_range_indices = np.append(linear_range_indices, np.where(diff_log_density < delta)[0] + start_linear_index)
+            delta += 10**(-3)
     
     # Removing duplicates
     linear_range_indices = np.unique(linear_range_indices).astype(int)
     
-    # use only the fit_point_num number of points in the middle of the list
-    fit_point_num = 4
-    if linear_range_indices.size > fit_point_num:
+    # # use only the fit_point_num number of points in the middle of the list
+    connect_point_num = 10
+    if linear_range_indices.size > connect_point_num:
         middle_index = int(linear_range_indices.size / 2)
         # two_third_index = int(fit_points_indices.size * 2 / 3)
         three_quater_index = middle_index + int(linear_range_indices.size / 4)
-        linear_range_indices = linear_range_indices[three_quater_index - int(fit_point_num / 2):three_quater_index + int(fit_point_num / 2)]
+        linear_range_indices = linear_range_indices[-connect_point_num:]
     
     if aHO == 1.2:
         slope = slope_aHO12
