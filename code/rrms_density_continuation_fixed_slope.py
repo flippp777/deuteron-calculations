@@ -68,6 +68,7 @@ def find_slope(aHO):
     
     # fitting the points to finde the slope
     slope = curve_fit(log_model, r_fit, log_density_fit)[0][0]
+    print(slope)
 
     return slope
 
@@ -180,8 +181,8 @@ def find_cont_par_cut(NNmax, aHO, norm=True):
 
         return slope, y_intersect, connection_point, rrms, np.array([r[linear_range_indices], density[2, linear_range_indices]])
 
-aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0]) 
+# aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0]) 
 
-for aHO in aHO_lst:    
-    find_cont_par_cut(60, aHO)
-plt.show()
+# for aHO in aHO_lst:    
+#     find_cont_par_cut(60, aHO)
+# plt.show()
