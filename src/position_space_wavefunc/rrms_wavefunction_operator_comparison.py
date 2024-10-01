@@ -4,8 +4,8 @@ from joblib import Parallel, delayed
 from concurrent.futures import ThreadPoolExecutor
 from scipy.integrate import quad
 
-from make_position_space_wavefunc import deuteron_wavefunc
-from make_matrix import mat
+from make.position_space_wavefunc import deuteron_wavefunc
+from make.matrix import mat
 
 
 chi_Nmax150_aHO12 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.20.meho', skiprows=1)

@@ -1,6 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
-from make_position_space_wavefunc import deuteron_wavefunc
+from make.position_space_wavefunc import deuteron_wavefunc
 
 
 wavefuncs_aHO12_comp = [np.loadtxt('comparative_wave_functions\chi2bM3A_srg0000_NMax\chi2bM3A_srg0000_NMax05_aHO01.20_JLLST10210.txt', skiprows=12, delimiter=',')]

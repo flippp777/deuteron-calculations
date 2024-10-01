@@ -8,7 +8,7 @@ aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0])
 Nmax_lst = np.arange(0, 62, 2)
 r = np.linspace(0, 100, 1000)
 
-from make_position_space_wavefunc import deuteron_wavefunc
+from make.position_space_wavefunc import deuteron_wavefunc
 def deut_density(r, Nmax, aHO):
     return deuteron_wavefunc(Nmax, aHO, r)[3]
 

@@ -1,6 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
-from make_position_space_wavefunc import deuteron_wavefunc
+from make.position_space_wavefunc import deuteron_wavefunc
 from scipy import integrate
 
 # print('density integral aHO = 1.2')

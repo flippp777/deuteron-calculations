@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from make_matrix import mat
+from make.matrix import mat
 from joblib import Parallel, delayed
 from concurrent.futures import ThreadPoolExecutor
 from math import sqrt
