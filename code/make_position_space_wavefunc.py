@@ -77,23 +77,20 @@ def deuteron_wavefunc(Nmax, aHO, r):
     
     return [deut_wavefunc, deut_wavefunc_L0, deut_wavefunc_L2, deut_density]
 
-# Alternative way to calculate the the wavefunction at different r with one r at a time. 
-# It is the same as before 
-def deuteron_wavefunc_single_r(Nmax, aHO, r):
-    gs_vec = gs_eigvec(Nmax, aHO)
+# # Alternative way to calculate the the wavefunction at different r with one r at a time. 
+# # It is the same as before 
+# def deuteron_wavefunc_single_r(Nmax, aHO, r):
+#     gs_vec = gs_eigvec(Nmax, aHO)
         
-    deut_wavefuncs = np.array([[0,0],[0,0]])
-    for x in r:
-        deut_wavefunc_L0 = 0
-        deut_wavefunc_L2 = 0
-        for N in range(Nmax + 1):
-            deut_wavefunc_L0 += gs_vec[N] * pos_wavefunc(N, 0, aHO, x) * pos_wavefunc_norm(N, 0)
-        for N in range(Nmax + 1):
-            deut_wavefunc_L2 += gs_vec[N + Nmax + 1] * pos_wavefunc(N, 2, aHO, x) * pos_wavefunc_norm(N, 2)
-        deut_wavefuncs = np.append(deut_wavefuncs, [[deut_wavefunc_L0,deut_wavefunc_L2]], axis=0)
-    deut_wavefuncs = np.delete(deut_wavefuncs, (0,1), axis=0)
+#     deut_wavefuncs = np.array([[0,0],[0,0]])
+#     for x in r:
+#         deut_wavefunc_L0 = 0
+#         deut_wavefunc_L2 = 0
+#         for N in range(Nmax + 1):
+#             deut_wavefunc_L0 += gs_vec[N] * pos_wavefunc(N, 0, aHO, x) * pos_wavefunc_norm(N, 0)
+#         for N in range(Nmax + 1):
+#             deut_wavefunc_L2 += gs_vec[N + Nmax + 1] * pos_wavefunc(N, 2, aHO, x) * pos_wavefunc_norm(N, 2)
+#         deut_wavefuncs = np.append(deut_wavefuncs, [[deut_wavefunc_L0,deut_wavefunc_L2]], axis=0)
+#     deut_wavefuncs = np.delete(deut_wavefuncs, (0,1), axis=0)
 
-    return deut_wavefuncs 
-
-# print(deuteron_wavefunc(0, 1.8, np.array([0,1])))
-# deuteron_wavefunc(20, 1.8, np.linspace(0,10, 100))
+#     return deut_wavefuncs 
