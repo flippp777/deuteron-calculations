@@ -10,10 +10,10 @@
 
  - kleinere Schritte im Nmax: 1er Schritte bis Nmax = 10    Erledigt
 
- - Verhalten der fitpunkte in abhängigkeit von Nmax
+ - Verhalten der fitpunkte in abhängigkeit von Nmax     Erledigt
 
  - Steigung in log-Darstellung mit Energie herausfinden
 
  - Ableitung Plotten    Erledigt
 
- - Fit mit |Psi(r)|**2 r**4 für Radiusberechnung
+ - Fit mit |Psi(r)|**2 r**4 für Radiusberechnung        Erledigt
