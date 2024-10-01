@@ -1,7 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from src.make.position_space_wavefunc import deuteron_wavefunc
-from rrms_density_continuation_overlap_Nmax_minus_1 import find_cont_par_cut
+import sys
+
+sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelorthesis\deuteron-calculations\src')
+
+from make.position_space_wavefunc import deuteron_wavefunc
+from rrms_density_continnuation.rrms_density_continuation_overlap_Nmax_minus_1 import find_cont_par_cut
 
 
 def deut_density(r, Nmax, aHO):
@@ -32,8 +36,8 @@ def slope_at_r(r):
         print(aHO, slope[-1], slope_fit[-1])
 
 aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0])
-Nmax_lst = np.arange(0, 60, 1)
+Nmax_lst = np.arange(140, 150, 1)
        
-slope_at_r(100)
+slope_at_r(20)
 
 plt.show()
