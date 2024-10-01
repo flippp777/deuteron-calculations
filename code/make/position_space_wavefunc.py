@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.special import eval_genlaguerre, gammaln, gamma
-from make_matrix import mat
+from make.matrix import mat
 from sys import exit
 
 

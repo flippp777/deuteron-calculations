@@ -5,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 from sys import exit
 
 
-from make_position_space_wavefunc import deuteron_wavefunc
+from make.position_space_wavefunc import deuteron_wavefunc
 def deut_density(r, Nmax, aHO):
     return deuteron_wavefunc(Nmax, aHO, r)[3]
 
