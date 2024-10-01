@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from make_position_space_wavefunc import deuteron_wavefunc
+from src.make.position_space_wavefunc import deuteron_wavefunc
+from rrms_density_continuation_overlap_Nmax_minus_1 import find_cont_par_cut
 
 
 def deut_density(r, Nmax, aHO):
@@ -20,15 +21,19 @@ def slope_at_r(r):
         plt.figure()
         plt.title("Steigung der logarithmischen Aufnethaltwahrscheinlichkeit an der Stelle r = " + str(r) + " (fm) für $a_{HO} = $" + str(aHO) + " (fm)")
         slope = []
+        slope_fit = []
         for Nmax in Nmax_lst:
             slope.append(derivative(r_space, np.log(deut_density(r_space, Nmax, aHO)), 1)[1])
+            slope_fit.append(find_cont_par_cut(Nmax, aHO)[0])
+        plt.plot(Nmax_lst, slope_fit)
         plt.plot(Nmax_lst, slope)
+        plt.legend(['Fit', 'Derivative'])
         plt.grid()
-        print(aHO, slope[-1])
+        print(aHO, slope[-1], slope_fit[-1])
 
 aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0])
 Nmax_lst = np.arange(0, 60, 1)
        
-slope_at_r(20)
+slope_at_r(100)
 
 plt.show()
