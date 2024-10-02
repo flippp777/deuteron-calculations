@@ -5,7 +5,8 @@ from concurrent.futures import ThreadPoolExecutor
 from sys import exit
 import sys
 
-sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelorthesis\deuteron-calculations\src')
+# sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelorthesis\deuteron-calculations\src')
+sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 
 from make.position_space_wavefunc import deuteron_wavefunc
 
