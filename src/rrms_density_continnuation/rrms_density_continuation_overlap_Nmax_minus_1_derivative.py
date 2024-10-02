@@ -162,5 +162,5 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
         plt.grid(linestyle='--')
 
 
-plot_density_continuation_rrms(r, 60, 3, 2)
+plot_density_continuation_rrms(r, 40, 3, 5)
 plt.show()
