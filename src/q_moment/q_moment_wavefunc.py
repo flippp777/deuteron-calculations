@@ -4,7 +4,11 @@ import sys
 import matplotlib.pyplot as plt
 from concurrent.futures import ThreadPoolExecutor
 
-sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
+if sys.platform == "win32":
+    sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelorthesis\deuteron-calculations\src')
+else:
+    sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
+
 from make.position_space_wavefunc import deuteron_wavefunc
 
 def log_model(r, a, b):
@@ -43,7 +47,7 @@ def continue_q(Nmax, aHO):
     q_lst_1 = q(r, Nmax, aHO)
     log_q_lst_1 = np.log(q_lst_1)
     
-    nan_index = np.where(np.isnan(log_q_lst_0)[0])
+    nan_index = np.where(np.isnan(log_q_lst_0))[0]
     nan_index = np.append(nan_index, np.where(np.isnan(log_q_lst_1))[0]).flatten()
     
     r = np.delete(r, nan_index)
@@ -67,7 +71,7 @@ def continue_q(Nmax, aHO):
     end_index = int(max(end_index)) + 1
     fit_points_indices = np.arange(start_index, end_index)
     
-    fit_point_num = 20
+    fit_point_num = 50
     if fit_points_indices.size > fit_point_num:
         middle_index = int(fit_points_indices.size / 2)
         # two_third_index = int(fit_points_indices.size * 2 / 3)
@@ -76,6 +80,7 @@ def continue_q(Nmax, aHO):
     
     # finding the slope with the mean of the derivative
     slope = np.mean(derivative(r[fit_points_indices], log_q[1, fit_points_indices], 1))
+    # slope = sp.optimize.curve_fit(log_model, r[fit_points_indices], log_q[1, fit_points_indices])[0][0]
 
     fit_points = [r[fit_points_indices], log_q[1, start_index: end_index]]
     
