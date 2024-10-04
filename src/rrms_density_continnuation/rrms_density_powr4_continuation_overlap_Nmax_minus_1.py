@@ -72,6 +72,7 @@ def find_cont_par_cut(NNmax, aHO, norm=True):
     
     # fitting the points to finde the slope
     slope = curve_fit(log_model, r_fit, log_density_fit)[0][0]
+    # slope = np.mean(derivative(r_fit, log_density_fit,1))
     
     # Finding a point that has the same slope as the fitted one 
     d_dr = derivative(r, log_density[2, min(fit_points_indices):max(fit_points_indices) + 1], 1)

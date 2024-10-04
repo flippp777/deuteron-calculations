@@ -1,15 +1,21 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from concurrent.futures import ThreadPoolExecutor
+from scipy.integrate import trapezoid
 from joblib import Parallel, delayed
+import sys
 
+if sys.platform == 'win32':
+    sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelorthesis\deuteron-calculations\src')
+else:
+    sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 from rrms_density_continuation_overlap_Nmax_minus_1 import find_cont_par_cut, deut_density, log_model
 
 def rsq_integral_trapz(Nmax, aHO, rmax, dr):
     r_size = int(np.round(rmax / dr))
     r = np.linspace(0, rmax + 1, r_size)
     integr = deut_density(r, Nmax, aHO) * r**4
-    return np.trapz(integr, r, dr) / 4      # Warum Faktor 4?
+    return trapezoid(integr, r, dr) / 4      # Warum Faktor 4?
 
 
 def rrms_integral_trapz(Nmax, Nmin, aHO, Nstep, rmax, dr):
@@ -44,6 +50,8 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
             plt.plot(r_cont, np.exp(log_model(r_cont, slope, y_sect)) * norm, "r")
             # plt.scatter(fit_points[0], np.exp(fit_points[1]))
             plt.semilogy()
+            plt.xlabel('r (fm)')
+            plt.ylabel('$|\Phi(r)|^2$')
             plt.grid(linestyle='--')
             rrms_lst.append(rrms)
         
@@ -102,7 +110,7 @@ def plot_norm_comparison(r, NNmax, NNmin, dNmax):
         plt.grid(linestyle='--')
    
         
-plot_density_continuation_rrms(r, 40, 3, 5)
+plot_density_continuation_rrms(r, 10, 3, 1)
 
 
 plt.show()

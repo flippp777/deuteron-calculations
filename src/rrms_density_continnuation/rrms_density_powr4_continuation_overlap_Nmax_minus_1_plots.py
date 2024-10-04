@@ -2,6 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from concurrent.futures import ThreadPoolExecutor
 from joblib import Parallel, delayed
+import sys
+from scipy.integrate import trapezoid
+
+if sys.platform == 'win32':
+    sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelorthesis\deuteron-calculations\src')
+else:
+    sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 
 from rrms_density_powr4_continuation_overlap_Nmax_minus_1 import find_cont_par_cut, deut_density, log_model
 
@@ -9,7 +16,7 @@ def rsq_integral_trapz(Nmax, aHO, rmax, dr):
     r_size = int(np.round(rmax / dr))
     r = np.linspace(0, rmax + 1, r_size)
     integr = deut_density(r, Nmax, aHO) * r**4
-    return np.trapz(integr, r, dr) / 4      # Warum Faktor 4?
+    return trapezoid(integr, r, dr) / 4      # Warum Faktor 4?
 
 
 def rrms_integral_trapz(Nmax, Nmin, aHO, Nstep, rmax, dr):
@@ -33,6 +40,8 @@ def plot_density_powr4_continuation_rrms(r, NNmax, NNmin, dNmax):
     Nmax_lst = np.arange(NNmin, NNmax + 1, dNmax)
     
     for j in range(aHO_lst.size):
+        print(str(20 * j) + " %")
+        
         plt.figure()
         plt.subplot(121)
 
@@ -45,6 +54,8 @@ def plot_density_powr4_continuation_rrms(r, NNmax, NNmin, dNmax):
             # plt.scatter(fit_points[0], np.exp(fit_points[1]))
             plt.semilogy()
             plt.grid(linestyle='--')
+            plt.xlabel('r (fm)')
+            plt.ylabel('$|\Phi(r)|^2 r^4$')
             rrms_lst.append(rrms)
         
         plt.title("Wellenfunktionen und exponentielle Fortzetzung für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)") 
@@ -61,7 +72,7 @@ def plot_density_powr4_continuation_rrms(r, NNmax, NNmin, dNmax):
         plt.legend(["Wellenfunktion", 'Wellenfunktion + Fortsetzung'])
         plt.xlabel('$N_{max}$')
         plt.ylabel("$R_{rms}$ (fm)")
-        plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
+        plt.yticks([1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
         plt.grid(linestyle='--')
 
 
@@ -102,7 +113,7 @@ def plot_norm_comparison(r, NNmax, NNmin, dNmax):
         plt.grid(linestyle='--')
    
         
-plot_density_powr4_continuation_rrms(r, 10, 5, 1)
+plot_density_powr4_continuation_rrms(r, 60, 5, 2)
 
 
 plt.show()
