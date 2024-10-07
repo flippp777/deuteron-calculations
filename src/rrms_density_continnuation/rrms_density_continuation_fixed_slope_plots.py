@@ -103,7 +103,7 @@ def plot_norm_comparison(r, NNmax, NNmin, dNmax):
         plt.grid(linestyle='--')
    
         
-plot_wavefunc_continuation_rrms(r, 10, 3, 1)
+plot_wavefunc_continuation_rrms(r, 60, 3, 5)
 # plot_norm_comparison(r, 60, 3, 2)
 
 

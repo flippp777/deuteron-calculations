@@ -63,7 +63,7 @@ def find_slope(aHO):
         middle_index = int(fit_points_indices.size / 2)
         two_third_index = int(fit_points_indices.size * 2 / 3)
         three_quater_index = middle_index + int(fit_points_indices.size / 4)
-        fit_points_indices = fit_points_indices[two_third_index - int(fit_point_num / 2):two_third_index + int(fit_point_num / 2)]
+        fit_points_indices = fit_points_indices[middle_index - int(fit_point_num / 2):middle_index + int(fit_point_num / 2)]
 
     # fit points from fit_pint_indexes
     r_fit = r[fit_points_indices]
@@ -72,6 +72,7 @@ def find_slope(aHO):
     
     # fitting the points to finde the slope
     slope = curve_fit(log_model, r_fit, log_density_fit)[0][0]
+    # slope = np.mean(derivative(r_fit, log_density_fit, 1) )
     print(slope)
 
     return slope
@@ -81,7 +82,18 @@ slope_aHO14 = find_slope(1.4)
 slope_aHO16 = find_slope(1.6)
 slope_aHO18 = find_slope(1.8)
 slope_aHO20 = find_slope(2.0)
+
+# slope_aHO12 = 0.43
+# slope_aHO14 = 0.43
+# slope_aHO16 = 0.43
+# slope_aHO18 = 0.43
+# slope_aHO20 = 0.43
     
+# slope_aHO12 = 0.46
+# slope_aHO14 = 0.46
+# slope_aHO16 = 0.46
+# slope_aHO18 = 0.46
+# slope_aHO20 = 0.46
 
 def find_cont_par_cut(NNmax, aHO, norm=True):
     # NNmax has to be bigger than 3 because Nmax=2 is the firts referece point to check for same densities
