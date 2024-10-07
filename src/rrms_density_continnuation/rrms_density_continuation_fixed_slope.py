@@ -77,23 +77,23 @@ def find_slope(aHO):
 
     return slope
 
-slope_aHO12 = find_slope(1.2)
-slope_aHO14 = find_slope(1.4)
-slope_aHO16 = find_slope(1.6)
-slope_aHO18 = find_slope(1.8)
-slope_aHO20 = find_slope(2.0)
+# slope_aHO12 = find_slope(1.2)
+# slope_aHO14 = find_slope(1.4)
+# slope_aHO16 = find_slope(1.6)
+# slope_aHO18 = find_slope(1.8)
+# slope_aHO20 = find_slope(2.0)
 
-# slope_aHO12 = 0.43
-# slope_aHO14 = 0.43
-# slope_aHO16 = 0.43
-# slope_aHO18 = 0.43
-# slope_aHO20 = 0.43
+# slope_aHO12 = -0.43
+# slope_aHO14 = -0.43
+# slope_aHO16 = -0.43
+# slope_aHO18 = -0.43
+# slope_aHO20 = -0.43
     
-# slope_aHO12 = 0.46
-# slope_aHO14 = 0.46
-# slope_aHO16 = 0.46
-# slope_aHO18 = 0.46
-# slope_aHO20 = 0.46
+slope_aHO12 = -0.46
+slope_aHO14 = -0.46
+slope_aHO16 = -0.46
+slope_aHO18 = -0.46
+slope_aHO20 = -0.46
 
 def find_cont_par_cut(NNmax, aHO, norm=True):
     # NNmax has to be bigger than 3 because Nmax=2 is the firts referece point to check for same densities
