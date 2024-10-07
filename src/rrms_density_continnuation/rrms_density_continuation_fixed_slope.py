@@ -3,10 +3,14 @@ from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 from concurrent.futures import ThreadPoolExecutor
 from scipy.integrate import trapezoid
-from sys import exit
+import sys 
 
+if sys.platform == 'win32':
+    sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelorthesis\deuteron-calculations\src')
+else:
+    sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 
-from make_position_space_wavefunc import deuteron_wavefunc
+from make.position_space_wavefunc import deuteron_wavefunc
 def deut_density(r, Nmax, aHO):
     return deuteron_wavefunc(Nmax, aHO, r)[3]
 
@@ -82,7 +86,7 @@ slope_aHO20 = find_slope(2.0)
 def find_cont_par_cut(NNmax, aHO, norm=True):
     # NNmax has to be bigger than 3 because Nmax=2 is the firts referece point to check for same densities
     if NNmax < 3:
-        exit("NNmax muss mindestens 3 sein / NNmin darf nicht kleiner als 3 sein")
+        sys.exit("NNmax muss mindestens 3 sein / NNmin darf nicht kleiner als 3 sein")
 
     # Define r range
     dr = 0.1
