@@ -142,7 +142,7 @@ def continue_q_wavefunc(Nmax, aHO):
     end_index_w = int(max(end_index_w)) + 1
     fit_points_indices_w = np.arange(start_index_w, end_index_w)
     
-    fit_point_num = 10
+    fit_point_num = 30
     if fit_points_indices_u.size > fit_point_num:
         middle_index = int(fit_points_indices_u.size / 2)
         # two_third_index = int(fit_points_indices.size * 2 / 3)
@@ -158,7 +158,7 @@ def continue_q_wavefunc(Nmax, aHO):
     fit_points_u = np.array([r[fit_points_indices_u], log_u[1, fit_points_indices_u]])
     fit_points_w = np.array([r[fit_points_indices_w], log_w[1, fit_points_indices_w]])
     slope_u = np.mean(derivative(fit_points_u[0], fit_points_u[1], 1))
-    slope_w = np.mean(derivative(fit_points_w[0], fit_points_w, 1))
+    slope_w = np.mean(derivative(fit_points_w[0], fit_points_w[1], 1))
 
     # Finding a point that has the same slope as the found one 
     d_dr_u = derivative(r, log_u[1, fit_points_indices_u], 1)
@@ -177,8 +177,8 @@ def continue_q_wavefunc(Nmax, aHO):
     connection_point_w = connection_point_w[0]
 
     # Finding the y intersection
-    y_intersect_u = np.log(q(connection_point_u, Nmax , aHO)) - slope_u * connection_point_u
-    y_intersect_w = np.log(q(connection_point_w, Nmax , aHO)) - slope_w * connection_point_w
+    y_intersect_u = np.log(u(connection_point_u, Nmax , aHO)) - slope_u * connection_point_u
+    y_intersect_w = np.log(w(connection_point_w, Nmax , aHO)) - slope_w * connection_point_w
     
     def u_cont(r):
         u_cont = []
@@ -301,7 +301,7 @@ def plot_continuation_wavefunc_Q(r, NNmax, NNmin, dNmax):
         plt.grid(linestyle='--')
 
 # plot_continuation_integrand_Q(r, 60, 5, 2)
-plot_continuation_wavefunc_Q(r, 10, 5, 2)
+plot_continuation_wavefunc_Q(r, 10, 5, 1)
 
 plt.show()
     
