@@ -48,7 +48,7 @@ def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
             plt.grid(linestyle='--')
             rrms_lst.append(rrms)
         
-        plt.title("Wellenfunktionen und exponentielle Fortzetzung für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)") 
+        plt.title("Wellenfunktionen und exponentielle Fortzetzung mit Steigung -0.46 1/fm für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)") 
         plt.ylim(10**(-6), 1)
         plt.xlim(0, 20)
         plt.legend(["Wellenfunktion", "Fortsetzung"])
@@ -103,7 +103,7 @@ def plot_norm_comparison(r, NNmax, NNmin, dNmax):
         plt.grid(linestyle='--')
    
         
-plot_wavefunc_continuation_rrms(r, 10, 3, 1)
+plot_wavefunc_continuation_rrms(r, 60, 3, 2)
 # plot_norm_comparison(r, 60, 3, 2)
 
 

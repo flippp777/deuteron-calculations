@@ -1,12 +1,15 @@
 import numpy as np
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
+from scipy.integrate import trapezoid
 from concurrent.futures import ThreadPoolExecutor
 from sys import exit
 import sys
 
-# sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelorthesis\deuteron-calculations\src')
-sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
+if sys.platform == 'win32':
+    sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelorthesis\deuteron-calculations\src')
+else:
+    sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 
 from make.position_space_wavefunc import deuteron_wavefunc
 
@@ -80,23 +83,23 @@ def find_cont_par_cut(NNmax, aHO, norm=True):
     cont_lst = np.exp(log_model(r_cont, slope, y_intersect))
     
     if norm:    
-        norm_integ_wave = np.trapz(density_lst * r_wave**2, x=r_wave)
-        norm_integ_cont = np.trapz(cont_lst * r_cont**2, x=r_cont)
+        norm_integ_wave = trapezoid(density_lst * r_wave**2, x=r_wave)
+        norm_integ_cont = trapezoid(cont_lst * r_cont**2, x=r_cont)
         
         norm_integ = norm_integ_wave + norm_integ_cont
         
         norm_factor = 1 / norm_integ
 
-        rsq_wave = np.trapz(density_lst * norm_factor * r_wave**4, x=r_wave) / 4
-        rsq_cont = np.trapz(cont_lst * norm_factor * r_cont**4, x=r_cont) / 4
+        rsq_wave = trapezoid(density_lst * norm_factor * r_wave**4, x=r_wave) / 4
+        rsq_cont = trapezoid(cont_lst * norm_factor * r_cont**4, x=r_cont) / 4
 
         rrms = np.sqrt(rsq_wave + rsq_cont)
 
         return slope, y_intersect, connection_point, rrms, norm_factor, fit_points
         
     else:
-        rsq_wave = np.trapz(density_lst * r_wave**4, x=r_wave) / 4
-        rsq_cont = np.trapz(cont_lst * r_cont**4, x=r_cont) / 4
+        rsq_wave = trapezoid(density_lst * r_wave**4, x=r_wave) / 4
+        rsq_cont = trapezoid(cont_lst * r_cont**4, x=r_cont) / 4
         
         rrms = np.sqrt(rsq_wave + rsq_cont)
 
@@ -107,7 +110,7 @@ def rsq_integral_trapz(Nmax, aHO, rmax, dr):
     r_size = int(np.round(rmax / dr))
     r = np.linspace(0, rmax + 1, r_size)
     integr = deut_density(r, Nmax, aHO) * r**4
-    return np.trapz(integr, r, dr) / 4      # Warum Faktor 4?
+    return trapezoid(integr, r, dr) / 4      # Warum Faktor 4?
 
 
 def rrms_integral_trapz(Nmax, Nmin, aHO, Nstep, rmax, dr):

@@ -35,20 +35,24 @@ def slope_at_r(r):
         plt.grid()
         print(aHO, slope[-1], slope_fit[-1])
 
-def slope_at_Nmax(Nmax, rmin, rmax):
+def slope_at_Nmax(Nmax, aHO, rmin, rmax):
     r = np.arange(rmin, rmax+0.1, 0.1)
-    for aHO in aHO_lst:
-        plt.figure()
-        plt.title("Steigung der logarithmischen Aufnethaltwahrscheinlichkeit an der Stelle für $N_{max}$ = " + str(Nmax) + " für $a_{HO} = $" + str(aHO) + " (fm)")
-        plt.plot(r, derivative(r, np.log(deut_density(r, Nmax, aHO)), 1))
-        # plt.plot(r, np.log(deut_density(r, Nmax, aHO)))
-        plt.grid()
+    # plt.figure()
+    plt.title("Steigung der logarithmischen Aufnethaltwahrscheinlichkeit für $N_{max}$ = " + str(Nmax))
+    plt.plot(r, derivative(r, np.log(deut_density(r, Nmax, aHO)), 1))
+    # plt.plot(r, np.log(deut_density(r, Nmax, aHO)))
+    plt.grid()
     
 
 aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0])
 Nmax_lst = np.arange(140, 150, 1)
        
 # slope_at_r(20)
-slope_at_Nmax(150,10,60)
+slope_at_Nmax(150, 1.2, 20, 34)
+slope_at_Nmax(150, 1.4, 20, 40)
+slope_at_Nmax(150, 1.6, 20, 47)
+slope_at_Nmax(150, 1.8, 20, 54)
+slope_at_Nmax(150, 2.0, 20, 60)
+plt.legend(['$a_{HO} = $' + str(aHO) + ' fm' for aHO in aHO_lst])
 
 plt.show()

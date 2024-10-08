@@ -4,7 +4,11 @@ import sys
 import matplotlib.pyplot as plt
 from concurrent.futures import ThreadPoolExecutor
 
-sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
+if sys.platform == "win32":
+    sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelorthesis\deuteron-calculations\src')
+else:
+    sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
+
 from make.position_space_wavefunc import deuteron_wavefunc
 
 def log_model(r, a, b):
@@ -43,7 +47,7 @@ def continue_q_integrand(Nmax, aHO):
     q_lst_1 = q(r, Nmax, aHO)
     log_q_lst_1 = np.log(q_lst_1)
     
-    nan_index = np.where(np.isnan(log_q_lst_0)[0])
+    nan_index = np.where(np.isnan(log_q_lst_0))[0]
     nan_index = np.append(nan_index, np.where(np.isnan(log_q_lst_1))[0]).flatten()
     
     r = np.delete(r, nan_index)
@@ -67,7 +71,7 @@ def continue_q_integrand(Nmax, aHO):
     end_index = int(max(end_index)) + 1
     fit_points_indices = np.arange(start_index, end_index)
     
-    fit_point_num = 20
+    fit_point_num = 50
     if fit_points_indices.size > fit_point_num:
         middle_index = int(fit_points_indices.size / 2)
         # two_third_index = int(fit_points_indices.size * 2 / 3)
@@ -76,6 +80,7 @@ def continue_q_integrand(Nmax, aHO):
     
     # finding the slope with the mean of the derivative
     slope = np.mean(derivative(r[fit_points_indices], log_q[1, fit_points_indices], 1))
+    # slope = sp.optimize.curve_fit(log_model, r[fit_points_indices], log_q[1, fit_points_indices])[0][0]
 
     fit_points = [r[fit_points_indices], log_q[1, start_index: end_index]]
     
@@ -236,20 +241,23 @@ def plot_continuation_wavefunc_Q(r, NNmax, NNmin, dNmax):
             plt.grid(linestyle='--')
             Q_lst.append(Q)
         
-        plt.title("Wellenfunktionen und exponentielle Fortzetzung für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)") 
+        plt.title("$1/\sqrt{50} r^2 u(r) w(r) - 1/20 r^2 w(r)^2$ und exponentielle Fortzetzung für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)") 
         plt.ylim(10**(-6), 1)
         plt.xlim(0, 20)
-        plt.legend(["Wellenfunktion", "Fortsetzung"])
+        plt.xlabel('r (fm)')
+        plt.legend(["$1/\sqrt{50} r^2 u(r) w(r) - 1/20 r^2 w(r)^2$", "Fortsetzung"])
+        print(Q_lst[-1])
         
         Q_full_wave = Q_integral_trapz_aHO(NNmax, NNmin, aHO_lst[j], dNmax)
         plt.subplot(122)
         plt.plot(Q_full_wave[0], Q_full_wave[1], 'x-')
         plt.plot(Nmax_lst, Q_lst, 'x-')
-        plt.ylim(0, 0.4)
-        plt.title('$R_{rms}$ bei $a_{HO} = $' + str(aHO_lst[j]) + ' fm aus Wellenfunktion und exponentieller Fortsetzung')
+        plt.ylim(0.15, 0.4)
+        plt.yticks([0.15, 0.2, 0.25, 0.2709, 0.3, 0.35, 0.4, 0.45])
+        plt.title('El. Quadrupolmoment bei $a_{HO} = $' + str(aHO_lst[j]) + ' fm aus Wellenfunktion und exponentieller Fortsetzung')
         plt.legend(["Wellenfunktion", 'Wellenfunktion + Fortsetzung'])
         plt.xlabel('$N_{max}$')
-        plt.ylabel("$R_{rms}$ (fm)")
+        plt.ylabel("$Q_{d}$ ($e_{0}$fm$^2$)")
         plt.grid(linestyle='--')
 
 
