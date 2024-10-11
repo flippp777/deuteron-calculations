@@ -1,12 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
+from scipy.optimize import curve_fit
 
 sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelorthesis\deuteron-calculations\src')
 
 from make.position_space_wavefunc import deuteron_wavefunc
 from rrms_density_continnuation.rrms_density_continuation_overlap_Nmax_minus_1 import find_cont_par_cut
 
+plt.style.use('tableau-colorblind10')
 
 def deut_density(r, Nmax, aHO):
     return deuteron_wavefunc(Nmax, aHO, r)[3]
@@ -48,14 +50,51 @@ def slope_at_Nmax(NNmax, NNmin, dNmax, aHO, rmin, rmax):
         plt.grid()
     plt.legend(['$N_{max} = $' + str(Nmax) for Nmax in Nmax_lst])
     
+def derivative_model(Nmax, aHO, kappa):
+    r = np.arange(0, 100, 0.1)
+    h0 = (1/(kappa * r) * np.exp(-kappa * r))
+    h2 = (1/(kappa * r) * np.exp(-kappa * r) * (1 + 3/(kappa * r) + 3/(kappa * r)**2))
+    plt.figure()
+    plt.title('d/d$r$ ln$(|\psi(r)|^2)$ für $N_{max} = $' + str(Nmax) + ' und $a_{HO} = $' + str(aHO) + ' fm und d/d$r$ ln$(|h_l(i\kappa r)|^2)$ für $\kappa = $' +str(kappa))
+    plt.plot(r, derivative(r, np.log(deut_density(r, Nmax, aHO)), 1))
+    plt.plot(r, derivative(r, np.log(h0**2), 1))
+    plt.plot(r, derivative(r, np.log(h2**2), 1))
+    plt.plot(r, derivative(r, np.log((h0 + h2)**2), 1))
+    plt.legend(['d/d$r$ ln$(|\psi(r)|^2)$' ,'d/d$r$ ln$(|h_0(i\kappa r)|^2)$', 'd/d$r$ ln$(|h_2(i\kappa r)|^2)$', 'd/d$r$ ln$(|h_0(i\kappa r) + h_2(i\kappa r)|^2)$'])
+    plt.ylim(-1.4, -0.4)
+    plt.grid()
+    
+def fit_derivative(Nmax, aHO):
+    r_fit = np.arange(3, 55, 0.1)
+    def lnh0_model(r, kappa):
+        return -1 * (kappa + 1/(kappa*r))
+
+    def lnh0h2_model(r, kappa):
+        return -1 * (kappa + 1/(kappa*r) + 1/(kappa * r**2 + r))
+    
+    lnpsi = derivative(r_fit, np.log(deut_density(r_fit, Nmax, aHO)), 1) 
+    
+    kappa_h0 = curve_fit(lnh0_model, r_fit, lnpsi)[0][0]
+    kappa_h0h2 = curve_fit(lnh0h2_model, r_fit, lnpsi)[0][0]
+    
+    plt.figure()
+    plt.title('d/d$r$ ln$(|\psi(r)|^2)$ für $N_{max} = $' + str(Nmax) + ' und $a_{HO} = $' + str(aHO) + ' fm mit gefitteten d/d$r$ ln$(|h_l(i\kappa r)|^2)$')
+    plt.plot(r_fit, lnpsi)
+    plt.plot(r_fit, lnh0_model(r_fit, kappa_h0))
+    plt.plot(r_fit, lnh0h2_model(r_fit, kappa_h0h2))
+    plt.ylim(-1.4, -0.45)
+    plt.legend(['d/d$r$ ln$(|\psi(r)|^2)$' ,'d/d$r$ ln$(|h_0(i\kappa r)|^2)$, $\kappa = $' + str(kappa_h0) + ' 1/fm', 'd/d$r$ ln$(|h_0(i\kappa r) + h_2(i\kappa r)|^2)$, $\kappa = $' + str(kappa_h0h2) + ' 1/fm'])
+    plt.grid()
 
 aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0])
        
-# slope_at_r(20)
-slope_at_Nmax(150, 20, 10, 1.2, 0, 34)
-slope_at_Nmax(150, 20, 10, 1.4, 0, 40)
-slope_at_Nmax(150, 20, 10, 1.6, 0, 47)
-slope_at_Nmax(150, 20, 10, 1.8, 0, 54)
-slope_at_Nmax(150, 20, 10, 2.0, 0, 60)
+# # slope_at_r(20)
+# slope_at_Nmax(150, 20, 10, 1.2, 0, 34)
+# slope_at_Nmax(150, 20, 10, 1.4, 0, 40)
+# slope_at_Nmax(150, 20, 10, 1.6, 0, 47)
+# slope_at_Nmax(150, 20, 10, 1.8, 0, 54)
+# slope_at_Nmax(150, 20, 10, 2.0, 0, 60)
 
+derivative_model(150, 2.0, 0.2305)
+fit_derivative(150, 2.0)
 plt.show()
