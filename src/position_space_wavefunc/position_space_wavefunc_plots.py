@@ -265,6 +265,28 @@ def plots_density_rpow4_Nmax(aHO, NmaxMax, step, xlim):
     plt.legend(['$N_{max} = $' + str(N) for N in range(0, NmaxMax + 1, step)])
     plt.grid(linestyle='--')
 
+
+def logplots_density_Nmax_lim(aHO, NNmax, NNmin, dNmax, xmin, xmax, ymin, ymax):
+    x_model_log = np.arange(0, 70, 0.1)
+    
+    plt.figure()
+    
+    for N in range(NNmin, NNmax + dNmax, dNmax):
+        plt.semilogy(x_model_log, deuteron_wavefunc(N, aHO, x_model_log)[3])
+    plt.ylim(ymin, ymax)
+    plt.xlim(xmin, xmax)
+    plt.title('Aufenthaltswahrscheinlichkeit bei $a_{HO} =$' + str(aHO) + ' und verschiedenen $N_{max}$ mit logarithmischer y-Achse')
+    plt.xlabel('r (fm)')
+    plt.ylabel('$|\Phi(r)|^2$')
+    plt.legend(['$N_{max} = $' + str(N) for N in range(0, NNmax + 1, dNmax)])
+    plt.grid(linestyle='--')
+    
+logplots_density_Nmax_lim(1.2, 150, 20, 10, 0, 42, 10**(-12), 1)
+logplots_density_Nmax_lim(1.4, 150, 20, 10, 0, 50, 10**(-14), 1)
+logplots_density_Nmax_lim(1.6, 150, 20, 10, 0, 55, 10**(-16), 1)
+logplots_density_Nmax_lim(1.8, 150, 20, 10, 0, 62, 10**(-16), 1)
+logplots_density_Nmax_lim(2.0, 150, 20, 10, 0, 70, 10**(-18), 1)
+
 # plots_wavefunc_Nmax(1.2, 60, 10)
 # plots_wavefunc_Nmax(1.4, 60, 10)
 # plots_wavefunc_Nmax(1.6, 60, 10)
@@ -313,9 +335,9 @@ def plots_density_rpow4_Nmax(aHO, NmaxMax, step, xlim):
 # logplots_density_rpow4_Nmax(1.8, 10, 1, 17)
 # # logplots_density_rpow4_Nmax(2.0, 10, 1, 24)
 
-plots_density_rpow4_Nmax(1.4, 10, 1, 14)
-plots_density_rpow4_Nmax(1.8, 10, 1, 16)
-plots_density_rpow4_Nmax(1.4, 60, 5, 19)
-plots_density_rpow4_Nmax(1.8, 60, 5, 19)
+# plots_density_rpow4_Nmax(1.4, 10, 1, 14)
+# plots_density_rpow4_Nmax(1.8, 10, 1, 16)
+# plots_density_rpow4_Nmax(1.4, 60, 5, 19)
+# plots_density_rpow4_Nmax(1.8, 60, 5, 19)
 
 plt.show()
