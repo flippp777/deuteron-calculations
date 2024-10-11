@@ -21,6 +21,7 @@ def derivative(x, f, n):
 
 def slope_at_r(r):
     r_space = [r - 10**(-6), r, r + 10**(-6)]
+    Nmax_lst = np.arange(0, 65, 5)
     for aHO in aHO_lst:
         plt.figure()
         plt.title("Steigung der logarithmischen Aufnethaltwahrscheinlichkeit an der Stelle r = " + str(r) + " (fm) für $a_{HO} = $" + str(aHO) + " (fm)")
@@ -35,24 +36,26 @@ def slope_at_r(r):
         plt.grid()
         print(aHO, slope[-1], slope_fit[-1])
 
-def slope_at_Nmax(Nmax, aHO, rmin, rmax):
+def slope_at_Nmax(NNmax, NNmin, dNmax, aHO, rmin, rmax):
     r = np.arange(rmin, rmax+0.1, 0.1)
-    # plt.figure()
-    plt.title("Steigung der logarithmischen Aufnethaltwahrscheinlichkeit für $N_{max}$ = " + str(Nmax))
-    plt.plot(r, derivative(r, np.log(deut_density(r, Nmax, aHO)), 1))
-    # plt.plot(r, np.log(deut_density(r, Nmax, aHO)))
-    plt.grid()
+    Nmax_lst = np.arange(NNmin, NNmax, dNmax)
+    plt.figure()
+    for Nmax in Nmax_lst:
+        plt.title("Steigung der logarithmischen Aufnethaltwahrscheinlichkeit für $a_{HO}$ = " + str(aHO) + ' fm und verschiedene $N_{max}$')
+        plt.plot(r, derivative(r, np.log(deut_density(r, Nmax, aHO)), 1))
+        plt.ylim(-1.4,-0.5)
+        # plt.plot(r, np.log(deut_density(r, Nmax, aHO)))
+        plt.grid()
+    plt.legend(['$N_{max} = $' + str(Nmax) for Nmax in Nmax_lst])
     
 
 aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0])
-Nmax_lst = np.arange(140, 150, 1)
        
 # slope_at_r(20)
-slope_at_Nmax(150, 1.2, 20, 34)
-slope_at_Nmax(150, 1.4, 20, 40)
-slope_at_Nmax(150, 1.6, 20, 47)
-slope_at_Nmax(150, 1.8, 20, 54)
-slope_at_Nmax(150, 2.0, 20, 60)
-plt.legend(['$a_{HO} = $' + str(aHO) + ' fm' for aHO in aHO_lst])
+slope_at_Nmax(150, 20, 10, 1.2, 0, 34)
+slope_at_Nmax(150, 20, 10, 1.4, 0, 40)
+slope_at_Nmax(150, 20, 10, 1.6, 0, 47)
+slope_at_Nmax(150, 20, 10, 1.8, 0, 54)
+slope_at_Nmax(150, 20, 10, 2.0, 0, 60)
 
 plt.show()
