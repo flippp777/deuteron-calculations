@@ -53,7 +53,7 @@ def slope_at_Nmax(NNmax, NNmin, dNmax, aHO, rmin, rmax):
 def derivative_model(Nmax, aHO, kappa, xmax):
     r = np.arange(0, 100, 0.1)
     h0 = (1/(kappa * r) * np.exp(-kappa * r))
-    h2 = (1/(kappa * r) * np.exp(-kappa * r) * (1 + 3/(kappa * r) + 3/(kappa * r)**2))
+    h2 = 1/(kappa * r)**2 * np.exp(-2 * kappa * r) * (1 + 3/(kappa * r) + 3/(kappa * r)**2)**2
     plt.figure()
     plt.title('d/d$r$ ln$(|\psi(r)|^2)$ für $N_{max} = $' + str(Nmax) + ' und $a_{HO} = $' + str(aHO) + ' fm und d/d$r$ ln$(|h_l(i\kappa r)|^2)$ für $\kappa = $' +str(kappa))
     plt.plot(r, derivative(r, np.log(deut_density(r, Nmax, aHO)), 1))
@@ -72,19 +72,23 @@ def fit_derivative(Nmax, aHO, rmax):
 
     def lnh0h2_model(r, kappa):
         return - (6/4 - (2 * kappa**2 *r)/(1 + kappa * r))
+    def lnh0h2_model2(r, kappa):
+        return (1 + kappa *  r  * (1 + kappa * r * (-1.66667 - 2 * kappa * r)))/(r * (-0.166667 + kappa * r * (-0.166667 + kappa * r)))
     
     lnpsi = derivative(r_fit, np.log(deut_density(r_fit, Nmax, aHO)), 1) 
     
     kappa_h0 = curve_fit(lnh0_model, r_fit, lnpsi, 0.2305)[0][0]
     kappa_h0h2 = curve_fit(lnh0h2_model, r_fit, lnpsi, 0.2305)[0][0]
+    kappa_h0h2_2 = curve_fit(lnh0h2_model2, r_fit, lnpsi, 0.2305)[0][0]
     
     plt.figure()
     plt.title('d/d$r$ ln$(|\psi(r)|^2)$ für $N_{max} = $' + str(Nmax) + ' und $a_{HO} = $' + str(aHO) + ' fm mit gefitteten d/d$r$ ln$(|h_l(i\kappa r)|^2)$')
     plt.plot(r_fit, lnpsi)
     plt.plot(r_fit, lnh0_model(r_fit, kappa_h0))
     plt.plot(r_fit, lnh0h2_model(r_fit, kappa_h0h2))
+    plt.plot(r_fit, lnh0h2_model2(r_fit, kappa_h0h2_2))
     plt.ylim(-1.4, -0.45)
-    plt.legend(['d/d$r$ ln$(|\psi(r)|^2)$' ,'d/d$r$ ln$(|h_0(i\kappa r)|^2)$, $\kappa = $' + str(kappa_h0) + ' 1/fm', 'd/d$r$ ln$(|h_0(i\kappa r) + h_2(i\kappa r)|^2)$, $\kappa = $' + str(kappa_h0h2) + ' 1/fm'])
+    plt.legend(['d/d$r$ ln$(|\psi(r)|^2)$' ,'d/d$r$ ln$(|h_0(i\kappa r)|^2)$, $\kappa = $' + str(kappa_h0) + ' 1/fm', 'd/d$r$ ln$(|h_0(i\kappa r) + h_2(i\kappa r)|^2)$, $\kappa = $' + str(kappa_h0h2) + ' 1/fm', 'd/d$r$ ln$(|0.95 h_0(i\kappa r) + 0.05 h_2(i\kappa r)|^2)$, $\kappa = $' + str(kappa_h0h2) + ' 1/fm'])
     plt.grid()
 
 aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0])
@@ -96,6 +100,6 @@ aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0])
 # slope_at_Nmax(150, 20, 10, 1.8, 0, 54)
 # slope_at_Nmax(150, 20, 10, 2.0, 0, 60)
 
-derivative_model(3, 1.2, 0.2305, 10)
-fit_derivative(10, 1.2, 8)
+derivative_model(150, 1.2, 0.2305, 40)
+fit_derivative(60, 1.2, 20)
 plt.show()
