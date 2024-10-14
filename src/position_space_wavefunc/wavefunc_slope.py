@@ -6,7 +6,7 @@ from scipy.optimize import curve_fit
 sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
 
 from make.position_space_wavefunc import deuteron_wavefunc
-from rrms_density_continnuation.rrms_density_continuation_overlap_Nmax_minus_1 import find_cont_par_cut
+from rrms_density_continnuation_exp.rrms_density_continuation_overlap_Nmax_minus_1 import find_cont_par_cut
 
 plt.style.use('tableau-colorblind10')
 
