@@ -163,7 +163,7 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
             r_cont = np.array([connect, 20])
             plt.plot(r, deut_density(r, Nmax, aHO_lst[j]) * norm, 'b')
             plt.plot(r_cont, np.exp(lnh0_model(r_cont, kappa, c)) * norm, "r")
-            plt.scatter(fit_points[0], np.exp(fit_points[1]))
+            # plt.scatter(fit_points[0], np.exp(fit_points[1]))
             plt.semilogy()
             plt.xlabel('r (fm)')
             plt.ylabel('$|\Phi(r)|^2$')
@@ -188,42 +188,7 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
         plt.grid(linestyle='--')
 
 
-def plot_norm_comparison(r, NNmax, NNmin, dNmax):
-    for aHO in aHO_lst:
-        Nmax_lst =  np.arange(NNmin, NNmax + 1, dNmax)
 
-        rrms_lst_norm = []
-        norm_lst = []
-        rrms_lst_nonorm = []
-        
-        for Nmax in Nmax_lst:
-            rrms, norm = find_continuation(Nmax, aHO)[3:5]
-
-            rrms_lst_norm.append(rrms)
-            norm_lst.append(norm)
-        
-            rrms_nonorm = find_continuation(Nmax, aHO, norm=False)[3]
-            rrms_lst_nonorm.append(rrms_nonorm)
-        
-        deviation = np.abs(np.array(rrms_lst_nonorm) - np.array(rrms_lst_norm)) / np.array(rrms_lst_nonorm)
-
-        plt.figure()
-        plt.subplot(211)
-        plt.plot(Nmax_lst, norm_lst, 'x-')
-        plt.title("Norm der fortgesetzten Wellenfunktion für $a_{HO} = $" + str(aHO))
-        plt.xlabel('$N_{max}$')
-        plt.grid(linestyle="--")
-
-        plt.subplot(212)
-        plt.plot(Nmax_lst, rrms_lst_nonorm, 'x-')
-        plt.plot(Nmax_lst, rrms_lst_norm, 'x-')
-        plt.title('$R_{rms}$ aus nicht normierter und normierter forgesetzten Wellenfunktion für $a_{HO} = $' + str(aHO))
-        plt.legend(["Ohne Normierung", 'Mit Normierung'])
-        plt.xlabel('$N_{max}$')
-        plt.ylabel("$R_{rms}$ (fm)")
-        plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
-        plt.grid(linestyle='--')
-   
         
 plot_density_continuation_rrms(r, 60, 3, 2)
 

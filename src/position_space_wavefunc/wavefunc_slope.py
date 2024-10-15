@@ -100,6 +100,6 @@ aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0])
 # slope_at_Nmax(150, 20, 10, 1.8, 0, 54)
 # slope_at_Nmax(150, 20, 10, 2.0, 0, 60)
 
-derivative_model(150, 1.2, 0.2305, 40)
+derivative_model(150, 1.2, 0.2171, 40)
 fit_derivative(60, 1.2, 20)
 plt.show()
