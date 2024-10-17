@@ -17,3 +17,11 @@
  - Ableitung Plotten    Erledigt
 
  - Fit mit |Psi(r)|**2 r**4 für Radiusberechnung        Erledigt
+
+ 15. Okt 2024
+
+  - alles nochmal mit Hankel-Funktion
+
+  - für zwei aHOs gute plots
+
+  - auch fortzetung der einzelnen Wellenfunktionen, nicht nur Dichten
