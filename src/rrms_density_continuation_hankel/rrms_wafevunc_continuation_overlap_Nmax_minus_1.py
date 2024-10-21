@@ -111,7 +111,7 @@ def find_continuation(NNmax, aHO, norm=True):
     fit_points_phi0 = np.array([r_fit_phi0, log_phi0_fit])
     
     r_fit_phi2 = r[fit_points_indices_phi2]
-    log_phi2_fit = log_phi0[1, fit_points_indices_phi2]
+    log_phi2_fit = log_phi2[1, fit_points_indices_phi2]
     fit_points_phi2 = np.array([r_fit_phi2, log_phi2_fit])
 
     # fitting the points to finde the slope
@@ -139,8 +139,8 @@ def find_continuation(NNmax, aHO, norm=True):
         delta += 10**(-6)
     connection_point_phi2 = connection_point_phi2[0]
 
-    c_phi0 = deut_density(connection_point_phi0, NNmax, aHO) / lnh0_sq_model(connection_point_phi0, kappa_phi0)
-    c_phi2 = deut_density(connection_point_phi2, NNmax, aHO) / lnh2_sq_model(connection_point_phi2, kappa_phi2)
+    c_phi0 = np.log(phi0(connection_point_phi0, NNmax, aHO)) - lnh0_sq_model(connection_point_phi0, kappa_phi0)
+    c_phi2 = np.log(phi2(connection_point_phi2, NNmax, aHO)) - lnh2_sq_model(connection_point_phi2, kappa_phi2)
 
     def phi0_cont(r, Nmax, aHO):
         cont = []
@@ -208,7 +208,7 @@ def rrms_integral_trapz(Nmax, Nmin, aHO, Nstep, rmax, dr):
     
     return np.array([Nmax_lst, rrms])
 
-aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0]) 
+aHO_lst = np.array([1.2, 2.0]) 
 r = np.linspace(0, 100, 1000)
 
 
