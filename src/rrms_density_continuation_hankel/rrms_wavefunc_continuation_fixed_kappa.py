@@ -227,7 +227,7 @@ def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
 
    
         
-plot_wavefunc_continuation_rrms(r, 60, 3, 2)
+plot_wavefunc_continuation_rrms(r, 60, 3, 10)
 # plt.plot(r, h2_sq_model(r, kappa))
 
 

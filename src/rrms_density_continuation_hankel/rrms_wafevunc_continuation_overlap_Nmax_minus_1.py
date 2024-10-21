@@ -30,17 +30,18 @@ def phi0(r, Nmax, aHO):
 def phi2(r, Nmax, aHO):
     return np.abs(deuteron_wavefunc(Nmax, aHO, r)[2])
 
-def lnh0_sq_model(r, kappa):
-    return -2 * (kappa * r + np.log(kappa) + np.log(r))
+def h0_sq_model(r, kappa):
+    return 1 / (kappa * r) * np.exp(-kappa * r)
 
-def lnh2_sq_model(r, kappa):
-    return 2 * np.log(1/(kappa * r) * np.exp(- kappa * r) * (1 + 3/(kappa * r) + 3/(kappa * r)**2))
+def h0_sq_model_a(r, a, kappa):
+    return a / (kappa * r) * np.exp(-kappa * r)
 
-def lnh0_sq_model_c(r, kappa, c):
-    return -2 * (kappa * r + np.log(kappa) + np.log(r)) + c
+def h2_sq_model(r, kappa):
+    return 1/(kappa * r) * np.exp(-kappa * r) * (1 + 3/(kappa * r) + 3/(kappa * r)**2)
 
-def lnh2_sq_model_c(r, kappa, c):
-    return 2 * np.log(c/(kappa * r) * np.exp(- kappa * r) * (1 + 3/(kappa * r) + 3/(kappa * r)**2))
+def h2_sq_model_a(r, a, kappa):
+    return a/(kappa * r) * np.exp(-kappa * r) * (1 + 3/(kappa * r) + 3/(kappa * r)**2)
+
 
 
 def find_continuation(NNmax, aHO, norm=True):
@@ -96,68 +97,88 @@ def find_continuation(NNmax, aHO, norm=True):
 
     end_fit_index = max(fit_points_indices_phi0) + 1
     
-    # # use only the fit_point_num number of points in the middle of the list
-    # fit_point_num = 4
-    # if fit_points_indices.size > fit_point_num:
-    #     middle_index = int(fit_points_indices.size / 2)
-    #     # two_third_index = int(fit_points_indices.size * 2 / 3)
-    #     three_quater_index = middle_index + int(fit_points_indices.size / 4)
-    #     fit_points_indices = fit_points_indices[three_quater_index - int(fit_point_num / 2):three_quater_index + int(fit_point_num / 2)]
+    # use only the fit_point_num number of points in the middle of the list
+    fit_point_num = 20
+    if fit_points_indices_phi0.size > fit_point_num:
+        middle_index = int(fit_points_indices_phi0.size / 2)
+        # two_third_index = int(fit_points_indices.size * 2 / 3)
+        three_quater_index = middle_index + int(fit_points_indices_phi0.size / 4)
+        fit_points_indices_phi0 = fit_points_indices_phi0[three_quater_index - int(fit_point_num / 2):three_quater_index + int(fit_point_num / 2)]
+    
+    fit_point_num = 20
+    if fit_points_indices_phi2.size > fit_point_num:
+        middle_index = int(fit_points_indices_phi2.size / 2)
+        # two_third_index = int(fit_points_indices.size * 2 / 3)
+        three_quater_index = middle_index + int(fit_points_indices_phi2.size / 4)
+        fit_points_indices_phi2 = fit_points_indices_phi2[three_quater_index - int(fit_point_num / 2):three_quater_index + int(fit_point_num / 2)]
 
     
     # fit points from fit_pint_indexes
     r_fit_phi0 = r[fit_points_indices_phi0]
-    log_phi0_fit = log_phi0[1, fit_points_indices_phi0]
-    fit_points_phi0 = np.array([r_fit_phi0, log_phi0_fit])
+    phi0_fit = phi0_lst[1, fit_points_indices_phi0]
+    fit_points_phi0 = np.array([r_fit_phi0, phi0_fit])
     
     r_fit_phi2 = r[fit_points_indices_phi2]
-    log_phi2_fit = log_phi2[1, fit_points_indices_phi2]
-    fit_points_phi2 = np.array([r_fit_phi2, log_phi2_fit])
+    phi2_fit = phi2_lst[1, fit_points_indices_phi2]
+    fit_points_phi2 = np.array([r_fit_phi2, phi2_fit])
 
     # fitting the points to finde the slope
-    kappa_phi0 = curve_fit(lnh0_sq_model, r_fit_phi0, log_phi0_fit, [0.2305])[0]
-    kappa_phi2 = curve_fit(lnh2_sq_model, r_fit_phi2, log_phi2_fit, [0.2305])[0]
+    try:
+        kappa_phi0 = curve_fit(h0_sq_model_a, r_fit_phi0, phi0_fit, [1, 0.2305])[0][0]
+    except:
+        kappa_phi0 = 0.2307
+        print("!!!Fit failed for phi1, aHO = " + str(aHO) + ", Nmax = " + str(NNmax) + "!!!")
+    if kappa_phi0 < 0.01 or kappa_phi0 > 1:
+        kappa_phi0 = 0.2307
+    try:
+        kappa_phi2 = curve_fit(h2_sq_model_a, r_fit_phi2, phi2_fit, [1, 0.2305])[0][0]
+    except:
+        kappa_phi2 = 0.2307
+    if kappa_phi2 < 0.01 or kappa_phi2 > 1:
+        kappa_phi2 = 0.2307
+        print("!!!Fit failed for phi2, aHO = " + str(aHO) + ", Nmax = " + str(NNmax) + "!!!")
+    print(kappa_phi0, kappa_phi2)
     
     # Finding a point that has the same slope as the fitted one 
     d_dr_log_phi0 = derivative(r, log_phi0[1, fit_points_indices_phi0], 1)
-    lnh0 = lnh0_sq_model(r_fit_phi0, kappa_phi0)
-    ddr_lnh0 = derivative(r_fit_phi0, lnh0, 1)
+    h0 = h0_sq_model(r_fit_phi0, kappa_phi0)
+    ddr_h0 = derivative(r_fit_phi0, h0, 1)
     connection_point_phi0 = np.array([])
     delta = 10**(-6)
     while connection_point_phi0.size == 0:
-        connection_point_phi0 = r_fit_phi0[((d_dr_log_phi0 > ddr_lnh0 - delta) & (d_dr_log_phi0 < ddr_lnh0 + delta))]
+        connection_point_phi0 = r_fit_phi0[((d_dr_log_phi0 > ddr_h0 - delta) & (d_dr_log_phi0 < ddr_h0 + delta))]
         delta += 10**(-6)
     connection_point_phi0 = connection_point_phi0[0]
     
     d_dr_log_phi2 = derivative(r, log_phi2[1, fit_points_indices_phi2], 1)
-    lnh2 = lnh2_sq_model(r_fit_phi2, kappa_phi2)
-    ddr_lnh2 = derivative(r_fit_phi2, lnh2, 1)
+    h2 = h2_sq_model(r_fit_phi2, kappa_phi2)
+    ddr_h2 = derivative(r_fit_phi2, h2, 1)
     connection_point_phi2 = np.array([])
     delta = 10**(-6)
     while connection_point_phi2.size == 0:
-        connection_point_phi2 = r_fit_phi2[((d_dr_log_phi2 > ddr_lnh2 - delta) & (d_dr_log_phi2 < ddr_lnh2 + delta))]
+        connection_point_phi2 = r_fit_phi2[((d_dr_log_phi2 > ddr_h2 - delta) & (d_dr_log_phi2 < ddr_h2 + delta))]
         delta += 10**(-6)
     connection_point_phi2 = connection_point_phi2[0]
 
-    c_phi0 = np.log(phi0(connection_point_phi0, NNmax, aHO)) - lnh0_sq_model(connection_point_phi0, kappa_phi0)
-    c_phi2 = np.log(phi2(connection_point_phi2, NNmax, aHO)) - lnh2_sq_model(connection_point_phi2, kappa_phi2)
+    a_phi0 = phi0(connection_point_phi0, NNmax, aHO) / h0_sq_model(connection_point_phi0, kappa_phi0)
+    a_phi2 = phi2(connection_point_phi2, NNmax, aHO) / h2_sq_model(connection_point_phi2, kappa_phi2)
 
-    def phi0_cont(r, Nmax, aHO):
+    def phi0_cont(r):
         cont = []
         for i in range(r.size):
             if r[i] <= connection_point_phi0:
                 cont.append(phi0_lst[1,i])
             else:
-                cont.append(np.exp(lnh0_sq_model_c(r[i], kappa_phi0, c_phi0))[0])
+                cont.append(h0_sq_model_a(r[i], a_phi0, kappa_phi0))
         return np.array(cont)
 
-    def phi2_cont(r, Nmax, aHO):
+    def phi2_cont(r):
         cont = []
         for i in range(r.size):
             if r[i] <= connection_point_phi2:
                 cont.append(phi2_lst[1,i])
             else:
-                cont.append(np.exp(lnh2_sq_model_c(r[i], kappa_phi2, c_phi2))[0])
+                cont.append(h2_sq_model_a(r[i], a_phi2, kappa_phi2))
         return np.array(cont)
         
     r_wave_phi0 = r[r <= connection_point_phi0]
@@ -165,28 +186,10 @@ def find_continuation(NNmax, aHO, norm=True):
     r_wave_phi2 = r[r <= connection_point_phi2]
     r_cont_phi2 = r[r > connection_point_phi2]
     
-    phi0_lst = phi0_cont(r, NNmax, aHO)
-    phi2_lst = phi2_cont(r, NNmax, aHO)
-    
-    if norm:
-        norm_integ = trapezoid((phi0_lst**2 + phi2_lst**2) * r**2, x=r)
         
-        norm_factor = 1 / norm_integ
+    rrms = np.sqrt(trapezoid((phi0_cont(r)**2 + phi2_cont(r)**2) * r**4, x=r)/4)
 
-        rsq = trapezoid((phi0_lst**2 + phi2_lst**2) * r**2, x=r) / 4
-
-        rrms = np.sqrt(rsq)
-
-        return kappa_phi0, c_phi0, connection_point_phi0, kappa_phi2, c_phi2, connection_point_phi2, rrms, norm_factor, fit_points_phi0, fit_points_indices_phi2
-        
-    else:
-        norm = trapezoid((phi0_lst**2 + phi2_lst**2) * r**2, x=r)
-        
-        rsq = trapezoid((phi0_lst**2 + phi2_lst**2) * r**2, x=r) / 4
-
-        rrms = np.sqrt(rsq)
-
-        return kappa_phi0, c_phi0, connection_point_phi0, rrms, fit_points_phi0
+    return kappa_phi0, a_phi0, connection_point_phi0, kappa_phi2, a_phi2, connection_point_phi2, rrms, fit_points_phi0, fit_points_phi2
     
 def rsq_integral_trapz(Nmax, aHO, rmax, dr):
     r_size = int(np.round(rmax / dr))
@@ -221,16 +224,17 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
 
         rrms_lst = []
         for Nmax in Nmax_lst:
-            kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, rrms, norm, fit_points_phi0, fit_points_phi2 = find_continuation(Nmax, aHO_lst[j])
+            kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, rrms, fit_points_phi0, fit_points_phi2 = find_continuation(Nmax, aHO_lst[j])
 
             r_cont_phi0 = np.arange(connect_phi0, 20.1, 0.1)
             r_cont_phi2 = np.arange(connect_phi2, 20.1, 0.1)
 
-            plt.plot(r, phi0(r, Nmax, aHO_lst[j]) * norm, 'b')
-            plt.plot(r, phi2(r, Nmax, aHO_lst[j]) * norm, 'c')
-            plt.plot(r_cont_phi0, np.exp(lnh0_sq_model_c(r_cont_phi0, kappa_phi0, c_phi0)) * norm, "r")
-            plt.plot(r_cont_phi2, np.exp(lnh2_sq_model_c(r_cont_phi2, kappa_phi2, c_phi2)) * norm, "r")
-            # plt.scatter(fit_points[0], np.exp(fit_points[1]))
+            plt.plot(r, phi0(r, Nmax, aHO_lst[j]), 'b')
+            plt.plot(r, phi2(r, Nmax, aHO_lst[j]), 'c')
+            plt.plot(r_cont_phi0, h0_sq_model_a(r_cont_phi0, c_phi0, kappa_phi0), "r")
+            plt.plot(r_cont_phi2, h2_sq_model_a(r_cont_phi2, c_phi2, kappa_phi2), "r")
+            plt.scatter(fit_points_phi0[0], fit_points_phi0[1])
+            plt.scatter(fit_points_phi2[0], fit_points_phi2[1])
             plt.semilogy()
             plt.xlabel('r (fm)')
             plt.ylabel('$|\Phi(r)|^2$')
