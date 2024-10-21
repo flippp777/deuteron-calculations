@@ -143,7 +143,7 @@ def find_cont_par_cut(NNmax, aHO):
             if r[i] < connection_point_phi0:
                 phi0_cont.append(phi0_lst[1, i])
             else:
-                phi0_cont.append(h0_sq_model_a(r[i], kappa, a_phi0))
+                phi0_cont.append(h0_sq_model_a(r[i], a_phi0, kappa))
         return np.array(phi0_cont)
 
     def phi2_cont(r):
@@ -152,10 +152,11 @@ def find_cont_par_cut(NNmax, aHO):
             if r[i] < connection_point_phi2:
                 phi2_cont.append(phi2_lst[1, i])
             else:
-                phi2_cont.append(h2_sq_model_a(r[i], kappa, a_phi2))
+                phi2_cont.append(h2_sq_model_a(r[i], a_phi2, kappa))
         return np.array(phi2_cont)
+    
 
-    rrms = np.sqrt(trapezoid((phi0_cont(r) + phi2_cont(r)) * r**4, x=r))
+    rrms = np.sqrt(trapezoid((phi0_cont(r) + phi2_cont(r)) * r**4, x=r)/4)
 
     return kappa, a_phi0, connection_point_phi0, a_phi2, connection_point_phi2, rrms, fit_points_indices_phi0, fit_points_indices_phi2
         
@@ -189,11 +190,11 @@ def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
     
     for j in range(aHO_lst.size):
         plt.figure()
-        # plt.subplot(121)
+        plt.subplot(121)
 
         rrms_lst = []
         for Nmax in Nmax_lst:
-            kappa, a0, connect0, a2, connect2, rrms, fit_points0, fit_points1 = find_cont_par_cut(Nmax, aHO_lst[j])
+            kappa, a0, connect0, a2, connect2, rrms, fit_points0, fit_points2 = find_cont_par_cut(Nmax, aHO_lst[j])
             r_cont0 = r[r>connect0]
             r_cont2 = r[r>connect2]
             plt.plot(r, phi0(r, Nmax, aHO_lst[j]), 'b')
@@ -212,21 +213,22 @@ def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
         
         rmax, dr = max(r), r[1]-r[0]
         rrms_full_wave = rrms_integral_trapz(NNmax, NNmin-3, aHO_lst[j], dNmax, rmax, dr)
-        # plt.subplot(122)
-        plt.figure()
+        plt.subplot(122)
+        # plt.figure()
         plt.plot(rrms_full_wave[0], rrms_full_wave[1], 'x-')
         plt.plot(Nmax_lst, rrms_lst, 'x-')
         plt.title('$R_{rms}$ bei $a_{HO} = $' + str(aHO_lst[j]) + ' fm aus Wellenfunktion und Fortsetzung')
         plt.legend(["Wellenfunktion", 'Wellenfunktion + Fortsetzung'])
         plt.xlabel('$N_{max}$')
         plt.ylabel("$R_{rms}$ (fm)")
-        # plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
+        plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
         plt.grid(linestyle='--')
 
 
    
         
-plot_wavefunc_continuation_rrms(r, 60, 3, 10)
+plot_wavefunc_continuation_rrms(r, 60, 3, 2)
+# plt.plot(r, h2_sq_model(r, kappa))
 
 
 plt.show()
