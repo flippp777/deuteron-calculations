@@ -228,17 +228,16 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
                 # plt.scatter(fit_points_phi0[0], fit_points_phi0[1])
                 # plt.scatter(fit_points_phi2[0], fit_points_phi2[1])
                 plt.semilogy()
-                plt.xlabel('r (fm)')
-                plt.ylabel('$|\Phi(r)|^2$')
                 plt.grid(linestyle='--')
                 rrms_lst.append(rrms)
             except:
                 err_fit.append(np.where(Nmax == Nmax_lst)[0][0])
-                print(err_fit)
         
         plt.title("Wellenfunktionen und angepasster Fortzetzung für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)") 
         plt.ylim(10**(-6), 1)
         plt.xlim(0, 20)
+        plt.xlabel('r (fm)')
+        plt.ylabel('$|\Phi(r)|$')
         legend = ['$\Phi_0(r)$', '$\Phi_0(r)-Fortsetzung$', '$\Phi_2(r)$', '$\Phi_2(r)$-Fortsetzung']
         plt.legend(legend, ncol=2)
         

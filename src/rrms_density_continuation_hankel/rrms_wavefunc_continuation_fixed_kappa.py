@@ -214,6 +214,8 @@ def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
         plt.title("Betragsquadrat der Wellenfunktionen und  Fortzetzung mit festem $\kappa = $" + str(kappa) + " 1/fm für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)") 
         plt.ylim(10**(-6), 1)
         plt.xlim(0, 20)
+        plt.xlabel("r (fm)")
+        plt.ylabel('$|\Phi(r)|^2$')
         legend_phi0 = np.array(["$N_{max} = $" + str(Nmax) + ", $\Phi_0(r)^2$" for Nmax in Nmax_lst])
         legend_h0 = np.array(["$N_{max} = $" + str(Nmax) + ", $\Phi_0(r)^2$-Fortsetzung" for Nmax in Nmax_lst])
         legend_phi2 = np.array(["$N_{max} = $" + str(Nmax) + ", $\Phi_2(r)^2$" for Nmax in Nmax_lst])
@@ -240,7 +242,7 @@ def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
 
    
         
-plot_wavefunc_continuation_rrms(r, 12, 3, 1)
+plot_wavefunc_continuation_rrms(r, 60, 3, 5)
 # plt.plot(r, h2_sq_model(r, kappa))
 
 
