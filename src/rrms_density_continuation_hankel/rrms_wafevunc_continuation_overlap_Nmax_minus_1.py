@@ -238,7 +238,7 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
         plt.xlim(0, 20)
         plt.xlabel('r (fm)')
         plt.ylabel('$|\Phi(r)|$')
-        legend = ['$\Phi_0(r)$', '$\Phi_0(r)-Fortsetzung$', '$\Phi_2(r)$', '$\Phi_2(r)$-Fortsetzung']
+        legend = ['$\Phi_0(r)$', '$\Phi_0(r)$-Fortsetzung', '$\Phi_2(r)$', '$\Phi_2(r)$-Fortsetzung']
         plt.legend(legend, ncol=2)
         
         plt.savefig(f"rrms_wavefunc_continuation_wavefuncs_aHO{aHO_lst[j]}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf", pad_inches=0.01)

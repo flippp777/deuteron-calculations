@@ -34,13 +34,13 @@ def h0_sq_powr4_model(r, kappa):
     return (1 / (kappa * r) * np.exp(-kappa * r))**2 * r**4
 
 def h0_sq_powr4_model_a(r, a, kappa):
-    return (a / (kappa * r) * np.exp(-kappa * r))**2 * r**4
+    return a * (1/ (kappa * r) * np.exp(-kappa * r))**2 * r**4
 
 def h2_sq_powr4_model(r, kappa):
     return (1/(kappa * r) * np.exp(-kappa * r) * (1 + 3/(kappa * r) + 3/(kappa * r)**2))**2 * r**4
 
 def h2_sq_powr4_model_a(r, a, kappa):
-    return (a/(kappa * r) * np.exp(-kappa * r) * (1 + 3/(kappa * r) + 3/(kappa * r)**2))**2 *r**4
+    return a * (1/(kappa * r) * np.exp(-kappa * r) * (1 + 3/(kappa * r) + 3/(kappa * r)**2))**2 *r**4
 
 
 
@@ -233,12 +233,12 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
             except:
                 err_fit.append(np.where(Nmax == Nmax_lst)[0][0])
         
-        plt.title("Wellenfunktionen und angepasster Fortzetzung für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)") 
-        plt.ylim(10**(-6), 1)
+        plt.title("Betragsquadrat der Wellenfunktionen mal $r^4$ und angepasster Fortzetzung für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)") 
+        plt.ylim(10**(-6), 10)
         plt.xlim(0, 20)
         plt.xlabel('r (fm)')
-        plt.ylabel('$|\Phi(r)|$')
-        legend = ['$\Phi_0(r)$', '$\Phi_0(r)-Fortsetzung$', '$\Phi_2(r)$', '$\Phi_2(r)$-Fortsetzung']
+        plt.ylabel('$|\Phi(r)|^2r^4$')
+        legend = ['$|\Phi_0(r)|^2r^4$', '$|\Phi_0(r)|^2r^4$-Fortsetzung', '$|\Phi_2(r)|^2r^4$', '$|\Phi_2(r)|^2r^4$-Fortsetzung']
         plt.legend(legend, ncol=2)
         
         plt.savefig(f"rrms_wavefunc_continuation_wavefuncs_aHO{aHO_lst[j]}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf", pad_inches=0.01)
@@ -249,7 +249,7 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
         plt.figure(figsize=(12,7.45))
         plt.plot(rrms_full_wave[0], rrms_full_wave[1], 'x-')
         plt.plot(np.delete(Nmax_lst, err_fit), rrms_lst, 'x-')
-        plt.title('$R_{rms}$ bei $a_{HO} = $' + str(aHO_lst[j]) + ' fm aus Wellenfunktion und angepasster Fortsetzung')
+        plt.title('$R_{rms}$ bei $a_{HO} = $' + str(aHO_lst[j]) + ' fm aus Betragsquadrat der Wellenfunktion mal $r^4$ und angepasster Fortsetzung')
         plt.legend(["Wellenfunktion", 'Wellenfunktion + Fortsetzung'])
         plt.xlabel('$N_{max}$')
         plt.ylabel("$R_{rms}$ (fm)")
@@ -260,7 +260,7 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
 
 
         
-plot_density_continuation_rrms(r, 60, 3, 10)
+plot_density_continuation_rrms(r, 60, 3, 1)
 
 
 plt.show()
