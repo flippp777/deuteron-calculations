@@ -81,15 +81,15 @@ def find_continuation(NNmax, aHO, norm=True):
     
     # condition to have two differen points in order to fit something
     if np.unique(fit_points_indices_phi0).size < 2:
-        delta = distance + 10**(-6)
+        delta = distance + 10**(-3)
         while np.unique(fit_points_indices_phi0).size < 2:
             fit_points_indices_phi0 = np.append(fit_points_indices_phi0, np.where(diff_log_phi0 < delta)[0] + start_fit_index_phi0)
-            delta += 10**(-6)
+            delta += 10**(-3)
     if np.unique(fit_points_indices_phi2).size < 2:
-        delta = distance + 10**(-6)
+        delta = distance + 10**(-3)
         while np.unique(fit_points_indices_phi2).size < 2:
             fit_points_indices_phi2 = np.append(fit_points_indices_phi2, np.where(diff_log_phi2 < delta)[0] + start_fit_index_phi2)
-            delta += 10**(-6)
+            delta += 10**(-3)
     
     # Removing duplicates
     fit_points_indices_phi0 = np.unique(fit_points_indices_phi0).astype(int)
@@ -123,73 +123,61 @@ def find_continuation(NNmax, aHO, norm=True):
 
     # fitting the points to finde the slope
     try:
-        kappa_phi0 = curve_fit(h0_model_a, r_fit_phi0, phi0_fit, [1, 0.2305])[0][0]
-    except:
-        kappa_phi0 = 0.2307
-        print("!!!Fit failed for phi1, aHO = " + str(aHO) + ", Nmax = " + str(NNmax) + "!!!")
-    print("kappa_phi0 = " +str(kappa_phi0))
-    if kappa_phi0 < 0.01 or kappa_phi0 > 1:
-        kappa_phi0 = 0.2307
-    try:
-        kappa_phi2 = curve_fit(h2_model_a, r_fit_phi2, phi2_fit, [1, 0.2305])[0][0]
-    except:
-        kappa_phi2 = 0.2307
-        print("!!!Fit failed for phi2, aHO = " + str(aHO) + ", Nmax = " + str(NNmax) + "!!!")
-    print("kappa_phi2 = " + str(kappa_phi2))
-    if kappa_phi2 < 0.01 or kappa_phi2 > 1:
-        kappa_phi2 = 0.2307
-    
-    # Finding a point that has the same slope as the fitted one 
-    d_dr_log_phi0 = derivative(r, log_phi0[1, fit_points_indices_phi0], 1)
-    h0 = h0_model(r_fit_phi0, kappa_phi0)
-    ddr_h0 = derivative(r_fit_phi0, h0, 1)
-    connection_point_phi0 = np.array([])
-    delta = 10**(-6)
-    while connection_point_phi0.size == 0:
-        connection_point_phi0 = r_fit_phi0[((d_dr_log_phi0 > ddr_h0 - delta) & (d_dr_log_phi0 < ddr_h0 + delta))]
-        delta += 10**(-6)
-    connection_point_phi0 = connection_point_phi0[0]
-    
-    d_dr_log_phi2 = derivative(r, log_phi2[1, fit_points_indices_phi2], 1)
-    h2 = h2_model(r_fit_phi2, kappa_phi2)
-    ddr_h2 = derivative(r_fit_phi2, h2, 1)
-    connection_point_phi2 = np.array([])
-    delta = 10**(-6)
-    while connection_point_phi2.size == 0:
-        connection_point_phi2 = r_fit_phi2[((d_dr_log_phi2 > ddr_h2 - delta) & (d_dr_log_phi2 < ddr_h2 + delta))]
-        delta += 10**(-6)
-    connection_point_phi2 = connection_point_phi2[0]
-
-    a_phi0 = phi0(connection_point_phi0, NNmax, aHO) / h0_model(connection_point_phi0, kappa_phi0)
-    a_phi2 = phi2(connection_point_phi2, NNmax, aHO) / h2_model(connection_point_phi2, kappa_phi2)
-
-    def phi0_cont(r):
-        cont = []
-        for i in range(r.size):
-            if r[i] <= connection_point_phi0:
-                cont.append(phi0_lst[1,i])
-            else:
-                cont.append(h0_model_a(r[i], a_phi0, kappa_phi0))
-        return np.array(cont)
-
-    def phi2_cont(r):
-        cont = []
-        for i in range(r.size):
-            if r[i] <= connection_point_phi2:
-                cont.append(phi2_lst[1,i])
-            else:
-                cont.append(h2_model_a(r[i], a_phi2, kappa_phi2))
-        return np.array(cont)
+        kappa_phi0 = curve_fit(h0_model_a, r_fit_phi0, phi0_fit, [1, 0.2305])[0][1]
+        kappa_phi2 = curve_fit(h2_model_a, r_fit_phi2, phi2_fit, [1, 0.2305])[0][1]
+        # Finding a point that has the same slope as the fitted one 
+        d_dr_log_phi0 = derivative(r, log_phi0[1, fit_points_indices_phi0], 1)
+        h0 = h0_model(r_fit_phi0, kappa_phi0)
+        ddr_h0 = derivative(r_fit_phi0, h0, 1)
+        connection_point_phi0 = np.array([])
+        delta = 10**(-3)
+        while connection_point_phi0.size == 0:
+            connection_point_phi0 = r_fit_phi0[((d_dr_log_phi0 > ddr_h0 - delta) & (d_dr_log_phi0 < ddr_h0 + delta))]
+            delta += 10**(-3)
+        connection_point_phi0 = connection_point_phi0[0]
         
-    r_wave_phi0 = r[r <= connection_point_phi0]
-    r_cont_phi0 = r[r > connection_point_phi0]
-    r_wave_phi2 = r[r <= connection_point_phi2]
-    r_cont_phi2 = r[r > connection_point_phi2]
-    
-        
-    rrms = np.sqrt(trapezoid((phi0_cont(r)**2 + phi2_cont(r)**2) * r**4, x=r)/4)
+        d_dr_log_phi2 = derivative(r, log_phi2[1, fit_points_indices_phi2], 1)
+        h2 = h2_model(r_fit_phi2, kappa_phi2)
+        ddr_h2 = derivative(r_fit_phi2, h2, 1)
+        connection_point_phi2 = np.array([])
+        delta = 10**(-3)
+        while connection_point_phi2.size == 0:
+            connection_point_phi2 = r_fit_phi2[((d_dr_log_phi2 > ddr_h2 - delta) & (d_dr_log_phi2 < ddr_h2 + delta))]
+            delta += 10**(-3)
+        connection_point_phi2 = connection_point_phi2[0]
 
-    return kappa_phi0, a_phi0, connection_point_phi0, kappa_phi2, a_phi2, connection_point_phi2, rrms, fit_points_phi0, fit_points_phi2
+        a_phi0 = phi0(connection_point_phi0, NNmax, aHO) / h0_model(connection_point_phi0, kappa_phi0)
+        a_phi2 = phi2(connection_point_phi2, NNmax, aHO) / h2_model(connection_point_phi2, kappa_phi2)
+
+        def phi0_cont(r):
+            cont = []
+            for i in range(r.size):
+                if r[i] <= connection_point_phi0:
+                    cont.append(phi0_lst[1,i])
+                else:
+                    cont.append(h0_model_a(r[i], a_phi0, kappa_phi0))
+            return np.array(cont)
+
+        def phi2_cont(r):
+            cont = []
+            for i in range(r.size):
+                if r[i] <= connection_point_phi2:
+                    cont.append(phi2_lst[1,i])
+                else:
+                    cont.append(h2_model_a(r[i], a_phi2, kappa_phi2))
+            return np.array(cont)
+            
+        r_wave_phi0 = r[r <= connection_point_phi0]
+        r_cont_phi0 = r[r > connection_point_phi0]
+        r_wave_phi2 = r[r <= connection_point_phi2]
+        r_cont_phi2 = r[r > connection_point_phi2]
+        
+            
+        rrms = np.sqrt(trapezoid((phi0_cont(r)**2 + phi2_cont(r)**2) * r**4, x=r)/4)
+
+        return kappa_phi0, a_phi0, connection_point_phi0, kappa_phi2, a_phi2, connection_point_phi2, rrms, fit_points_phi0, fit_points_phi2
+    except:
+        return 0
     
 def rsq_integral_trapz(Nmax, aHO, rmax, dr):
     r_size = int(np.round(rmax / dr))
@@ -219,49 +207,61 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
     Nmax_lst = np.arange(NNmin, NNmax + 1, dNmax)
     
     for j in range(aHO_lst.size):
-        plt.figure()
-        plt.subplot(121)
+        plt.figure(figsize=(17,10.6))
+        # plt.subplot(121)
 
         rrms_lst = []
+        err_fit = []
         for Nmax in Nmax_lst:
-            kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, rrms, fit_points_phi0, fit_points_phi2 = find_continuation(Nmax, aHO_lst[j])
+            try:
+                kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, rrms, fit_points_phi0, fit_points_phi2 = find_continuation(Nmax, aHO_lst[j])
 
-            r_cont_phi0 = np.arange(connect_phi0, 20.1, 0.1)
-            r_cont_phi2 = np.arange(connect_phi2, 20.1, 0.1)
+                r_cont_phi0 = np.arange(connect_phi0, 20.1, 0.1)
+                r_cont_phi2 = np.arange(connect_phi2, 20.1, 0.1)
 
-            plt.plot(r, phi0(r, Nmax, aHO_lst[j]), 'b')
-            plt.plot(r, phi2(r, Nmax, aHO_lst[j]), 'c')
-            plt.plot(r_cont_phi0, h0_model_a(r_cont_phi0, c_phi0, kappa_phi0), "r")
-            plt.plot(r_cont_phi2, h2_model_a(r_cont_phi2, c_phi2, kappa_phi2), "r")
-            plt.scatter(fit_points_phi0[0], fit_points_phi0[1])
-            plt.scatter(fit_points_phi2[0], fit_points_phi2[1])
-            plt.semilogy()
-            plt.xlabel('r (fm)')
-            plt.ylabel('$|\Phi(r)|^2$')
-            plt.grid(linestyle='--')
-            rrms_lst.append(rrms)
+                phi0_plot = plt.plot(r, phi0(r, Nmax, aHO_lst[j]))
+                phi0_color = phi0_plot[0].get_color()
+                plt.plot(r_cont_phi0, h0_model_a(r_cont_phi0, c_phi0, kappa_phi0), '--', color=phi0_color)
+                phi2_plot = plt.plot(r, phi2(r, Nmax, aHO_lst[j]))
+                phi2_color = phi2_plot[0].get_color()
+                plt.plot(r_cont_phi2, h2_model_a(r_cont_phi2, c_phi2, kappa_phi2), "--", color=phi2_color)
+                # plt.scatter(fit_points_phi0[0], fit_points_phi0[1])
+                # plt.scatter(fit_points_phi2[0], fit_points_phi2[1])
+                plt.semilogy()
+                plt.xlabel('r (fm)')
+                plt.ylabel('$|\Phi(r)|^2$')
+                plt.grid(linestyle='--')
+                rrms_lst.append(rrms)
+            except:
+                err_fit.append(np.where(Nmax == Nmax_lst)[0][0])
+                print(err_fit)
         
-        plt.title("Wellenfunktionen und Fortzetzung für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)") 
+        plt.title("Wellenfunktionen und angepasster Fortzetzung für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)") 
         plt.ylim(10**(-6), 1)
         plt.xlim(0, 20)
-        plt.legend(["Wellenfunktion", "Fortsetzung"])
+        legend = ['$\Phi_0(r)$', '$\Phi_0(r)-Fortsetzung$', '$\Phi_2(r)$', '$\Phi_2(r)$-Fortsetzung']
+        plt.legend(legend, ncol=2)
+        
+        plt.savefig(f"rrms_wavefunc_continuation_wavefuncs_aHO{aHO_lst[j]}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf", pad_inches=0.01)
         
         rmax, dr = max(r), r[1]-r[0]
         rrms_full_wave = rrms_integral_trapz(NNmax, NNmin-3, aHO_lst[j], dNmax, rmax, dr)
-        plt.subplot(122)
+        # plt.subplot(122)
+        plt.figure(figsize=(12,7.45))
         plt.plot(rrms_full_wave[0], rrms_full_wave[1], 'x-')
-        plt.plot(Nmax_lst, rrms_lst, 'x-')
-        plt.title('$R_{rms}$ bei $a_{HO} = $' + str(aHO_lst[j]) + ' fm aus Wellenfunktion und Fortsetzung')
+        plt.plot(np.delete(Nmax_lst, err_fit), rrms_lst, 'x-')
+        plt.title('$R_{rms}$ bei $a_{HO} = $' + str(aHO_lst[j]) + ' fm aus Wellenfunktion und angepasster Fortsetzung')
         plt.legend(["Wellenfunktion", 'Wellenfunktion + Fortsetzung'])
         plt.xlabel('$N_{max}$')
         plt.ylabel("$R_{rms}$ (fm)")
         plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
         plt.grid(linestyle='--')
+        plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO_lst[j]}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
 
 
 
         
-plot_density_continuation_rrms(r, 60, 3, 10)
+plot_density_continuation_rrms(r, 12, 3, 1)
 
 
 plt.show()
