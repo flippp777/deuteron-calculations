@@ -179,8 +179,8 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, save=False):
         try:
             kappa_u , a_u, connect_u, kappa_w , a_w, connect_w, Q, fit_points_u, fit_points_w = continue_q_wavefunc(Nmax, aHO)
 
-            r_cont_u = np.array([connect_u, 20])
-            r_cont_w = np.array([connect_w, 20])
+            r_cont_u = np.array([connect_u, xmax])
+            r_cont_w = np.array([connect_w, xmax])
 
             u_plot = plt.plot(r, u(r, Nmax, aHO))
             u_color = u_plot[0].get_color()
@@ -222,8 +222,10 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, save=False):
     if save:
         plt.savefig(f"q_wavefunc_continuation_rrms_aHO{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
 
-plot_continuation_wavefunc_Q(r, 1.2, 15, 3, 1, 20, True)
-plot_continuation_wavefunc_Q(r, 2.0, 15, 3, 1, 20, True)
+plot_continuation_wavefunc_Q(r, 1.2, 60, 3, 1, 29, True)
+plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, True)
+
+# print(np.mean([Q_integral_trapz_Nmax(150, aho) for aho in [1.2, 1.4, 1.6, 1.8, 2.0]]))
 
 
 plt.show()
