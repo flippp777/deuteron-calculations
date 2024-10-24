@@ -126,23 +126,24 @@ def find_continuation(NNmax, aHO, norm=True):
         kappa_phi0 = curve_fit(h0_model_a, r_fit_phi0, phi0_fit, [1, 0.2305])[0][1]
         kappa_phi2 = curve_fit(h2_model_a, r_fit_phi2, phi2_fit, [1, 0.2305])[0][1]
         # Finding a point that has the same slope as the fitted one 
-        d_dr_log_phi0 = derivative(r, log_phi0[1, fit_points_indices_phi0], 1)
+
+        d_dr_phi0 = derivative(r, phi0_lst[1, fit_points_indices_phi0], 1)
         h0 = h0_model(r_fit_phi0, kappa_phi0)
         ddr_h0 = derivative(r_fit_phi0, h0, 1)
         connection_point_phi0 = np.array([])
         delta = 10**(-3)
         while connection_point_phi0.size == 0:
-            connection_point_phi0 = r_fit_phi0[((d_dr_log_phi0 > ddr_h0 - delta) & (d_dr_log_phi0 < ddr_h0 + delta))]
+            connection_point_phi0 = r_fit_phi0[((d_dr_phi0 > ddr_h0 - delta) & (d_dr_phi0 < ddr_h0 + delta))]
             delta += 10**(-3)
         connection_point_phi0 = connection_point_phi0[0]
         
-        d_dr_log_phi2 = derivative(r, log_phi2[1, fit_points_indices_phi2], 1)
+        d_dr_phi2 = derivative(r, phi2_lst[1, fit_points_indices_phi2], 1)
         h2 = h2_model(r_fit_phi2, kappa_phi2)
         ddr_h2 = derivative(r_fit_phi2, h2, 1)
         connection_point_phi2 = np.array([])
         delta = 10**(-3)
         while connection_point_phi2.size == 0:
-            connection_point_phi2 = r_fit_phi2[((d_dr_log_phi2 > ddr_h2 - delta) & (d_dr_log_phi2 < ddr_h2 + delta))]
+            connection_point_phi2 = r_fit_phi2[((d_dr_phi2 > ddr_h2 - delta) & (d_dr_phi2 < ddr_h2 + delta))]
             delta += 10**(-3)
         connection_point_phi2 = connection_point_phi2[0]
 
@@ -203,7 +204,7 @@ aHO_lst = np.array([1.2, 2.0])
 r = np.linspace(0, 100, 1000)
 
 
-def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
+def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax, save=False):
     Nmax_lst = np.arange(NNmin, NNmax + 1, dNmax)
     
     for j in range(aHO_lst.size):
@@ -241,7 +242,8 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
         legend = ['$\Phi_0(r)$', '$\Phi_0(r)$-Fortsetzung', '$\Phi_2(r)$', '$\Phi_2(r)$-Fortsetzung']
         plt.legend(legend, ncol=2)
         
-        plt.savefig(f"rrms_wavefunc_continuation_wavefuncs_aHO{aHO_lst[j]}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf", pad_inches=0.01)
+        if save:
+            plt.savefig(f"rrms_wavefunc_continuation_wavefuncs_aHO{aHO_lst[j]}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf", pad_inches=0.01)
         
         rmax, dr = max(r), r[1]-r[0]
         rrms_full_wave = rrms_integral_trapz(NNmax, NNmin-3, aHO_lst[j], dNmax, rmax, dr)
@@ -255,12 +257,14 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
         plt.ylabel("$R_{rms}$ (fm)")
         plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
         plt.grid(linestyle='--')
-        plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO_lst[j]}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
+        
+        if save:
+            plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO_lst[j]}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
 
 
 
         
-plot_density_continuation_rrms(r, 12, 3, 1)
+plot_density_continuation_rrms(r, 60, 3, 1, False)
 
 
 plt.show()
