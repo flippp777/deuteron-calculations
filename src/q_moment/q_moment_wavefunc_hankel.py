@@ -11,9 +11,6 @@ else:
 
 from make.position_space_wavefunc import deuteron_wavefunc
 
-def log_model(r, a, b):
-    return a*r+b
-
 def derivative(x, f, n):
     dx = abs(x[0] - x[1])
     
@@ -28,8 +25,17 @@ def u(r, Nmax, aHO):
 def w(r, Nmax, aHO):
     return np.abs(r * deuteron_wavefunc(Nmax, aHO, r)[2])
 
-def Q_quad(Nmax, aHO):
-    return sp.integrate.quad(lambda r: 1/np.sqrt(50) * r**2 * u(r, Nmax, aHO) * w(r, Nmax, aHO) - 1/20 * r**2 * w(r, Nmax, aHO)**2, 0, 100)[0]
+def h0_model(r, kappa):
+    return 1 / (kappa * r) * np.exp(-kappa * r)
+
+def h0_model_a(r, a, kappa):
+    return a / (kappa * r) * np.exp(-kappa * r)
+
+def h2_model(r, kappa):
+    return 1/(kappa * r) * np.exp(-kappa * r) * (1 + 3/(kappa * r) + 3/(kappa * r)**2)
+
+def h2_model_a(r, a, kappa):
+    return a/(kappa * r) * np.exp(-kappa * r) * (1 + 3/(kappa * r) + 3/(kappa * r)**2)
 
 def q(r, Nmax, aHO):
     return 1/np.sqrt(50) * r**2 * u(r, Nmax, aHO) * w(r, Nmax, aHO) - 1/20 * r**2 * w(r, Nmax, aHO)**2
