@@ -47,7 +47,7 @@ def Q_trapz(r, Nmax, aHO):
 
 def continue_q_wavefunc(Nmax, aHO):
     dr = 0.1
-    r = np.arange(0, 50 + dr, dr)
+    r = np.arange(0, 100 + dr, dr)
     
     u_lst = np.array([u(r, Nmax-1, aHO), u(r, Nmax, aHO)])
     w_lst = np.array([w(r, Nmax-1, aHO), w(r, Nmax, aHO)])
@@ -148,7 +148,7 @@ def continue_q_wavefunc(Nmax, aHO):
 
 def Q_integral_trapz_Nmax(Nmax, aHO):
     dr = 0.1
-    r = np.arange(0, 50 + dr, dr)
+    r = np.arange(0, 100 + dr, dr)
     return sp.integrate.trapezoid(q(r, Nmax, aHO), dx=dr)
 
 def Q_integral_trapz_aHO(Nmax, Nmin, aHO, Nstep):
@@ -223,8 +223,8 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, save=False):
     if save:
         plt.savefig(f"q_wavefunc_continuation_rrms_aHO{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
 
-plot_continuation_wavefunc_Q(r, 1.2, 60, 3, 1, 29, True)
-plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, True)
+plot_continuation_wavefunc_Q(r, 1.2, 60, 3, 1, 29, False)
+# plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, True)
 
 # print(np.mean([Q_integral_trapz_Nmax(150, aho) for aho in [1.2, 1.4, 1.6, 1.8, 2.0]]))
 

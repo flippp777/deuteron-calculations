@@ -40,7 +40,7 @@ def Q_trapz(r, Nmax, aHO):
 
 def continue_q_integrand(Nmax, aHO):
     dr = 0.1
-    r = np.arange(0, 50 + dr, dr)
+    r = np.arange(0, 100 + dr, dr)
     
     q_lst_0 = q(r, Nmax - 1, aHO)
     log_q_lst_0 = np.log(q_lst_0)
