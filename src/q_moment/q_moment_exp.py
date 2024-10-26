@@ -221,7 +221,7 @@ def Q_integral_trapz_aHO(Nmax, Nmin, aHO, Nstep):
 aHO_lst = np.array([1.2, 1.4, 1.6, 1.8, 2.0]) 
 r = np.linspace(0, 100, 1000)
 
-def plot_continuation_wavefunc_Q(r, NNmax, NNmin, dNmax):
+def plot_continuation_inegrad_Q(r, NNmax, NNmin, dNmax):
     Nmax_lst = np.arange(NNmin, NNmax + 1, dNmax)
     
     for j in range(aHO_lst.size):

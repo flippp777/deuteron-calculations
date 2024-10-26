@@ -6,7 +6,7 @@ from concurrent.futures import ThreadPoolExecutor
 from scipy.optimize import curve_fit
 
 if sys.platform == "win32":
-    sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelorthesis\deuteron-calculations\src')
+    sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
 else:
     sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 
@@ -179,8 +179,9 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, save=False):
         try:
             kappa_u , a_u, connect_u, kappa_w , a_w, connect_w, Q, fit_points_u, fit_points_w = continue_q_wavefunc(Nmax, aHO)
 
-            r_cont_u = np.array([connect_u, xmax])
-            r_cont_w = np.array([connect_w, xmax])
+            r_cont_u = np.arange(connect_u, xmax+0.1, 0.1)
+            r_cont_w = np.arange(connect_w, xmax+0.1, 0.1)
+
 
             u_plot = plt.plot(r, u(r, Nmax, aHO))
             u_color = u_plot[0].get_color()
@@ -189,8 +190,8 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, save=False):
             w_plot = plt.plot(r, w(r, Nmax, aHO))
             w_color = w_plot[0].get_color()
             plt.plot(r_cont_w, rh2_model_a(r_cont_w, a_w, kappa_w), "--", color=w_color)
-            plt.scatter(fit_points_u[0], fit_points_u[1])
-            plt.scatter(fit_points_w[0], fit_points_w[1])
+            # plt.scatter(fit_points_u[0], fit_points_u[1])
+            # plt.scatter(fit_points_w[0], fit_points_w[1])
             plt.semilogy()
             plt.grid(linestyle='--')
             Q_lst.append(Q)
