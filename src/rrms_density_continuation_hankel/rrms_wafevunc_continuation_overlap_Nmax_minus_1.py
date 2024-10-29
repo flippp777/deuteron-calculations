@@ -200,7 +200,6 @@ def rrms_integral_trapz(Nmax, Nmin, aHO, Nstep, rmax, dr):
     
     return np.array([Nmax_lst, rrms])
 
-aHO_lst = np.array([1.2, 2.0]) 
 r = np.linspace(0, 100, 1000)
 
 
@@ -263,6 +262,7 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax, save=False):
 
 
 
+aHO_lst = np.array([1.4]) 
         
 plot_density_continuation_rrms(r, 60, 3, 1, False)
 
