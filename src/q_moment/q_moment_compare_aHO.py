@@ -50,6 +50,8 @@ def plot_Q(Nmax, Nmin, Nstep):
         q_aHO_lst.append(Q_integral_trapz_aHO(Nmax, Nmin, aHO, Nstep))
         
     q_aHO_lst = np.array(q_aHO_lst)
+
+    print(q_aHO_lst[:,1,-1])
     
     Nmax_lst = np.arange(Nmin, Nmax + Nstep, Nstep)
     q_mean_lst = []
@@ -57,6 +59,7 @@ def plot_Q(Nmax, Nmin, Nstep):
         q_mean_lst.append(np.mean([q_aHO_lst[:, 1, i]]))
     
     q_mean_lst = np.array([Nmax_lst, q_mean_lst])
+    print(q_mean_lst[1,-1])
     
     plt.figure()
 
@@ -70,6 +73,6 @@ def plot_Q(Nmax, Nmin, Nstep):
 
     plt.ylim(0.27, 0.28)    
 
-plot_Q(60, 3, 10)
+plot_Q(150, 3, 10)
 
 plt.show()

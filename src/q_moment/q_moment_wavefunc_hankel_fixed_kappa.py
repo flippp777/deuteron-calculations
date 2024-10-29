@@ -213,7 +213,7 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, save=False):
     plt.figure(figsize=(12, 7.45))
     plt.plot(Q_full_wave[0], Q_full_wave[1], 'x-')
     plt.plot(np.delete(Nmax_lst, err_fit), Q_lst, 'x-')
-    plt.yticks([0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.27809, 0.3, 0.35, 0.4])
+    plt.yticks([0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.2709, 0.3, 0.35, 0.4])
     plt.title('$Q$ bei $a_{HO} = $' + str(aHO) + ' fm aus Wellenfunktion und Fortsetzung')
     plt.legend(["Wellenfunktion", 'Wellenfunktion + Fortsetzung'])
     plt.xlabel('$N_{max}$')
@@ -223,14 +223,14 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, save=False):
     if save:
         plt.savefig(f"q_wavefunc_continuation_rrms_aHO{aHO}_NNmax{NNmax}_Nstep{dNmax}_fixed_kappa0.2307.pdf")
 
-# plot_continuation_wavefunc_Q(r, 1.2, 60, 3, 1, 29, True)
-# plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, True)
-# plot_continuation_wavefunc_Q(r, 1.2, 15, 3, 1, 17.5, True)
+plot_continuation_wavefunc_Q(r, 1.2, 60, 3, 1, 29, True)
+plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, True)
+plot_continuation_wavefunc_Q(r, 1.2, 15, 3, 1, 17.5, True)
 plot_continuation_wavefunc_Q(r, 2.0, 15, 3, 1, 27, True)
 
 # print(np.mean([Q_integral_trapz_Nmax(150, aho) for aho in [1.2, 1.4, 1.6, 1.8, 2.0]]))
 
 
-plt.show()
+# plt.show()
     
     
