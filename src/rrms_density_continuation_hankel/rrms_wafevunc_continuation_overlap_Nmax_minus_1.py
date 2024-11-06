@@ -44,7 +44,7 @@ def h2_model_a(r, a, kappa):
 
 
 
-def find_continuation(NNmax, aHO, norm=True):
+def find_continuation(NNmax, aHO, fit_point_num1, fit_point_num2, norm=True):
     # NNmax has to be bigger than 3 because Nmax=2 is the firts referece point to check for same densities
     if NNmax < 3:
         exit("NNmax muss mindestens 3 sein / NNmin darf nicht kleiner als 3 sein")
@@ -80,14 +80,14 @@ def find_continuation(NNmax, aHO, norm=True):
     fit_points_indices_phi2 = np.where(diff_log_phi2 < distance)[0] + start_fit_index_phi2
     
     # condition to have two differen points in order to fit something
-    if np.unique(fit_points_indices_phi0).size < 2:
+    if np.unique(fit_points_indices_phi0).size < fit_point_num1:
         delta = distance + 10**(-3)
-        while np.unique(fit_points_indices_phi0).size < 2:
+        while np.unique(fit_points_indices_phi0).size < fit_point_num1:
             fit_points_indices_phi0 = np.append(fit_points_indices_phi0, np.where(diff_log_phi0 < delta)[0] + start_fit_index_phi0)
             delta += 10**(-3)
-    if np.unique(fit_points_indices_phi2).size < 2:
+    if np.unique(fit_points_indices_phi2).size < fit_point_num1:
         delta = distance + 10**(-3)
-        while np.unique(fit_points_indices_phi2).size < 2:
+        while np.unique(fit_points_indices_phi2).size < fit_point_num1:
             fit_points_indices_phi2 = np.append(fit_points_indices_phi2, np.where(diff_log_phi2 < delta)[0] + start_fit_index_phi2)
             delta += 10**(-3)
     
@@ -98,18 +98,17 @@ def find_continuation(NNmax, aHO, norm=True):
     end_fit_index = max(fit_points_indices_phi0) + 1
     
     # use only the fit_point_num number of points in the middle of the list
-    fit_point_num = 30
-    if fit_points_indices_phi0.size > fit_point_num:
+    if fit_points_indices_phi0.size > fit_point_num2:
         middle_index = int(fit_points_indices_phi0.size / 2)
         # two_third_index = int(fit_points_indices.size * 2 / 3)
         three_quater_index = middle_index + int(fit_points_indices_phi0.size / 4)
-        fit_points_indices_phi0 = fit_points_indices_phi0[three_quater_index - int(fit_point_num / 2):three_quater_index + int(fit_point_num / 2)]
+        fit_points_indices_phi0 = fit_points_indices_phi0[three_quater_index - int(fit_point_num2 / 2):three_quater_index + int(fit_point_num2 / 2)]
     
-    if fit_points_indices_phi2.size > fit_point_num:
+    if fit_points_indices_phi2.size > fit_point_num2:
         middle_index = int(fit_points_indices_phi2.size / 2)
         # two_third_index = int(fit_points_indices.size * 2 / 3)
         three_quater_index = middle_index + int(fit_points_indices_phi2.size / 4)
-        fit_points_indices_phi2 = fit_points_indices_phi2[three_quater_index - int(fit_point_num / 2):three_quater_index + int(fit_point_num / 2)]
+        fit_points_indices_phi2 = fit_points_indices_phi2[three_quater_index - int(fit_point_num2 / 2):three_quater_index + int(fit_point_num2 / 2)]
 
     
     # fit points from fit_pint_indexes
@@ -120,6 +119,8 @@ def find_continuation(NNmax, aHO, norm=True):
     r_fit_phi2 = r[fit_points_indices_phi2]
     phi2_fit = phi2_lst[1, fit_points_indices_phi2]
     fit_points_phi2 = np.array([r_fit_phi2, phi2_fit])
+    
+    
 
     # fitting the points to finde the slope
     try:
@@ -178,7 +179,7 @@ def find_continuation(NNmax, aHO, norm=True):
 
         return kappa_phi0, a_phi0, connection_point_phi0, kappa_phi2, a_phi2, connection_point_phi2, rrms, fit_points_phi0, fit_points_phi2
     except:
-        return 0
+        return fit_points_phi0, fit_points_phi2
     
 def rsq_integral_trapz(Nmax, aHO, rmax, dr):
     r_size = int(np.round(rmax / dr))
@@ -203,7 +204,7 @@ def rrms_integral_trapz(Nmax, Nmin, aHO, Nstep, rmax, dr):
 r = np.linspace(0, 100, 1000)
 
 
-def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax, save=False):
+def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax, fit_point_num1, fit_point_num2, save=False):
     Nmax_lst = np.arange(NNmin, NNmax + 1, dNmax)
     
     for j in range(aHO_lst.size):
@@ -211,10 +212,12 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax, save=False):
         # plt.subplot(121)
 
         rrms_lst = []
-        err_fit = []
+        N_err_lst = []
+        err_fitpoints_phi0 = []
+        err_fitpoints_phi2 = []
         for Nmax in Nmax_lst:
             try:
-                kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, rrms, fit_points_phi0, fit_points_phi2 = find_continuation(Nmax, aHO_lst[j])
+                kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, rrms, fit_points_phi0, fit_points_phi2 = find_continuation(Nmax, aHO_lst[j], fit_point_num1, fit_point_num2)
 
                 r_cont_phi0 = np.arange(connect_phi0, 20.1, 0.1)
                 r_cont_phi2 = np.arange(connect_phi2, 20.1, 0.1)
@@ -231,7 +234,16 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax, save=False):
                 plt.grid(linestyle='--')
                 rrms_lst.append(rrms)
             except:
-                err_fit.append(np.where(Nmax == Nmax_lst)[0][0])
+                N_err_lst.append(np.where(Nmax == Nmax_lst)[0][0])
+                print(N_err_lst)
+                fit_points_phi0, fit_points_phi2 = find_continuation(Nmax, aHO_lst[j], fit_point_num1, fit_point_num2)
+                err_fitpoints_phi0.append(fit_points_phi0)
+                err_fitpoints_phi2.append(fit_points_phi2)
+            
+        # err_fitpoints_phi0 = np.array(err_fitpoints_phi0) 
+        # err_fitpoints_phi2 = np.array(err_fitpoints_phi2) 
+        # print(err_fitpoints_phi0[0][0], err_fitpoints_phi0[0][1])
+                
         
         plt.title("Wellenfunktionen und angepasster Fortzetzung für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)") 
         plt.ylim(10**(-6), 1)
@@ -249,7 +261,7 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax, save=False):
         # plt.subplot(122)
         plt.figure(figsize=(12,7.45))
         plt.plot(rrms_full_wave[0], rrms_full_wave[1], 'x-')
-        plt.plot(np.delete(Nmax_lst, err_fit), rrms_lst, 'x-')
+        plt.plot(np.delete(Nmax_lst, N_err_lst), rrms_lst, 'x-')
         plt.title('$R_{rms}$ bei $a_{HO} = $' + str(aHO_lst[j]) + ' fm aus Wellenfunktion und angepasster Fortsetzung')
         plt.legend(["Wellenfunktion", 'Wellenfunktion + Fortsetzung'])
         plt.xlabel('$N_{max}$')
@@ -260,11 +272,31 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax, save=False):
         if save:
             plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO_lst[j]}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
 
+        plt.figure()
+        plt.title("Wellenfunktionen, wo die Anpassung nicht funktioniert hat für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)")
+        i = 0
+        for N_err in N_err_lst:
+            plt.plot(r, phi0(r, Nmax_lst[N_err], aHO_lst[j]))
+            plt.scatter(err_fitpoints_phi0[i][0], err_fitpoints_phi0[i][1])
+            plt.plot(r, phi2(r, Nmax_lst[N_err], aHO_lst[j]))
+            plt.scatter(err_fitpoints_phi2[i][0], err_fitpoints_phi2[i][1])
+        plt.semilogy()
+        plt.grid(linestyle="--")
+        plt.xlim(0,20)
+        plt.ylim(10**(-6), 1)
+        plt.xlabel("r (fm)")
+        plt.ylabel('$|\Phi(r)|$')
+        plt.legend(["Nmax = " + str(Nmax_lst[N_err]) for N_err in N_err_lst])
+            
 
 
-aHO_lst = np.array([1.4]) 
+aHO_lst = np.array([1.2]) 
         
-plot_density_continuation_rrms(r, 60, 3, 1, False)
+plot_density_continuation_rrms(r, 60, 3, 1, 20, 10, False)
+
+aHO_lst = np.array([2.0]) 
+        
+# plot_density_continuation_rrms(r, 60, 3, 1, 30, 15, True)
 
 
 plt.show()
