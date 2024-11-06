@@ -125,7 +125,6 @@ def find_continuation(NNmax, aHO, norm=True):
     try:
         kappa_phi0 = curve_fit(h0_sq_powr4_model_a, r_fit_phi0, phi0_fit, [1, 0.2305])[0][1]
         kappa_phi2 = curve_fit(h2_sq_powr4_model_a, r_fit_phi2, phi2_fit, [1, 0.2305])[0][1]
-        print(kappa_phi0, kappa_phi2)
         # Finding a point that has the same slope as the fitted one 
         d_dr_log_phi0 = derivative(r, log_phi0[1, fit_points_indices_phi0], 1)
         h0 = h0_sq_powr4_model(r_fit_phi0, kappa_phi0)
@@ -200,7 +199,7 @@ def rrms_integral_trapz(Nmax, Nmin, aHO, Nstep, rmax, dr):
     
     return np.array([Nmax_lst, rrms])
 
-aHO_lst = np.array([1.2, 2.0]) 
+aHO_lst = np.array([2.4, 2.6]) 
 r = np.linspace(0, 100, 1000)
 
 
@@ -261,7 +260,7 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
 
 
         
-plot_density_continuation_rrms(r, 60, 3, 10)
+plot_density_continuation_rrms(r, 60, 3, 1)
 
 
 plt.show()

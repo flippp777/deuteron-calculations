@@ -10,6 +10,8 @@ chi_Nmax150_aHO14 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02
 chi_Nmax150_aHO16 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.60.meho', skiprows=1)
 chi_Nmax150_aHO18 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.80.meho', skiprows=1)
 chi_Nmax150_aHO20 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO02.00.meho', skiprows=1)
+chi_Nmax150_aHO24 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO02.40.meho', skiprows=1)
+chi_Nmax150_aHO26 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO02.60.meho', skiprows=1)
 trel_Nmax150 = np.loadtxt(r'matrix_elements/trel_NMax150_LMax02_aHO01.00.meho', skiprows=1)
 
 
@@ -24,8 +26,10 @@ def gs_eigvec(Nmax, aHO):
         chi = chi_Nmax150_aHO18
     elif aHO == 2.0:
         chi = chi_Nmax150_aHO20
-    elif aHO == 2:
-        chi = chi_Nmax150_aHO20
+    elif aHO == 2.4:
+        chi = chi_Nmax150_aHO24
+    elif aHO == 2.6:
+        chi = chi_Nmax150_aHO26
     else:
         exit('!aHO = ' + str(aHO) + ' is not supported!')
         

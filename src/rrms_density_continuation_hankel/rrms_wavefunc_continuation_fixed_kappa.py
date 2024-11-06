@@ -184,7 +184,7 @@ def rrms_integral_trapz(Nmax, Nmin, aHO, Nstep, rmax, dr):
     
     return np.array([Nmax_lst, rrms])
 
-aHO_lst = np.array([1.2, 2.0]) 
+aHO_lst = np.array([2.4, 2.6]) 
 r = np.linspace(0, 100, 1000)
 
 

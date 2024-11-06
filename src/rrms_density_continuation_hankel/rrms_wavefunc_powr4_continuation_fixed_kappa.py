@@ -185,7 +185,7 @@ def rrms_integral_trapz(Nmax, Nmin, aHO, Nstep, rmax, dr):
     
     return np.array([Nmax_lst, rrms])
 
-aHO_lst = np.array([1.2, 2.0]) 
+aHO_lst = np.array([2.4, 2.6]) 
 r = np.linspace(0, 100, 1000)
 
 
@@ -239,7 +239,7 @@ def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
 
    
         
-plot_wavefunc_continuation_rrms(r, 12, 3, 1)
+plot_wavefunc_continuation_rrms(r, 60, 3, 1)
 # plt.plot(r, h2_sq_model(r, kappa))
 
 

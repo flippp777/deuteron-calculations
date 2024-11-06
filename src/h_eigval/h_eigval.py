@@ -8,11 +8,13 @@ chi_Nmax150_aHO14 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02
 chi_Nmax150_aHO16 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.60.meho', skiprows=1)
 chi_Nmax150_aHO18 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.80.meho', skiprows=1)
 chi_Nmax150_aHO20 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO02.00.meho', skiprows=1)
+chi_Nmax150_aHO24 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO02.40.meho', skiprows=1)
+chi_Nmax150_aHO26 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO02.60.meho', skiprows=1)
 trel_Nmax150 = np.loadtxt(r'matrix_elements/trel_NMax150_LMax02_aHO01.00.meho', skiprows=1)
 
 
-chi = np.array([chi_Nmax150_aHO12, chi_Nmax150_aHO14, chi_Nmax150_aHO16, chi_Nmax150_aHO18, chi_Nmax150_aHO20])
-aHO = np.array([1.2,1.4,1.6,1.8,2])
+chi = np.array([chi_Nmax150_aHO12, chi_Nmax150_aHO14, chi_Nmax150_aHO16, chi_Nmax150_aHO18, chi_Nmax150_aHO20, chi_Nmax150_aHO24, chi_Nmax150_aHO26])
+aHO = np.array([1.2,1.4,1.6,1.8,2.0,2.4,2.6])
 
 
 # Erschtellt die Matirx mit gegebenen Matrixelementen
@@ -67,7 +69,7 @@ def mat(mat_el, Nmax):
 def E0(chi, aHO, Nmax):
     if Nmax > 150:
         exit('Nmax ist maximal 150')
-    elif aHO not in [1.2,1.4,1.6,1.8,2]:
+    elif aHO not in [1.2,1.4,1.6,1.8,2.0,2.4,2.6]:
         exit('Es gibt nur aHO 1.2, 1.4, 1.6, 1.8, 2')
     else:
         E0 = min(np.linalg.eigvalsh(mat(chi, Nmax) + mat(trel_Nmax150, Nmax)*1/(aHO**2)))

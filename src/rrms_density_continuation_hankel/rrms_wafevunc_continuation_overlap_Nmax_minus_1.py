@@ -272,32 +272,32 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax, fit_point_num1, fit_p
         if save:
             plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO_lst[j]}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
 
-        plt.figure()
-        plt.title("Wellenfunktionen, wo die Anpassung nicht funktioniert hat für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)")
-        i = 0
-        for N_err in N_err_lst:
-            plt.plot(r, phi0(r, Nmax_lst[N_err], aHO_lst[j]))
-            plt.scatter(err_fitpoints_phi0[i][0], err_fitpoints_phi0[i][1])
-            plt.plot(r, phi2(r, Nmax_lst[N_err], aHO_lst[j]))
-            plt.scatter(err_fitpoints_phi2[i][0], err_fitpoints_phi2[i][1])
-            i = i + 1
-        plt.semilogy()
-        plt.grid(linestyle="--")
-        plt.xlim(0,20)
-        plt.ylim(10**(-6), 1)
-        plt.xlabel("r (fm)")
-        plt.ylabel('$|\Phi(r)|$')
-        plt.legend(["Nmax = " + str(Nmax_lst[N_err]) for N_err in N_err_lst])
+        # plt.figure()
+        # plt.title("Wellenfunktionen, wo die Anpassung nicht funktioniert hat für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)")
+        # i = 0
+        # for N_err in N_err_lst:
+        #     plt.plot(r, phi0(r, Nmax_lst[N_err], aHO_lst[j]))
+        #     plt.scatter(err_fitpoints_phi0[i][0], err_fitpoints_phi0[i][1])
+        #     plt.plot(r, phi2(r, Nmax_lst[N_err], aHO_lst[j]))
+        #     plt.scatter(err_fitpoints_phi2[i][0], err_fitpoints_phi2[i][1])
+        #     i = i + 1
+        # plt.semilogy()
+        # plt.grid(linestyle="--")
+        # plt.xlim(0,20)
+        # plt.ylim(10**(-6), 1)
+        # plt.xlabel("r (fm)")
+        # plt.ylabel('$|\Phi(r)|$')
+        # plt.legend(["Nmax = " + str(Nmax_lst[N_err]) for N_err in N_err_lst])
             
 
 
-aHO_lst = np.array([1.2]) 
+aHO_lst = np.array([2.4]) 
         
-plot_density_continuation_rrms(r, 60, 3, 1, 30, 15, False)
+plot_density_continuation_rrms(r, 60, 3, 1, 30, 15, True)
 
-aHO_lst = np.array([2.0]) 
+aHO_lst = np.array([2.6]) 
         
-# plot_density_continuation_rrms(r, 60, 3, 1, 30, 15, True)
+plot_density_continuation_rrms(r, 60, 3, 1, 30, 15, True)
 
 
 plt.show()

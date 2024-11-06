@@ -223,14 +223,16 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, save=False):
     if save:
         plt.savefig(f"q_wavefunc_continuation_rrms_aHO{aHO}_NNmax{NNmax}_Nstep{dNmax}_fixed_kappa0.2307.pdf")
 
-plot_continuation_wavefunc_Q(r, 1.2, 60, 3, 1, 29, True)
-plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, True)
-plot_continuation_wavefunc_Q(r, 1.2, 15, 3, 1, 17.5, True)
-plot_continuation_wavefunc_Q(r, 2.0, 15, 3, 1, 27, True)
+# plot_continuation_wavefunc_Q(r, 1.2, 60, 3, 1, 29, True)
+# plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, True)
+# plot_continuation_wavefunc_Q(r, 1.2, 15, 3, 1, 17.5, True)
+# plot_continuation_wavefunc_Q(r, 2.0, 15, 3, 1, 27, True)
+plot_continuation_wavefunc_Q(r, 2.4, 60, 3, 1, 60, True)
+plot_continuation_wavefunc_Q(r, 2.6, 60, 3, 1, 65, True)
 
 # print(np.mean([Q_integral_trapz_Nmax(150, aho) for aho in [1.2, 1.4, 1.6, 1.8, 2.0]]))
 
 
-# plt.show()
+plt.show()
     
     
