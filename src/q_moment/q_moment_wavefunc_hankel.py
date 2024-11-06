@@ -45,7 +45,7 @@ def Q_trapz(r, Nmax, aHO):
     return sp.integrate.trapezoid(q(r, Nmax, aHO), x=r)
 
 
-def continue_q_wavefunc(Nmax, aHO):
+def continue_q_wavefunc(Nmax, aHO, fit_point_num1=3, fit_point_num2=30):
     dr = 0.1
     r = np.arange(0, 100 + dr, dr)
     
@@ -62,12 +62,12 @@ def continue_q_wavefunc(Nmax, aHO):
     
     distance = 0.001
     end_index_u = np.array([])
-    while end_index_u.size < 3:
+    while end_index_u.size < fit_point_num1:
         distance += 10**(-3)
         end_index_u = np.append(end_index_u,np.where(diff_log_u < distance)[0] + start_index_u).flatten()
-    distance = 0.001
+    distance = 0.05
     end_index_w = np.array([])
-    while end_index_w.size < 3:
+    while end_index_w.size < fit_point_num1:
         distance += 10**(-3)
         end_index_w = np.append(end_index_w,np.where(diff_log_w < distance)[0] + start_index_w).flatten()
 
@@ -76,17 +76,16 @@ def continue_q_wavefunc(Nmax, aHO):
     end_index_w = int(max(end_index_w)) + 1
     fit_points_indices_w = np.arange(start_index_w, end_index_w)
     
-    fit_point_num = 30
-    if fit_points_indices_u.size > fit_point_num:
+    if fit_points_indices_u.size > fit_point_num2:
         middle_index = int(fit_points_indices_u.size / 2)
         # two_third_index = int(fit_points_indices.size * 2 / 3)
         three_quater_index = middle_index + int(fit_points_indices_u.size / 4)
-        fit_points_indices_u = fit_points_indices_u[three_quater_index - int(fit_point_num / 2):three_quater_index + int(fit_point_num / 2)]
-    if fit_points_indices_w.size > fit_point_num:
+        fit_points_indices_u = fit_points_indices_u[three_quater_index - int(fit_point_num2 / 2):three_quater_index + int(fit_point_num2 / 2)]
+    if fit_points_indices_w.size > fit_point_num2:
         middle_index = int(fit_points_indices_u.size / 2)
         # two_third_index = int(fit_points_indices.size * 2 / 3)
         three_quater_index = middle_index + int(fit_points_indices_w.size / 4)
-        fit_points_indices_w = fit_points_indices_w[three_quater_index - int(fit_point_num / 2):three_quater_index + int(fit_point_num / 2)]
+        fit_points_indices_w = fit_points_indices_w[three_quater_index - int(fit_point_num2 / 2):three_quater_index + int(fit_point_num2 / 2)]
     
     # finding the slope with the mean of the derivative
     fit_points_u = np.array([r[fit_points_indices_u], u_lst[1, fit_points_indices_u]])
@@ -167,7 +166,7 @@ r = np.linspace(0, 100, 1000)
 
 
 
-def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, save=False):
+def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, fit_point_num1, fit_point_num2, save=False):
     Nmax_lst = np.arange(NNmin, NNmax + 1, dNmax)
     
     plt.figure(figsize=(17, 10.6))
@@ -177,7 +176,7 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, save=False):
     err_fit = []
     for Nmax in Nmax_lst:
         try:
-            kappa_u , a_u, connect_u, kappa_w , a_w, connect_w, Q, fit_points_u, fit_points_w = continue_q_wavefunc(Nmax, aHO)
+            kappa_u , a_u, connect_u, kappa_w , a_w, connect_w, Q, fit_points_u, fit_points_w = continue_q_wavefunc(Nmax, aHO, fit_point_num1, fit_point_num2)
 
             r_cont_u = np.arange(connect_u, xmax+0.1, 0.1)
             r_cont_w = np.arange(connect_w, xmax+0.1, 0.1)
@@ -190,13 +189,14 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, save=False):
             w_plot = plt.plot(r, w(r, Nmax, aHO))
             w_color = w_plot[0].get_color()
             plt.plot(r_cont_w, rh2_model_a(r_cont_w, a_w, kappa_w), "--", color=w_color)
-            # plt.scatter(fit_points_u[0], fit_points_u[1])
-            # plt.scatter(fit_points_w[0], fit_points_w[1])
+            plt.scatter(fit_points_u[0], fit_points_u[1])
+            plt.scatter(fit_points_w[0], fit_points_w[1])
             plt.semilogy()
             plt.grid(linestyle='--')
             Q_lst.append(Q)
         except:
             err_fit.append(np.where(Nmax == Nmax_lst)[0][0])
+            print(err_fit)
     
     plt.title("$u(r)$ und $w(r)$ sowie deren Fortzetzung für aHO = " + str(aHO) + " fm (logaryhtmische y-Axhse)") 
     plt.ylim(10**(-6), 10)
@@ -223,10 +223,10 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, save=False):
     if save:
         plt.savefig(f"q_wavefunc_continuation_rrms_aHO{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
 
-plot_continuation_wavefunc_Q(r, 1.4, 60, 3, 1, 29, False)
-# plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, True)
+# plot_continuation_wavefunc_Q(r, 1.4, 60, 3, 1, 29, False)
+plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 60, 30, False)
 # plot_continuation_wavefunc_Q(r, 1.2, 15, 3, 1, 17.5, True)
-# plot_continuation_wavefunc_Q(r, 2.0, 15, 3, 1, 27, True)
+# plot_continuation_wavefunc_Q(r, 2.0, 15, 3, 1, 27, False)
 
 # print(np.mean([Q_integral_trapz_Nmax(150, aho) for aho in [1.2, 1.4, 1.6, 1.8, 2.0]]))
 

@@ -75,7 +75,7 @@ def find_continuation(NNmax, aHO, fit_point_num1, fit_point_num2, norm=True):
     diff_log_phi2 = np.abs(log_phi2[0, start_fit_index_phi2:] - log_phi2[1, start_fit_index_phi2:])
     
     # Indiexes are at the points, where the difference in log densities is smaller 0.1
-    distance = 0.01
+    distance = 0.05
     fit_points_indices_phi0 = np.where(diff_log_phi0 < distance)[0] + start_fit_index_phi0
     fit_points_indices_phi2 = np.where(diff_log_phi2 < distance)[0] + start_fit_index_phi2
     
@@ -280,6 +280,7 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax, fit_point_num1, fit_p
             plt.scatter(err_fitpoints_phi0[i][0], err_fitpoints_phi0[i][1])
             plt.plot(r, phi2(r, Nmax_lst[N_err], aHO_lst[j]))
             plt.scatter(err_fitpoints_phi2[i][0], err_fitpoints_phi2[i][1])
+            i = i + 1
         plt.semilogy()
         plt.grid(linestyle="--")
         plt.xlim(0,20)
@@ -292,7 +293,7 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax, fit_point_num1, fit_p
 
 aHO_lst = np.array([1.2]) 
         
-plot_density_continuation_rrms(r, 60, 3, 1, 20, 10, False)
+plot_density_continuation_rrms(r, 60, 3, 1, 30, 15, False)
 
 aHO_lst = np.array([2.0]) 
         
