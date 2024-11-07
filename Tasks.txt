@@ -18,10 +18,19 @@
 
  - Fit mit |Psi(r)|**2 r**4 für Radiusberechnung        Erledigt
 
- 15. Okt 2024
+15. Okt 2024
 
   - alles nochmal mit Hankel-Funktion
 
   - für zwei aHOs gute plots
 
   - auch fortzetung der einzelnen Wellenfunktionen, nicht nur Dichten
+
+7. Nov 2024
+
+ - An den Startwerden der Fits spielen um überall fits zu bekommen
+
+ - Q mit den selben Fits berechnen wie Rrms (Da gibt es unterschiede in der Auswahl der Fitpunkte)
+
+ - Werte für naheliegende aHOs (1.1 fm, 1.2 fm, 1.2 fm) im bereich Nmax 4 (vllt auch ab 2, aber auf jeden fall 4) bis maximal 20 
+    zusammenlegen, Mittelwert und Varianz bestimmen.
