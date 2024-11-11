@@ -120,12 +120,9 @@ def find_continuation(NNmax, aHO, fit_point_num1, fit_point_num2, norm=True):
     phi2_fit = phi2_lst[1, fit_points_indices_phi2]
     fit_points_phi2 = np.array([r_fit_phi2, phi2_fit])
     
-    
-
-    # fitting the points to finde the slope
-    try:
-        kappa_phi0 = curve_fit(h0_model_a, r_fit_phi0, phi0_fit, [1, 0.2305])[0][1]
-        kappa_phi2 = curve_fit(h2_model_a, r_fit_phi2, phi2_fit, [1, 0.2305])[0][1]
+    def fit(a00, a02, kappa00, kappa02):
+        kappa_phi0 = curve_fit(h0_model_a, r_fit_phi0, phi0_fit, [a00, kappa00])[0][1]
+        kappa_phi2 = curve_fit(h2_model_a, r_fit_phi2, phi2_fit, [a02, kappa02])[0][1]
         # Finding a point that has the same slope as the fitted one 
 
         d_dr_phi0 = derivative(r, phi0_lst[1, fit_points_indices_phi0], 1)
@@ -169,17 +166,29 @@ def find_continuation(NNmax, aHO, fit_point_num1, fit_point_num2, norm=True):
                     cont.append(h2_model_a(r[i], a_phi2, kappa_phi2))
             return np.array(cont)
             
-        r_wave_phi0 = r[r <= connection_point_phi0]
-        r_cont_phi0 = r[r > connection_point_phi0]
-        r_wave_phi2 = r[r <= connection_point_phi2]
-        r_cont_phi2 = r[r > connection_point_phi2]
-        
-            
         rrms = np.sqrt(trapezoid((phi0_cont(r)**2 + phi2_cont(r)**2) * r**4, x=r)/4)
 
         return kappa_phi0, a_phi0, connection_point_phi0, kappa_phi2, a_phi2, connection_point_phi2, rrms, fit_points_phi0, fit_points_phi2
+    
+    # fitting the points to finde the slope
+    try:
+        kappa_phi0, a_phi0, connection_point_phi0, kappa_phi2, a_phi2, connection_point_phi2, rrms, fit_points_phi0, fit_points_phi2 = fit(1, 1, 0.2305, 0.2305)
+    except:
+        for i in range(51):
+            try:
+                kappa_phi0, a_phi0, connection_point_phi0, kappa_phi2, a_phi2, connection_point_phi2, rrms, fit_points_phi0, fit_points_phi2 = fit(np.random.rand(), np.random.rand(), 0.2305, 0.2305)
+            except:
+                continue
+        for i in range(51):
+            try:
+                kappa_phi0, a_phi0, connection_point_phi0, kappa_phi2, a_phi2, connection_point_phi2, rrms, fit_points_phi0, fit_points_phi2 = fit(np.random.rand(), np.random.rand(), np.random.rand(), np.random.rand())
+            except:
+                continue
+    try:
+        return kappa_phi0, a_phi0, connection_point_phi0, kappa_phi2, a_phi2, connection_point_phi2, rrms, fit_points_phi0, fit_points_phi2
     except:
         return fit_points_phi0, fit_points_phi2
+
     
 def rsq_integral_trapz(Nmax, aHO, rmax, dr):
     r_size = int(np.round(rmax / dr))
@@ -240,11 +249,6 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax, fit_point_num1, fit_p
                 err_fitpoints_phi0.append(fit_points_phi0)
                 err_fitpoints_phi2.append(fit_points_phi2)
             
-        # err_fitpoints_phi0 = np.array(err_fitpoints_phi0) 
-        # err_fitpoints_phi2 = np.array(err_fitpoints_phi2) 
-        # print(err_fitpoints_phi0[0][0], err_fitpoints_phi0[0][1])
-                
-        
         plt.title("Wellenfunktionen und angepasster Fortzetzung für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)") 
         plt.ylim(10**(-6), 1)
         plt.xlim(0, 20)
@@ -272,28 +276,27 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax, fit_point_num1, fit_p
         if save:
             plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO_lst[j]}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
 
-        # plt.figure()
-        # plt.title("Wellenfunktionen, wo die Anpassung nicht funktioniert hat für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)")
-        # i = 0
-        # for N_err in N_err_lst:
-        #     plt.plot(r, phi0(r, Nmax_lst[N_err], aHO_lst[j]))
-        #     plt.scatter(err_fitpoints_phi0[i][0], err_fitpoints_phi0[i][1])
-        #     plt.plot(r, phi2(r, Nmax_lst[N_err], aHO_lst[j]))
-        #     plt.scatter(err_fitpoints_phi2[i][0], err_fitpoints_phi2[i][1])
-        #     i = i + 1
-        # plt.semilogy()
-        # plt.grid(linestyle="--")
-        # plt.xlim(0,20)
-        # plt.ylim(10**(-6), 1)
-        # plt.xlabel("r (fm)")
-        # plt.ylabel('$|\Phi(r)|$')
-        # plt.legend(["Nmax = " + str(Nmax_lst[N_err]) for N_err in N_err_lst])
+        plt.figure()
+        plt.title("Wellenfunktionen, wo die Anpassung nicht funktioniert hat für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)")
+        i = 0
+        for N_err in N_err_lst:
+            plt.plot(r, phi0(r, Nmax_lst[N_err], aHO_lst[j]))
+            plt.scatter(err_fitpoints_phi0[i][0], err_fitpoints_phi0[i][1])
+            plt.plot(r, phi2(r, Nmax_lst[N_err], aHO_lst[j]))
+            plt.scatter(err_fitpoints_phi2[i][0], err_fitpoints_phi2[i][1])
+            i = i + 1
+        plt.semilogy()
+        plt.grid(linestyle="--")
+        plt.xlim(0,20)
+        plt.ylim(10**(-6), 1)
+        plt.xlabel("r (fm)")
+        plt.ylabel('$|\Phi(r)|$')
             
 
 
 aHO_lst = np.array([1.2]) 
         
-plot_density_continuation_rrms(r, 20, 3, 1, 20, 10, False)
+plot_density_continuation_rrms(r, 20, 3, 1, 2, 10, False)
 
 # aHO_lst = np.array([2.6]) 
         
