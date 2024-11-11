@@ -101,14 +101,16 @@ def find_continuation(NNmax, aHO, fit_point_num1, fit_point_num2, norm=True):
     if fit_points_indices_phi0.size > fit_point_num2:
         middle_index = int(fit_points_indices_phi0.size / 2)
         # two_third_index = int(fit_points_indices.size * 2 / 3)
-        three_quater_index = middle_index + int(fit_points_indices_phi0.size / 4)
-        fit_points_indices_phi0 = fit_points_indices_phi0[three_quater_index - int(fit_point_num2 / 2):three_quater_index + int(fit_point_num2 / 2)]
+        # three_quater_index = middle_index + int(fit_points_indices_phi0.size / 4)
+        # fit_points_indices_phi0 = fit_points_indices_phi0[three_quater_index - int(fit_point_num2 / 2):three_quater_index + int(fit_point_num2 / 2)]
+        fit_points_indices_phi0 = fit_points_indices_phi0[middle_index - int(fit_point_num2 / 2):middle_index + int(fit_point_num2 / 2)]
     
     if fit_points_indices_phi2.size > fit_point_num2:
         middle_index = int(fit_points_indices_phi2.size / 2)
         # two_third_index = int(fit_points_indices.size * 2 / 3)
-        three_quater_index = middle_index + int(fit_points_indices_phi2.size / 4)
-        fit_points_indices_phi2 = fit_points_indices_phi2[three_quater_index - int(fit_point_num2 / 2):three_quater_index + int(fit_point_num2 / 2)]
+        # three_quater_index = middle_index + int(fit_points_indices_phi2.size / 4)
+        # fit_points_indices_phi2 = fit_points_indices_phi2[three_quater_index - int(fit_point_num2 / 2):three_quater_index + int(fit_point_num2 / 2)]
+        fit_points_indices_phi2 = fit_points_indices_phi2[middle_index - int(fit_point_num2 / 2):middle_index + int(fit_point_num2 / 2)]
 
     
     # fit points from fit_pint_indexes
