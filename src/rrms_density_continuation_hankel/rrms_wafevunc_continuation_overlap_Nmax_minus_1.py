@@ -291,13 +291,13 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax, fit_point_num1, fit_p
             
 
 
-aHO_lst = np.array([2.4]) 
+aHO_lst = np.array([1.2]) 
         
-plot_density_continuation_rrms(r, 60, 3, 1, 30, 15, True)
+plot_density_continuation_rrms(r, 20, 3, 1, 20, 10, False)
 
-aHO_lst = np.array([2.6]) 
+# aHO_lst = np.array([2.6]) 
         
-plot_density_continuation_rrms(r, 60, 3, 1, 30, 15, True)
+# plot_density_continuation_rrms(r, 60, 3, 1, 30, 15, True)
 
 
 plt.show()
