@@ -1,14 +1,14 @@
 import numpy as np
 from scipy.integrate import trapezoid
 from scipy.optimize import curve_fit
-from lmfit import Model
+from lmfit import Model, Parameters, create_params
 import matplotlib.pyplot as plt
 from concurrent.futures import ThreadPoolExecutor
 from sys import exit
 import sys
 
 if sys.platform == 'win32':
-    sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
+    sys.path.insert(1, r'C:\Users\phili.DESKTOP\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
 else:
     sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 
@@ -45,7 +45,7 @@ def h2_model_a(r, a, kappa):
 
 
 
-def find_continuation(NNmax, aHO, fit_point_num1, fit_point_num2, norm=True):
+def find_continuation(NNmax, aHO, number_at_least_collected_points, number_used_points, norm=True):
     # NNmax has to be bigger than 3 because Nmax=2 is the firts referece point to check for same densities
     if NNmax < 3:
         exit("NNmax muss mindestens 3 sein / NNmin darf nicht kleiner als 3 sein")
@@ -81,14 +81,14 @@ def find_continuation(NNmax, aHO, fit_point_num1, fit_point_num2, norm=True):
     fit_points_indices_phi2 = np.where(diff_log_phi2 < distance)[0] + start_fit_index_phi2
     
     # condition to have two differen points in order to fit something
-    if np.unique(fit_points_indices_phi0).size < fit_point_num1:
+    if np.unique(fit_points_indices_phi0).size < number_at_least_collected_points:
         delta = distance + 10**(-3)
-        while np.unique(fit_points_indices_phi0).size < fit_point_num1:
+        while np.unique(fit_points_indices_phi0).size < number_at_least_collected_points:
             fit_points_indices_phi0 = np.append(fit_points_indices_phi0, np.where(diff_log_phi0 < delta)[0] + start_fit_index_phi0)
             delta += 10**(-3)
-    if np.unique(fit_points_indices_phi2).size < fit_point_num1:
+    if np.unique(fit_points_indices_phi2).size < number_at_least_collected_points:
         delta = distance + 10**(-3)
-        while np.unique(fit_points_indices_phi2).size < fit_point_num1:
+        while np.unique(fit_points_indices_phi2).size < number_at_least_collected_points:
             fit_points_indices_phi2 = np.append(fit_points_indices_phi2, np.where(diff_log_phi2 < delta)[0] + start_fit_index_phi2)
             delta += 10**(-3)
     
@@ -99,17 +99,17 @@ def find_continuation(NNmax, aHO, fit_point_num1, fit_point_num2, norm=True):
     end_fit_index = max(fit_points_indices_phi0) + 1
     
     # use only the fit_point_num number of points in the middle of the list
-    if fit_points_indices_phi0.size > fit_point_num2:
+    if fit_points_indices_phi0.size > number_used_points:
         middle_index = int(fit_points_indices_phi0.size / 2)
         # two_third_index = int(fit_points_indices.size * 2 / 3)
         three_quater_index = middle_index + int(fit_points_indices_phi0.size / 4)
-        fit_points_indices_phi0 = fit_points_indices_phi0[three_quater_index - int(fit_point_num2 / 2):three_quater_index + int(fit_point_num2 / 2)]
+        fit_points_indices_phi0 = fit_points_indices_phi0[three_quater_index - int(number_used_points / 2):three_quater_index + int(number_used_points / 2)]
     
-    if fit_points_indices_phi2.size > fit_point_num2:
+    if fit_points_indices_phi2.size > number_used_points:
         middle_index = int(fit_points_indices_phi2.size / 2)
         # two_third_index = int(fit_points_indices.size * 2 / 3)
         three_quater_index = middle_index + int(fit_points_indices_phi2.size / 4)
-        fit_points_indices_phi2 = fit_points_indices_phi2[three_quater_index - int(fit_point_num2 / 2):three_quater_index + int(fit_point_num2 / 2)]
+        fit_points_indices_phi2 = fit_points_indices_phi2[three_quater_index - int(number_used_points / 2):three_quater_index + int(number_used_points / 2)]
 
     
     # fit points from fit_pint_indexes
@@ -120,15 +120,23 @@ def find_continuation(NNmax, aHO, fit_point_num1, fit_point_num2, norm=True):
     r_fit_phi2 = r[fit_points_indices_phi2]
     phi2_fit = phi2_lst[1, fit_points_indices_phi2]
     fit_points_phi2 = np.array([r_fit_phi2, phi2_fit])    
+    # plt.figure()
+    # plt.scatter(fit_points_phi2[0], fit_points_phi2[1])
+    # plt.plot(r, phi2_lst[1])
+    # plt.ylim(bottom=10**(-6))
+    # plt.xlim(0,12)
+    # plt.semilogy()
 
-    # fitting the points to finde the slope
-    # a0, appa_phi0 = curve_fit(h0_model_a, r_fit_phi0, phi0_fit, [0.5, 0.2305], maxfev=1000)[0]
-    # a2, kappa_phi2 = curve_fit(h2_model_a, r_fit_phi2, phi2_fit, [0.5, 0.2305], maxfev=1000)[0]
-    # plt.plot(h)
+    
+
+    hparams = create_params(a=1, kappa=dict(value=0.2305, min=0.2, max=0.4))
     
     h0model = Model(h0_model_a)
-    h0result = h0model.fit(fit_points_phi0[1], r=fit_points_phi0[0], a=1, kappa=0.2305)
+    h0result = h0model.fit(fit_points_phi0[1], r=fit_points_phi0[0], params=hparams)
     kappa_phi0 = h0result.best_values["kappa"]
+    # plt.figure()
+    # h0result.plot_fit()
+    
     # plt.plot(r, h0_model_a(r, h0result.best_values['a'], kappa_phi0))
     # plt.scatter(fit_points_phi0[0], fit_points_phi0[1])
     # plt.ylim(min(fit_points_phi0[1])-1, max(fit_points_phi0[1])+1)
@@ -136,8 +144,17 @@ def find_continuation(NNmax, aHO, fit_point_num1, fit_point_num2, norm=True):
     # plt.show()
     
     h2model = Model(h2_model_a)
-    h2result = h2model.fit(fit_points_phi2[1], r=fit_points_phi2[0], a=1, kappa=0.2305)
+    h2result = h2model.fit(fit_points_phi2[1], r=fit_points_phi2[0], params=hparams)
     kappa_phi2 = h2result.best_values["kappa"]
+    # plt.figure()
+    # h2result.plot_fit()
+    # plt.figure()
+    # plt.plot(r, h2_model_a(r, 0.1*h0result.best_values['a'], 0.2305))
+    # plt.plot(r, h2_model_a(r, h0result.best_values['a'], kappa_phi2))
+    # plt.ylim(0, 0.02)
+    # plt.xlim(min(fit_points_phi2[0]), max(fit_points_phi2[0]))
+    # plt.show()
+    
     # plt.plot(r, h2_model_a(r, h2result.best_values['a'], kappa_phi2))
     # plt.scatter(fit_points_phi2[0], fit_points_phi2[1])
     # plt.ylim(min(fit_points_phi2[1])-1, max(fit_points_phi2[1])+1)
@@ -216,7 +233,7 @@ r = np.linspace(0, 100, 1000)
 # find_continuation(5, 1.2, 10, 20)
 
 
-def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, fit_point_num1, fit_point_num2, save=False):
+def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_collected_points, number_used_points, save=False, print_info=False):
     Nmax_lst = np.arange(NNmin, NNmax + 1, dNmax)
     
     plt.figure(figsize=(17,10.6))
@@ -227,37 +244,47 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, fit_point_num1, 
     err_fitpoints_phi0 = []
     err_fitpoints_phi2 = []
     counter = 0
-    for Nmax in Nmax_lst:
-        counter += 1
-        # try:
-        kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, rrms, fit_points_phi0, fit_points_phi2 = find_continuation(Nmax, aHO, fit_point_num1, fit_point_num2)
+    if print_info:
+        for Nmax in Nmax_lst:
+            counter += 1
+            kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, rrms, fit_points_phi0, fit_points_phi2 = find_continuation(Nmax, aHO, number_at_least_collected_points, number_used_points)
 
-        r_cont_phi0 = np.arange(connect_phi0, 20.1, 0.1)
-        r_cont_phi2 = np.arange(connect_phi2, 20.1, 0.1)
+            r_cont_phi0 = np.arange(connect_phi0, 20.1, 0.1)
+            r_cont_phi2 = np.arange(connect_phi2, 20.1, 0.1)
 
-        phi0_plot = plt.plot(r, phi0(r, Nmax, aHO))
-        phi0_color = phi0_plot[0].get_color()
-        plt.plot(r_cont_phi0, h0_model_a(r_cont_phi0, c_phi0, kappa_phi0), '--', color=phi0_color)
-        phi2_plot = plt.plot(r, phi2(r, Nmax, aHO))
-        phi2_color = phi2_plot[0].get_color()
-        plt.plot(r_cont_phi2, h2_model_a(r_cont_phi2, c_phi2, kappa_phi2), "--", color=phi2_color)
-        # plt.scatter(fit_points_phi0[0], fit_points_phi0[1])
-        # plt.scatter(fit_points_phi2[0], fit_points_phi2[1])
-        plt.semilogy()
-        plt.grid(linestyle='--')
-        rrms_lst.append(rrms)
-        # except:
-        #     N_err_lst.append(np.where(Nmax == Nmax_lst)[0][0])
-        #     print(N_err_lst)
-        #     fit_points_phi0, fit_points_phi2 = find_continuation(Nmax, aHO, fit_point_num1, fit_point_num2)
-        #     err_fitpoints_phi0.append(fit_points_phi0)
-        #     err_fitpoints_phi2.append(fit_points_phi2)
-        print(f"{counter/len(Nmax_lst)} %")
+            phi0_plot = plt.plot(r, phi0(r, Nmax, aHO))
+            phi0_color = phi0_plot[0].get_color()
+            plt.plot(r_cont_phi0, h0_model_a(r_cont_phi0, c_phi0, kappa_phi0), '--', color=phi0_color)
+            phi2_plot = plt.plot(r, phi2(r, Nmax, aHO))
+            phi2_color = phi2_plot[0].get_color()
+            plt.plot(r_cont_phi2, h2_model_a(r_cont_phi2, c_phi2, kappa_phi2), "--", color=phi2_color)
+            plt.scatter(fit_points_phi0[0], fit_points_phi0[1])
+            plt.scatter(fit_points_phi2[0], fit_points_phi2[1])
+            plt.semilogy()
+            plt.grid(linestyle='--')
+            rrms_lst.append(rrms)
+            print(f"Nmax = {Nmax} ({100*counter/len(Nmax_lst)} %)")
+            print(f'kappa_phi0 = {kappa_phi0}, kappa_phi2 = {kappa_phi2}')
+    else:
+        for Nmax in Nmax_lst:
+            counter += 1
+            kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, rrms, fit_points_phi0, fit_points_phi2 = find_continuation(Nmax, aHO, number_at_least_collected_points, number_used_points)
+
+            r_cont_phi0 = np.arange(connect_phi0, 20.1, 0.1)
+            r_cont_phi2 = np.arange(connect_phi2, 20.1, 0.1)
+
+            phi0_plot = plt.plot(r, phi0(r, Nmax, aHO))
+            phi0_color = phi0_plot[0].get_color()
+            plt.plot(r_cont_phi0, h0_model_a(r_cont_phi0, c_phi0, kappa_phi0), '--', color=phi0_color)
+            phi2_plot = plt.plot(r, phi2(r, Nmax, aHO))
+            phi2_color = phi2_plot[0].get_color()
+            plt.plot(r_cont_phi2, h2_model_a(r_cont_phi2, c_phi2, kappa_phi2), "--", color=phi2_color)
+            plt.scatter(fit_points_phi0[0], fit_points_phi0[1])
+            plt.scatter(fit_points_phi2[0], fit_points_phi2[1])
+            plt.semilogy()
+            plt.grid(linestyle='--')
+            rrms_lst.append(rrms)
         
-    # err_fitpoints_phi0 = np.array(err_fitpoints_phi0) 
-    # err_fitpoints_phi2 = np.array(err_fitpoints_phi2) 
-    # print(err_fitpoints_phi0[0][0], err_fitpoints_phi0[0][1])
-            
     
     plt.title("Wellenfunktionen und angepasster Fortzetzung für aHO = " + str(aHO) + " fm (logaryhtmische y-Axhse)") 
     plt.ylim(10**(-6), 1)
@@ -285,26 +312,9 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, fit_point_num1, 
     
     if save:
         plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
-
-    plt.figure()
-    plt.title("Wellenfunktionen, wo die Anpassung nicht funktioniert hat für aHO = " + str(aHO) + " fm (logaryhtmische y-Axhse)")
-    i = 0
-    for N_err in N_err_lst:
-        plt.plot(r, phi0(r, Nmax_lst[N_err], aHO))
-        plt.scatter(err_fitpoints_phi0[i][0], err_fitpoints_phi0[i][1])
-        plt.plot(r, phi2(r, Nmax_lst[N_err], aHO))
-        plt.scatter(err_fitpoints_phi2[i][0], err_fitpoints_phi2[i][1])
-        i = i + 1
-    plt.semilogy()
-    plt.grid(linestyle="--")
-    plt.xlim(0,20)
-    plt.ylim(10**(-6), 1)
-    plt.xlabel("r (fm)")
-    plt.ylabel('$|\Phi(r)|$')
-    plt.legend(["Nmax = " + str(Nmax_lst[N_err]) for N_err in N_err_lst])
             
 
-plot_density_continuation_rrms(r, 1.2, 20, 3, 1, 15, 30, False)
+plot_density_continuation_rrms(r, 2, 60, 3, 1, 10, 50, False, True)
 
 # aHO_lst = np.array([2.0]) 
         
