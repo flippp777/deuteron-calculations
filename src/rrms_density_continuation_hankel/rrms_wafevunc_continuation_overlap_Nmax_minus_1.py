@@ -52,7 +52,7 @@ def find_continuation(NNmax, aHO, number_at_least_collected_points, number_used_
 
     # Define r range
     dr = 0.1
-    r = np.arange(0, 100 + dr, dr)
+    r = np.arange(0, 150 + dr, dr)
    
     # create first list with Nmax=1 and then compute all other lists in parallel. Nmax goes from 2 to the closest number below NNmax that can be reached in steps the size of dNmax
     phi0_lst = np.array([phi0(r, NNmax-1, aHO), phi0(r, NNmax, aHO)])
@@ -128,12 +128,12 @@ def find_continuation(NNmax, aHO, number_at_least_collected_points, number_used_
     # plt.semilogy()
 
     
-
-    hparams = create_params(a=1, kappa=dict(value=0.2305, min=0.2, max=0.4))
+    h0params = create_params(a=dict(value=0.21, min=0.1, max=0.3), kappa=dict(value=0.2305, min=0.13, max=0.33))
     
     h0model = Model(h0_model_a)
-    h0result = h0model.fit(fit_points_phi0[1], r=fit_points_phi0[0], params=hparams)
+    h0result = h0model.fit(fit_points_phi0[1], r=fit_points_phi0[0], params=h0params)
     kappa_phi0 = h0result.best_values["kappa"]
+    # print(h0result.fit_report())
     # plt.figure()
     # h0result.plot_fit()
     
@@ -143,9 +143,12 @@ def find_continuation(NNmax, aHO, number_at_least_collected_points, number_used_
     # plt.xlim(min(fit_points_phi0[0])-1, max(fit_points_phi0[0])+1)
     # plt.show()
     
+    h2params = create_params(a=dict(value=0.005, min=0.001, max=0.01), kappa=dict(value=0.2305, min=0.13, max=0.33))
+    
     h2model = Model(h2_model_a)
-    h2result = h2model.fit(fit_points_phi2[1], r=fit_points_phi2[0], params=hparams)
+    h2result = h2model.fit(fit_points_phi2[1], r=fit_points_phi2[0], params=h2params)
     kappa_phi2 = h2result.best_values["kappa"]
+    # print(h2result.fit_report())
     # plt.figure()
     # h2result.plot_fit()
     # plt.figure()
@@ -249,8 +252,8 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_
             counter += 1
             kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, rrms, fit_points_phi0, fit_points_phi2 = find_continuation(Nmax, aHO, number_at_least_collected_points, number_used_points)
 
-            r_cont_phi0 = np.arange(connect_phi0, 20.1, 0.1)
-            r_cont_phi2 = np.arange(connect_phi2, 20.1, 0.1)
+            r_cont_phi0 = np.arange(connect_phi0, 30.1, 0.1)
+            r_cont_phi2 = np.arange(connect_phi2, 30.1, 0.1)
 
             phi0_plot = plt.plot(r, phi0(r, Nmax, aHO))
             phi0_color = phi0_plot[0].get_color()
@@ -288,7 +291,7 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_
     
     plt.title("Wellenfunktionen und angepasster Fortzetzung für aHO = " + str(aHO) + " fm (logaryhtmische y-Axhse)") 
     plt.ylim(10**(-6), 1)
-    plt.xlim(0, 20)
+    plt.xlim(0, 30)
     plt.xlabel('r (fm)')
     plt.ylabel('$|\Phi(r)|$')
     legend = ['$\Phi_0(r)$', '$\Phi_0(r)$-Fortsetzung', '$\Phi_2(r)$', '$\Phi_2(r)$-Fortsetzung']
@@ -314,7 +317,7 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_
         plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
             
 
-plot_density_continuation_rrms(r, 2, 60, 3, 1, 10, 50, False, True)
+plot_density_continuation_rrms(r, 1.2, 60, 3, 1, 10, 30, False, True)
 
 # aHO_lst = np.array([2.0]) 
         
