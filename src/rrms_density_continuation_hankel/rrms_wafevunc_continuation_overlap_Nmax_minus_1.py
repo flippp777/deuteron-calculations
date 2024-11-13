@@ -76,7 +76,7 @@ def find_continuation(NNmax, aHO, number_at_least_collected_points, number_used_
     diff_log_phi2 = np.abs(log_phi2[0, start_fit_index_phi2:] - log_phi2[1, start_fit_index_phi2:])
     
     # Indiexes are at the points, where the difference in log densities is smaller 0.1
-    distance = 0.05
+    distance = 0.01
     fit_points_indices_phi0 = np.where(diff_log_phi0 < distance)[0] + start_fit_index_phi0
     fit_points_indices_phi2 = np.where(diff_log_phi2 < distance)[0] + start_fit_index_phi2
     
@@ -129,10 +129,10 @@ def find_continuation(NNmax, aHO, number_at_least_collected_points, number_used_
 
     
 
-    hparams = create_params(a=1, kappa=dict(value=0.2305, min=0.2, max=0.4))
+    h0params = create_params(a=1, kappa=dict(value=0.2305, min=0.2, max=0.4))
     
     h0model = Model(h0_model_a)
-    h0result = h0model.fit(fit_points_phi0[1], r=fit_points_phi0[0], params=hparams)
+    h0result = h0model.fit(fit_points_phi0[1], r=fit_points_phi0[0], params=h0params)
     kappa_phi0 = h0result.best_values["kappa"]
     # plt.figure()
     # h0result.plot_fit()
@@ -143,8 +143,10 @@ def find_continuation(NNmax, aHO, number_at_least_collected_points, number_used_
     # plt.xlim(min(fit_points_phi0[0])-1, max(fit_points_phi0[0])+1)
     # plt.show()
     
+    h2params = create_params(a=0.01, kappa=dict(value=0.2305, min=0.2, max=0.4))
+    
     h2model = Model(h2_model_a)
-    h2result = h2model.fit(fit_points_phi2[1], r=fit_points_phi2[0], params=hparams)
+    h2result = h2model.fit(fit_points_phi2[1], r=fit_points_phi2[0], params=h2params)
     kappa_phi2 = h2result.best_values["kappa"]
     # plt.figure()
     # h2result.plot_fit()
@@ -314,7 +316,7 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_
         plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
             
 
-plot_density_continuation_rrms(r, 2, 60, 3, 1, 10, 50, False, True)
+plot_density_continuation_rrms(r, 1.2, 60, 3, 1, 10, 50, False, True)
 
 # aHO_lst = np.array([2.0]) 
         
