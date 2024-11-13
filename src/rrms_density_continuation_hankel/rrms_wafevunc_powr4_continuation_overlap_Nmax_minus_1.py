@@ -1,13 +1,14 @@
 import numpy as np
 from scipy.integrate import trapezoid
 from scipy.optimize import curve_fit
+from lmfit import Model, Parameters, create_params
 import matplotlib.pyplot as plt
 from concurrent.futures import ThreadPoolExecutor
 from sys import exit
 import sys
 
 if sys.platform == 'win32':
-    sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
+    sys.path.insert(1, r'C:\Users\phili.DESKTOP\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
 else:
     sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 
@@ -80,14 +81,14 @@ def find_continuation(NNmax, aHO, norm=True):
     fit_points_indices_phi2 = np.where(diff_log_phi2 < distance)[0] + start_fit_index_phi2
     
     # condition to have two differen points in order to fit something
-    if np.unique(fit_points_indices_phi0).size < 2:
+    if np.unique(fit_points_indices_phi0).size < 10:
         delta = distance + 10**(-3)
-        while np.unique(fit_points_indices_phi0).size < 2:
+        while np.unique(fit_points_indices_phi0).size < 10:
             fit_points_indices_phi0 = np.append(fit_points_indices_phi0, np.where(diff_log_phi0 < delta)[0] + start_fit_index_phi0)
             delta += 10**(-3)
-    if np.unique(fit_points_indices_phi2).size < 2:
+    if np.unique(fit_points_indices_phi2).size < 10:
         delta = distance + 10**(-3)
-        while np.unique(fit_points_indices_phi2).size < 2:
+        while np.unique(fit_points_indices_phi2).size < 10:
             fit_points_indices_phi2 = np.append(fit_points_indices_phi2, np.where(diff_log_phi2 < delta)[0] + start_fit_index_phi2)
             delta += 10**(-3)
     
@@ -98,7 +99,7 @@ def find_continuation(NNmax, aHO, norm=True):
     end_fit_index = max(fit_points_indices_phi0) + 1
     
     # use only the fit_point_num number of points in the middle of the list
-    fit_point_num = 30
+    fit_point_num = 50
     if fit_points_indices_phi0.size > fit_point_num:
         middle_index = int(fit_points_indices_phi0.size / 2)
         # two_third_index = int(fit_points_indices.size * 2 / 3)
@@ -122,62 +123,65 @@ def find_continuation(NNmax, aHO, norm=True):
     fit_points_phi2 = np.array([r_fit_phi2, phi2_fit])
 
     # fitting the points to finde the slope
-    try:
-        kappa_phi0 = curve_fit(h0_sq_powr4_model_a, r_fit_phi0, phi0_fit, [1, 0.2305])[0][1]
-        kappa_phi2 = curve_fit(h2_sq_powr4_model_a, r_fit_phi2, phi2_fit, [1, 0.2305])[0][1]
-        # Finding a point that has the same slope as the fitted one 
-        d_dr_log_phi0 = derivative(r, log_phi0[1, fit_points_indices_phi0], 1)
-        h0 = h0_sq_powr4_model(r_fit_phi0, kappa_phi0)
-        ddr_h0 = derivative(r_fit_phi0, h0, 1)
-        connection_point_phi0 = np.array([])
-        delta = 10**(-3)
-        while connection_point_phi0.size == 0:
-            connection_point_phi0 = r_fit_phi0[((d_dr_log_phi0 > ddr_h0 - delta) & (d_dr_log_phi0 < ddr_h0 + delta))]
-            delta += 10**(-3)
-        connection_point_phi0 = connection_point_phi0[0]
+    h0params = create_params(a=1, kappa=dict(value=0.2305, min=0.2, max=0.4))
+    
+    h0model = Model(h0_sq_powr4_model_a)
+    h0result = h0model.fit(fit_points_phi0[1], r=fit_points_phi0[0], params=h0params)
+    kappa_phi0 = h0result.best_values["kappa"]
+    
+    h2params = create_params(a=1, kappa=dict(value=0.2305, min=0.2, max=0.4))
+    
+    h2model = Model(h2_sq_powr4_model_a)
+    h2result = h2model.fit(fit_points_phi2[1], r=fit_points_phi2[0], params=h2params)
+    kappa_phi2 = h2result.best_values["kappa"]
+    print(f'aHO: {aHO}, Nmax: {NNmax}, kappa_phi0: {kappa_phi0}, kappa_phi2: {kappa_phi2}')
+
+    # Finding a point that has the same slope as the fitted one 
+    d_dr_log_phi0 = derivative(r, log_phi0[1, fit_points_indices_phi0], 1)
+    h0 = h0_sq_powr4_model(r_fit_phi0, kappa_phi0)
+    ddr_h0 = derivative(r_fit_phi0, h0, 1)
+    connection_point_phi0 = np.array([])
+    delta = 10**(-3)
+    while connection_point_phi0.size == 0:
+        connection_point_phi0 = r_fit_phi0[((d_dr_log_phi0 > ddr_h0 - delta) & (d_dr_log_phi0 < ddr_h0 + delta))]
+        delta += 10**(-3)
+    connection_point_phi0 = connection_point_phi0[0]
+    
+    d_dr_log_phi2 = derivative(r, log_phi2[1, fit_points_indices_phi2], 1)
+    h2 = h2_sq_powr4_model(r_fit_phi2, kappa_phi2)
+    ddr_h2 = derivative(r_fit_phi2, h2, 1)
+    connection_point_phi2 = np.array([])
+    delta = 10**(-3)
+    while connection_point_phi2.size == 0:
+        connection_point_phi2 = r_fit_phi2[((d_dr_log_phi2 > ddr_h2 - delta) & (d_dr_log_phi2 < ddr_h2 + delta))]
+        delta += 10**(-3)
+    connection_point_phi2 = connection_point_phi2[0]
+
+    a_phi0 = phi0_sq_powr4(connection_point_phi0, NNmax, aHO) / h0_sq_powr4_model(connection_point_phi0, kappa_phi0)
+    a_phi2 = phi2_sq_powr4(connection_point_phi2, NNmax, aHO) / h2_sq_powr4_model(connection_point_phi2, kappa_phi2)
+
+    def phi0_cont(r):
+        cont = []
+        for i in range(r.size):
+            if r[i] <= connection_point_phi0:
+                cont.append(phi0_lst[1,i])
+            else:
+                cont.append(h0_sq_powr4_model_a(r[i], a_phi0, kappa_phi0))
+        return np.array(cont)
+
+    def phi2_cont(r):
+        cont = []
+        for i in range(r.size):
+            if r[i] <= connection_point_phi2:
+                cont.append(phi2_lst[1,i])
+            else:
+                cont.append(h2_sq_powr4_model_a(r[i], a_phi2, kappa_phi2))
+        return np.array(cont)
         
-        d_dr_log_phi2 = derivative(r, log_phi2[1, fit_points_indices_phi2], 1)
-        h2 = h2_sq_powr4_model(r_fit_phi2, kappa_phi2)
-        ddr_h2 = derivative(r_fit_phi2, h2, 1)
-        connection_point_phi2 = np.array([])
-        delta = 10**(-3)
-        while connection_point_phi2.size == 0:
-            connection_point_phi2 = r_fit_phi2[((d_dr_log_phi2 > ddr_h2 - delta) & (d_dr_log_phi2 < ddr_h2 + delta))]
-            delta += 10**(-3)
-        connection_point_phi2 = connection_point_phi2[0]
-
-        a_phi0 = phi0_sq_powr4(connection_point_phi0, NNmax, aHO) / h0_sq_powr4_model(connection_point_phi0, kappa_phi0)
-        a_phi2 = phi2_sq_powr4(connection_point_phi2, NNmax, aHO) / h2_sq_powr4_model(connection_point_phi2, kappa_phi2)
-
-        def phi0_cont(r):
-            cont = []
-            for i in range(r.size):
-                if r[i] <= connection_point_phi0:
-                    cont.append(phi0_lst[1,i])
-                else:
-                    cont.append(h0_sq_powr4_model_a(r[i], a_phi0, kappa_phi0))
-            return np.array(cont)
-
-        def phi2_cont(r):
-            cont = []
-            for i in range(r.size):
-                if r[i] <= connection_point_phi2:
-                    cont.append(phi2_lst[1,i])
-                else:
-                    cont.append(h2_sq_powr4_model_a(r[i], a_phi2, kappa_phi2))
-            return np.array(cont)
-            
-        r_wave_phi0 = r[r <= connection_point_phi0]
-        r_cont_phi0 = r[r > connection_point_phi0]
-        r_wave_phi2 = r[r <= connection_point_phi2]
-        r_cont_phi2 = r[r > connection_point_phi2]
         
-            
-        rrms = np.sqrt(trapezoid((phi0_cont(r) + phi2_cont(r)), x=r)/4)
+    rrms = np.sqrt(trapezoid((phi0_cont(r) + phi2_cont(r)), x=r)/4)
 
-        return kappa_phi0, a_phi0, connection_point_phi0, kappa_phi2, a_phi2, connection_point_phi2, rrms, fit_points_phi0, fit_points_phi2
-    except:
-        return 0
+    return kappa_phi0, a_phi0, connection_point_phi0, kappa_phi2, a_phi2, connection_point_phi2, rrms, fit_points_phi0, fit_points_phi2
     
 def rsq_integral_trapz(Nmax, aHO, rmax, dr):
     r_size = int(np.round(rmax / dr))
@@ -199,7 +203,7 @@ def rrms_integral_trapz(Nmax, Nmin, aHO, Nstep, rmax, dr):
     
     return np.array([Nmax_lst, rrms])
 
-aHO_lst = np.array([2.4, 2.6]) 
+aHO_lst = np.array([1.2, 2]) 
 r = np.linspace(0, 100, 1000)
 
 
@@ -213,25 +217,22 @@ def plot_density_continuation_rrms(r, NNmax, NNmin, dNmax):
         rrms_lst = []
         err_fit = []
         for Nmax in Nmax_lst:
-            try:
-                kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, rrms, fit_points_phi0, fit_points_phi2 = find_continuation(Nmax, aHO_lst[j])
+            kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, rrms, fit_points_phi0, fit_points_phi2 = find_continuation(Nmax, aHO_lst[j])
 
-                r_cont_phi0 = np.arange(connect_phi0, 20.1, 0.1)
-                r_cont_phi2 = np.arange(connect_phi2, 20.1, 0.1)
+            r_cont_phi0 = np.arange(connect_phi0, 20.1, 0.1)
+            r_cont_phi2 = np.arange(connect_phi2, 20.1, 0.1)
 
-                phi0_plot = plt.plot(r, phi0_sq_powr4(r, Nmax, aHO_lst[j]))
-                phi0_color = phi0_plot[0].get_color()
-                plt.plot(r_cont_phi0, h0_sq_powr4_model_a(r_cont_phi0, c_phi0, kappa_phi0), '--', color=phi0_color)
-                phi2_plot = plt.plot(r, phi2_sq_powr4(r, Nmax, aHO_lst[j]))
-                phi2_color = phi2_plot[0].get_color()
-                plt.plot(r_cont_phi2, h2_sq_powr4_model_a(r_cont_phi2, c_phi2, kappa_phi2), "--", color=phi2_color)
-                # plt.scatter(fit_points_phi0[0], fit_points_phi0[1])
-                # plt.scatter(fit_points_phi2[0], fit_points_phi2[1])
-                plt.semilogy()
-                plt.grid(linestyle='--')
-                rrms_lst.append(rrms)
-            except:
-                err_fit.append(np.where(Nmax == Nmax_lst)[0][0])
+            phi0_plot = plt.plot(r, phi0_sq_powr4(r, Nmax, aHO_lst[j]))
+            phi0_color = phi0_plot[0].get_color()
+            plt.plot(r_cont_phi0, h0_sq_powr4_model_a(r_cont_phi0, c_phi0, kappa_phi0), '--', color=phi0_color)
+            phi2_plot = plt.plot(r, phi2_sq_powr4(r, Nmax, aHO_lst[j]))
+            phi2_color = phi2_plot[0].get_color()
+            plt.plot(r_cont_phi2, h2_sq_powr4_model_a(r_cont_phi2, c_phi2, kappa_phi2), "--", color=phi2_color)
+            # plt.scatter(fit_points_phi0[0], fit_points_phi0[1])
+            # plt.scatter(fit_points_phi2[0], fit_points_phi2[1])
+            plt.semilogy()
+            plt.grid(linestyle='--')
+            rrms_lst.append(rrms)
         
         plt.title("Betragsquadrat der Wellenfunktionen mal $r^4$ und angepasster Fortzetzung für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)") 
         plt.ylim(10**(-6), 10)
