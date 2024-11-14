@@ -4,9 +4,10 @@ import sys
 import matplotlib.pyplot as plt
 from concurrent.futures import ThreadPoolExecutor
 from scipy.optimize import curve_fit
+from lmfit import Model, Parameters, create_params
 
 if sys.platform == "win32":
-    sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
+    sys.path.insert(1, r'C:\Users\phili.DESKTOP\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
 else:
     sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 
@@ -45,7 +46,7 @@ def Q_trapz(r, Nmax, aHO):
     return sp.integrate.trapezoid(q(r, Nmax, aHO), x=r)
 
 
-def continue_q_wavefunc(Nmax, aHO, fit_point_num1=3, fit_point_num2=30):
+def continue_q_wavefunc(Nmax, aHO, number_at_least_collected_points=10, number_used_points=50):
     dr = 0.1
     r = np.arange(0, 100 + dr, dr)
     
@@ -60,89 +61,97 @@ def continue_q_wavefunc(Nmax, aHO, fit_point_num1=3, fit_point_num2=30):
     start_index_w = np.where(log_w[1] == max(log_w[1]))[0][0]
     diff_log_w = np.abs(log_w[0, start_index_w:] - log_w[1, start_index_w:])
     
-    distance = 0.001
-    end_index_u = np.array([])
-    while end_index_u.size < fit_point_num1:
-        distance += 10**(-3)
-        end_index_u = np.append(end_index_u,np.where(diff_log_u < distance)[0] + start_index_u).flatten()
-    distance = 0.05
-    end_index_w = np.array([])
-    while end_index_w.size < fit_point_num1:
-        distance += 10**(-3)
-        end_index_w = np.append(end_index_w,np.where(diff_log_w < distance)[0] + start_index_w).flatten()
+    distance = 0.01
+    fit_points_indices_u = np.where(diff_log_u < distance)[0] + start_index_u
+    fit_points_indices_w = np.where(diff_log_w < distance)[0] + start_index_w
 
-    end_index_u = int(max(end_index_u)) + 1
-    fit_points_indices_u = np.arange(start_index_u, end_index_u)
-    end_index_w = int(max(end_index_w)) + 1
-    fit_points_indices_w = np.arange(start_index_w, end_index_w)
+    if np.unique(fit_points_indices_u).size < number_at_least_collected_points:
+        while np.unique(fit_points_indices_u).size < number_at_least_collected_points:
+            distance += 10**(-3)
+            fit_points_indices_u = np.append(fit_points_indices_u, np.where(diff_log_u < distance)[0] + start_index_u).flatten()
+    distance = 0.01
     
-    if fit_points_indices_u.size > fit_point_num2:
+    while np.unique(fit_points_indices_w).size < number_at_least_collected_points:
+        distance += 10**(-3)
+        fit_points_indices_w = np.append(fit_points_indices_w,np.where(diff_log_w < distance)[0] + start_index_w).flatten()
+
+    fit_points_indices_u = np.unique(fit_points_indices_u)
+    fit_points_indices_w = np.unique(fit_points_indices_w)
+    
+    if fit_points_indices_u.size > number_used_points:
         middle_index = int(fit_points_indices_u.size / 2)
         # two_third_index = int(fit_points_indices.size * 2 / 3)
         three_quater_index = middle_index + int(fit_points_indices_u.size / 4)
-        fit_points_indices_u = fit_points_indices_u[three_quater_index - int(fit_point_num2 / 2):three_quater_index + int(fit_point_num2 / 2)]
-    if fit_points_indices_w.size > fit_point_num2:
+        fit_points_indices_u = fit_points_indices_u[three_quater_index - int(number_used_points / 2):three_quater_index + int(number_used_points / 2)]
+    if fit_points_indices_w.size > number_used_points:
         middle_index = int(fit_points_indices_u.size / 2)
         # two_third_index = int(fit_points_indices.size * 2 / 3)
         three_quater_index = middle_index + int(fit_points_indices_w.size / 4)
-        fit_points_indices_w = fit_points_indices_w[three_quater_index - int(fit_point_num2 / 2):three_quater_index + int(fit_point_num2 / 2)]
+        fit_points_indices_w = fit_points_indices_w[three_quater_index - int(number_used_points / 2):three_quater_index + int(number_used_points / 2)]
     
     # finding the slope with the mean of the derivative
     fit_points_u = np.array([r[fit_points_indices_u], u_lst[1, fit_points_indices_u]])
     fit_points_w = np.array([r[fit_points_indices_w], w_lst[1, fit_points_indices_w]])
 
-    try:    
-        kappa_u = curve_fit(rh0_model_a, fit_points_u[0], fit_points_u[1], [1, 0.2307])[0][1]
-        kappa_w = curve_fit(rh2_model_a, fit_points_w[0], fit_points_w[1], [1, 0.2307])[0][1]
+    # Fit
+    params_u = create_params(a=1, kappa=dict(value=0.2305, min=0.2, max=0.4))
+    
+    h0model = Model(rh0_model_a)
+    h0result = h0model.fit(fit_points_u[1], r=fit_points_u[0], params=params_u)
+    kappa_u = h0result.best_values["kappa"]
+    
+    params_w = create_params(a=0.01, kappa=dict(value=0.2305, min=0.2, max=0.4))
+    
+    h2model = Model(rh2_model_a)
+    h2result = h2model.fit(fit_points_w[1], r=fit_points_w[0], params=params_w)
+    kappa_w = h2result.best_values["kappa"]
 
-        # Finding a point that has the same slope as the found one 
-        d_dr_u = derivative(r, u_lst[1, fit_points_indices_u], 1)
-        rh0 = rh0_model(r[fit_points_indices_u], kappa_u)
-        d_dr_rh0 = derivative(r[fit_points_indices_u], rh0, 1)
-        connection_point_u = np.array([])
-        delta = 10**(-3)
-        while connection_point_u.size == 0:
-            connection_point_u = r[fit_points_indices_u][((d_dr_u > d_dr_rh0 - delta) & (d_dr_u < d_dr_rh0 + delta))]
-            delta += 10**(-3)
-        connection_point_u = connection_point_u[0]
-        
-        d_dr_w = derivative(r, w_lst[1, fit_points_indices_w], 1)
-        rh2 = rh2_model(r[fit_points_indices_w], kappa_w)
-        d_dr_rh2 = derivative(r[fit_points_indices_w], rh2, 1)
-        connection_point_w = np.array([])
-        delta = 10**(-3)
-        while connection_point_w.size == 0:
-            connection_point_w = r[fit_points_indices_w][((d_dr_w > d_dr_rh2 - delta) & (d_dr_w < d_dr_rh2 + delta))]
-            delta += 10**(-3)
-        connection_point_w = connection_point_w[0]
+    # Finding a point that has the same slope as the found one 
+    d_dr_u = derivative(r, u_lst[1, fit_points_indices_u], 1)
+    rh0 = rh0_model(r[fit_points_indices_u], kappa_u)
+    d_dr_rh0 = derivative(r[fit_points_indices_u], rh0, 1)
+    connection_point_u = np.array([])
+    delta = 10**(-3)
+    while connection_point_u.size == 0:
+        connection_point_u = r[fit_points_indices_u][((d_dr_u > d_dr_rh0 - delta) & (d_dr_u < d_dr_rh0 + delta))]
+        delta += 10**(-3)
+    connection_point_u = connection_point_u[0]
+    
+    d_dr_w = derivative(r, w_lst[1, fit_points_indices_w], 1)
+    rh2 = rh2_model(r[fit_points_indices_w], kappa_w)
+    d_dr_rh2 = derivative(r[fit_points_indices_w], rh2, 1)
+    connection_point_w = np.array([])
+    delta = 10**(-3)
+    while connection_point_w.size == 0:
+        connection_point_w = r[fit_points_indices_w][((d_dr_w > d_dr_rh2 - delta) & (d_dr_w < d_dr_rh2 + delta))]
+        delta += 10**(-3)
+    connection_point_w = connection_point_w[0]
 
-        # Finding the y intersection
-        a_u = u(connection_point_u, Nmax, aHO) / rh0_model(connection_point_u, kappa_u) 
-        a_w = w(connection_point_w, Nmax, aHO) / rh2_model(connection_point_w, kappa_w)
-        
-        def u_cont(r):
-            u_cont = []
-            for i in range(r.size):
-                if r[i] < connection_point_u:
-                    u_cont.append(u_lst[1, i])
-                else:
-                    u_cont.append(rh0_model_a(r[i], a_u, kappa_u))
-            return np.array(u_cont)
+    # Finding the y intersection
+    a_u = u(connection_point_u, Nmax, aHO) / rh0_model(connection_point_u, kappa_u) 
+    a_w = w(connection_point_w, Nmax, aHO) / rh2_model(connection_point_w, kappa_w)
+    
+    def u_cont(r):
+        u_cont = []
+        for i in range(r.size):
+            if r[i] < connection_point_u:
+                u_cont.append(u_lst[1, i])
+            else:
+                u_cont.append(rh0_model_a(r[i], a_u, kappa_u))
+        return np.array(u_cont)
 
-        def w_cont(r):
-            w_cont = []
-            for i in range(r.size):
-                if r[i] < connection_point_w:
-                    w_cont.append(w_lst[1, i])
-                else:
-                    w_cont.append(rh2_model_a(r[i], a_w, kappa_w))
-            return np.array(w_cont)
+    def w_cont(r):
+        w_cont = []
+        for i in range(r.size):
+            if r[i] < connection_point_w:
+                w_cont.append(w_lst[1, i])
+            else:
+                w_cont.append(rh2_model_a(r[i], a_w, kappa_w))
+        return np.array(w_cont)
 
-        Q = 1/np.sqrt(50) * sp.integrate.trapezoid(r**2 * u_cont(r) * w_cont(r), x=r) - 1/20 * sp.integrate.trapezoid(r**2 * w_cont(r)**2, x=r)
+    Q = 1/np.sqrt(50) * sp.integrate.trapezoid(r**2 * u_cont(r) * w_cont(r), x=r) - 1/20 * sp.integrate.trapezoid(r**2 * w_cont(r)**2, x=r)
 
-        return kappa_u, a_u, connection_point_u, kappa_w, a_w, connection_point_w, Q, fit_points_u, fit_points_w
-    except:
-        return 0
+    return kappa_u, a_u, connection_point_u, kappa_w, a_w, connection_point_w, Q, fit_points_u, fit_points_w
 
 
 def Q_integral_trapz_Nmax(Nmax, aHO):
@@ -226,12 +235,12 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, fit_point_nu
     if save:
         plt.savefig(f"q_wavefunc_continuation_rrms_aHO{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
 
-# plot_continuation_wavefunc_Q(r, 1.4, 60, 3, 1, 29, False)
-# plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 60, 30, False)
+plot_continuation_wavefunc_Q(r, 1.4, 60, 3, 1, 29, 10, 50, False)
+plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, False)
 # plot_continuation_wavefunc_Q(r, 1.2, 15, 3, 1, 17.5, True)
 # plot_continuation_wavefunc_Q(r, 2.0, 15, 3, 1, 27, False)
-plot_continuation_wavefunc_Q(r, 2.4, 60, 3, 1, 60, 80, 40, True)
-plot_continuation_wavefunc_Q(r, 2.6, 60, 3, 1, 65, 80, 40, True)
+# plot_continuation_wavefunc_Q(r, 2.4, 60, 3, 1, 60, 80, 40, True)
+# plot_continuation_wavefunc_Q(r, 2.6, 60, 3, 1, 65, 80, 40, True)
 
 # print(np.mean([Q_integral_trapz_Nmax(150, aho) for aho in [1.2, 1.4, 1.6, 1.8, 2.0]]))
 
