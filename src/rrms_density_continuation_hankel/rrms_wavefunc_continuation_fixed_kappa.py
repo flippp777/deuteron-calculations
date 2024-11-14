@@ -6,7 +6,7 @@ from scipy.integrate import trapezoid
 import sys 
 
 if sys.platform == 'win32':
-    sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
+    sys.path.insert(1, r'C:\Users\phili.DESKTOP\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
 else:
     sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 
@@ -45,10 +45,10 @@ def h2_sq_model_a(r, a, kappa):
 kappa = 0.2307 # kappa from real energy
 # kappa = 0.2171 # kappa from found energy
 
-def find_cont_par_cut(NNmax, aHO):
+def find_continuation_parameters(NNmax, aHO):
     # NNmax has to be bigger than 3 because Nmax=2 is the firts referece point to check for same densities
-    if NNmax < 3:
-        sys.exit("NNmax muss mindestens 3 sein / NNmin darf nicht kleiner als 3 sein")
+    if NNmax < 1:
+        sys.exit("NNmax muss mindestens 1 sein / NNmin darf nicht kleiner als 1 sein")
 
     # Define r range
     dr = 0.1
@@ -197,7 +197,7 @@ def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
 
         rrms_lst = []
         for Nmax in Nmax_lst:
-            kappa, a0, connect0, a2, connect2, rrms, fit_points0, fit_points2 = find_cont_par_cut(Nmax, aHO_lst[j])
+            kappa, a0, connect0, a2, connect2, rrms, fit_points0, fit_points2 = find_continuation_parameters(Nmax, aHO_lst[j])
             r_cont0 = r[r>connect0]
             r_cont2 = r[r>connect2]
             phi0_plt = plt.plot(r, phi0(r, Nmax, aHO_lst[j]))
@@ -240,9 +240,22 @@ def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
         plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO_lst[j]}_NNmax{NNmax}_Nstep{dNmax}_kappa{kappa}.pdf")
 
 
-   
+def mean_var():
+    Nmax_lst = np.arange(1, 21)
+    aHO_lst = [1.1, 1.2, 1.3]
+    
+    rrms_lsts = []
+    for aHO in aHO_lst:
+        rrms_lst = []
+        for Nmax in Nmax_lst:
+            rrms_lst.append(find_continuation_parameters(Nmax, aHO)[5])
+        rrms_lsts.append(rrms_lst)
+    print(rrms_lsts)
         
-plot_wavefunc_continuation_rrms(r, 60, 3, 5)
+    
+mean_var()
+
+# plot_wavefunc_continuation_rrms(r, 60, 3, 5)
 # plt.plot(r, h2_sq_model(r, kappa))
 
 
