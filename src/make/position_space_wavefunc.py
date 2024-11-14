@@ -5,7 +5,9 @@ from make.matrix import mat
 from sys import exit
 
 
+chi_Nmax150_aHO11 = np.loadtxt(r'matrix_elements/chi2b_srg0000_NMax150_LMax02_aHO01.10.meho', skiprows=1)
 chi_Nmax150_aHO12 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.20.meho', skiprows=1)
+chi_Nmax150_aHO13 = np.loadtxt(r'matrix_elements/chi2b_srg0000_NMax150_LMax02_aHO01.30.meho', skiprows=1)
 chi_Nmax150_aHO14 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.40.meho', skiprows=1)
 chi_Nmax150_aHO16 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.60.meho', skiprows=1)
 chi_Nmax150_aHO18 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.80.meho', skiprows=1)
@@ -16,8 +18,12 @@ trel_Nmax150 = np.loadtxt(r'matrix_elements/trel_NMax150_LMax02_aHO01.00.meho', 
 
 
 def gs_eigvec(Nmax, aHO):
-    if aHO == 1.2:
+    if aHO == 1.1:
+        chi = chi_Nmax150_aHO11
+    elif aHO == 1.2:
         chi = chi_Nmax150_aHO12
+    elif aHO == 1.3:
+        chi = chi_Nmax150_aHO13
     elif aHO == 1.4:
         chi = chi_Nmax150_aHO14
     elif aHO == 1.6:
