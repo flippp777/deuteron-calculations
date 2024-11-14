@@ -3,7 +3,7 @@ from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 from concurrent.futures import ThreadPoolExecutor
 from scipy.integrate import trapezoid
-import sys 
+import sys
 
 if sys.platform == 'win32':
     sys.path.insert(1, r'C:\Users\phili.DESKTOP\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
@@ -13,6 +13,7 @@ else:
 from make.position_space_wavefunc import deuteron_wavefunc
 
 plt.style.use('tableau-colorblind10')
+
 def deut_density(r, Nmax, aHO):
     return deuteron_wavefunc(Nmax, aHO, r)[3]
 
@@ -185,7 +186,7 @@ def rrms_integral_trapz(Nmax, Nmin, aHO, Nstep, rmax, dr):
     return np.array([Nmax_lst, rrms])
 
 aHO_lst = np.array([2.4, 2.6]) 
-r = np.linspace(0, 100, 1000)
+r = np.arange(0, 150.01, 0.01)
 
 
 def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
@@ -240,20 +241,63 @@ def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
         plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO_lst[j]}_NNmax{NNmax}_Nstep{dNmax}_kappa{kappa}.pdf")
 
 
-def mean_var():
-    Nmax_lst = np.arange(1, 21)
+def ANN_comparison():
+    Nmax_lst = np.arange(1, 11)
     aHO_lst = [1.1, 1.2, 1.3]
+    ANN_lst = np.arange(4, 11)
     
     rrms_lsts = []
+    rrms_fullwav = []
     for aHO in aHO_lst:
         rrms_lst = []
         for Nmax in Nmax_lst:
             rrms_lst.append(find_continuation_parameters(Nmax, aHO)[5])
         rrms_lsts.append(rrms_lst)
+        rrms_fullwav.append(rrms_integral_trapz(10, 1, aHO, 1, 150, 0.01))
+        
+    rrms_lsts = np.array(rrms_lsts)
     print(rrms_lsts)
+
+    mean_lst = []
+    std_lst = []
+    for i in ANN_lst:
+        mean_lst.append(np.mean(rrms_lsts[:, i-4:i].flatten()))
+        std_lst.append(np.std(rrms_lsts[:, i-4:i].flatten()))
+    
+    print(mean_lst)
+    print(std_lst)
         
     
-mean_var()
+    plt.figure()
+    plt.subplot(121)
+    aHO11_plt = plt.plot(Nmax_lst, rrms_lsts[0], 'o-')
+    aHO11_color = aHO11_plt[0].get_color()
+    plt.plot(rrms_fullwav[0][0], rrms_fullwav[0][1], 'o--', color = aHO11_color)
+    aHO12_plt = plt.plot(Nmax_lst, rrms_lsts[1], 'v-')
+    aHO12_color = aHO12_plt[0].get_color()
+    plt.plot(rrms_fullwav[1][0], rrms_fullwav[1][1], 'v--', color= aHO12_color)
+    aHO13_plt = plt.plot(Nmax_lst, rrms_lsts[2], '^-')
+    aHO13_color = aHO13_plt[0].get_color()
+    plt.plot(rrms_fullwav[2][0], rrms_fullwav[2][1], '^--', color=aHO13_color)
+    plt.xlabel('$N_{max}$')
+    plt.ylabel('$R_{rms}$ (fm)')
+    plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
+    plt.legend(['$a_{HO}=1.1$ fm, Fortsetzung', '$a_{HO}=1.1$ fm, Wellenfunktion',
+                '$a_{HO}=1.2$ fm, Fortsetzung', '$a_{HO}=1.2$ fm, Wellenfunktion',
+                '$a_{HO}=1.3$ fm, Fortsetzung', '$a_{HO}=1.3$ fm, Wellenfunktion'])
+    plt.grid(linestyle='--')
+    
+    plt.subplot(122)
+    plt.errorbar(ANN_lst, mean_lst, yerr=std_lst, fmt='o', capsize=5)
+    plt.xlabel('$NN_{max}$')
+    plt.ylabel('$R_{rms}$ (fm)')
+    plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
+    plt.grid(linestyle='--')
+    
+    
+         
+    
+ANN_comparison()
 
 # plot_wavefunc_continuation_rrms(r, 60, 3, 5)
 # plt.plot(r, h2_sq_model(r, kappa))
