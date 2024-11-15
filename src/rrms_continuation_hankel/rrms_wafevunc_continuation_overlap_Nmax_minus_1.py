@@ -375,9 +375,10 @@ def ANN_comparison(save=False):
     if save:
         plt.savefig("ANN_comparison_fitted_kappa.pdf", pad_inches=0)
     
-ANN_comparison(True)
+# ANN_comparison(True)
 
-# plot_density_continuation_rrms(r, 1.1, 60, 1, 1, 10, 50, False, True)
+plot_density_continuation_rrms(r, 1.2, 60, 1, 1, 10, 50, True, False)
+plot_density_continuation_rrms(r, 2, 60, 1, 1, 10, 50, True, False)
 
 # aHO_lst = np.array([2.0]) 
         
