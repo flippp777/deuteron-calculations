@@ -45,14 +45,14 @@ def h2_model_a(r, a, kappa):
 
 
 
-def find_continuation(NNmax, aHO, number_at_least_collected_points, number_used_points, norm=True):
+def find_continuation_parameters(NNmax, aHO, number_at_least_collected_points=10, number_used_points=50, norm=True):
     # NNmax has to be bigger than 3 because Nmax=2 is the firts referece point to check for same densities
-    if NNmax < 3:
-        exit("NNmax muss mindestens 3 sein / NNmin darf nicht kleiner als 3 sein")
+    if NNmax < 1:
+        exit("NNmax muss mindestens 1 sein / NNmin darf nicht kleiner als 1 sein")
 
     # Define r range
     dr = 0.1
-    r = np.arange(0, 100 + dr, dr)
+    r = np.arange(0, 150 + dr, dr)
    
     # create first list with Nmax=1 and then compute all other lists in parallel. Nmax goes from 2 to the closest number below NNmax that can be reached in steps the size of dNmax
     phi0_lst = np.array([phi0(r, NNmax-1, aHO), phi0(r, NNmax, aHO)])
@@ -249,7 +249,7 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_
     if print_info:
         for Nmax in Nmax_lst:
             counter += 1
-            kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, rrms, fit_points_phi0, fit_points_phi2 = find_continuation(Nmax, aHO, number_at_least_collected_points, number_used_points)
+            kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, rrms, fit_points_phi0, fit_points_phi2 = find_continuation_parameters(Nmax, aHO, number_at_least_collected_points, number_used_points)
 
             r_cont_phi0 = np.arange(connect_phi0, 20.1, 0.1)
             r_cont_phi2 = np.arange(connect_phi2, 20.1, 0.1)
@@ -270,7 +270,7 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_
     else:
         for Nmax in Nmax_lst:
             counter += 1
-            kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, rrms, fit_points_phi0, fit_points_phi2 = find_continuation(Nmax, aHO, number_at_least_collected_points, number_used_points)
+            kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, rrms, fit_points_phi0, fit_points_phi2 = find_continuation_parameters(Nmax, aHO, number_at_least_collected_points, number_used_points)
 
             r_cont_phi0 = np.arange(connect_phi0, 20.1, 0.1)
             r_cont_phi2 = np.arange(connect_phi2, 20.1, 0.1)
@@ -300,7 +300,7 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_
         plt.savefig(f"rrms_wavefunc_continuation_wavefuncs_aHO{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf", pad_inches=0.01)
     
     rmax, dr = max(r), r[1]-r[0]
-    rrms_full_wave = rrms_integral_trapz(NNmax, NNmin-3, aHO, dNmax, rmax, dr)
+    rrms_full_wave = rrms_integral_trapz(NNmax, NNmin-1, aHO, dNmax, rmax, dr)
     # plt.subplot(122)
     plt.figure(figsize=(12,7.45))
     plt.plot(rrms_full_wave[0], rrms_full_wave[1], 'x-')
@@ -315,8 +315,68 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_
     if save:
         plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
             
+def ANN_comparison():
+    Nmax_lst = np.arange(1, 11)
+    aHO_lst = [1.1, 1.2, 1.3]
+    NNmax_lst = np.arange(4, 11)
+    
+    rrms_lsts = []
+    rrms_fullwav = []
+    for aHO in aHO_lst:
+        rrms_lst = []
+        for Nmax in Nmax_lst:
+            rrms_lst.append(find_continuation_parameters(Nmax, aHO)[6])
+        rrms_lsts.append(rrms_lst)
+        rrms_fullwav.append(rrms_integral_trapz(10, 1, aHO, 1, 150, 0.01))
+        
+    rrms_lsts = np.array(rrms_lsts)
+    print(rrms_lsts)
 
-plot_density_continuation_rrms(r, 1.2, 60, 3, 1, 10, 50, False, True)
+    mean_lst = []
+    std_lst = []
+    for i in NNmax_lst:
+        mean_lst.append(np.mean(rrms_lsts[:, i-4:i].flatten()))
+        std_lst.append(np.std(rrms_lsts[:, i-4:i].flatten()))
+    
+    print(mean_lst)
+    print(std_lst)
+        
+    
+    plt.figure()
+    plt.subplot(121)
+    aHO11_plt = plt.plot(Nmax_lst, rrms_lsts[0], 'o-')
+    aHO11_color = aHO11_plt[0].get_color()
+    plt.plot(rrms_fullwav[0][0], rrms_fullwav[0][1], 'o--', color = aHO11_color)
+    aHO12_plt = plt.plot(Nmax_lst, rrms_lsts[1], 'v-')
+    aHO12_color = aHO12_plt[0].get_color()
+    plt.plot(rrms_fullwav[1][0], rrms_fullwav[1][1], 'v--', color= aHO12_color)
+    aHO13_plt = plt.plot(Nmax_lst, rrms_lsts[2], '^-')
+    aHO13_color = aHO13_plt[0].get_color()
+    plt.plot(rrms_fullwav[2][0], rrms_fullwav[2][1], '^--', color=aHO13_color)
+    plt.xlabel('$N_{max}$')
+    plt.ylabel('$R_{rms}$ (fm)')
+    plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
+    plt.legend(['$a_{HO}=1.1$ fm, Fortsetzung', '$a_{HO}=1.1$ fm, Wellenfunktion',
+                '$a_{HO}=1.2$ fm, Fortsetzung', '$a_{HO}=1.2$ fm, Wellenfunktion',
+                '$a_{HO}=1.3$ fm, Fortsetzung', '$a_{HO}=1.3$ fm, Wellenfunktion'])
+    plt.grid(linestyle='--')
+    
+    ANN_lst = [1.766, 1.923, 1.927, 1.868, 1.895, 1.881, 1.917]
+    ANN_err_lst = [[0.051, 0.051], [0.051, 0.051], [0.047, 0.047], [0.032, 0.032], [0.019, 0.019], [0.013, 0.017], [0.013, 0.013]]
+    ANN_err_lst = [[0.051, 0.051, 0.047, 0.032, 0.019, 0.013, 0.013], [0.051, 0.051, 0.047, 0.032, 0.019, 0.017, 0.013]]
+    
+    plt.subplot(122)
+    plt.errorbar(NNmax_lst, mean_lst, yerr=std_lst, fmt='o', capsize=5)
+    plt.errorbar(NNmax_lst, ANN_lst, yerr=ANN_err_lst, fmt='v', capsize=5)
+    plt.xlabel('$NN_{max}$')
+    plt.ylabel('$R_{rms}$ (fm)')
+    plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
+    plt.legend(['Mittelwert der Fortsetzungen', 'ANN Vorgersage'])
+    plt.grid(linestyle='--')
+    
+ANN_comparison()
+
+# plot_density_continuation_rrms(r, 1.1, 60, 1, 1, 10, 50, False, True)
 
 # aHO_lst = np.array([2.0]) 
         
