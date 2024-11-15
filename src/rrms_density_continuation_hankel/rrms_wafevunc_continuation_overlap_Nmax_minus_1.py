@@ -315,7 +315,7 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_
     if save:
         plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
             
-def ANN_comparison():
+def ANN_comparison(save=False):
     Nmax_lst = np.arange(1, 11)
     aHO_lst = [1.1, 1.2, 1.3]
     NNmax_lst = np.arange(4, 11)
@@ -330,7 +330,6 @@ def ANN_comparison():
         rrms_fullwav.append(rrms_integral_trapz(10, 1, aHO, 1, 150, 0.01))
         
     rrms_lsts = np.array(rrms_lsts)
-    print(rrms_lsts)
 
     mean_lst = []
     std_lst = []
@@ -338,43 +337,45 @@ def ANN_comparison():
         mean_lst.append(np.mean(rrms_lsts[:, i-4:i].flatten()))
         std_lst.append(np.std(rrms_lsts[:, i-4:i].flatten()))
     
-    print(mean_lst)
-    print(std_lst)
-        
+    fig = plt.figure(figsize=(12,7.45))
+    gs = fig.add_gridspec(1, 2, wspace=0)
+    axs = gs.subplots(sharey=True)
     
-    plt.figure()
-    plt.subplot(121)
-    aHO11_plt = plt.plot(Nmax_lst, rrms_lsts[0], 'o-')
+    
+    aHO11_plt = axs[0].plot(Nmax_lst, rrms_lsts[0], 'o-')
     aHO11_color = aHO11_plt[0].get_color()
-    plt.plot(rrms_fullwav[0][0], rrms_fullwav[0][1], 'o--', color = aHO11_color)
-    aHO12_plt = plt.plot(Nmax_lst, rrms_lsts[1], 'v-')
+    axs[0].plot(rrms_fullwav[0][0], rrms_fullwav[0][1], 'o--', color = aHO11_color)
+    aHO12_plt = axs[0].plot(Nmax_lst, rrms_lsts[1], 'v-')
     aHO12_color = aHO12_plt[0].get_color()
-    plt.plot(rrms_fullwav[1][0], rrms_fullwav[1][1], 'v--', color= aHO12_color)
-    aHO13_plt = plt.plot(Nmax_lst, rrms_lsts[2], '^-')
+    axs[0].plot(rrms_fullwav[1][0], rrms_fullwav[1][1], 'v--', color= aHO12_color)
+    aHO13_plt = axs[0].plot(Nmax_lst, rrms_lsts[2], '^-')
     aHO13_color = aHO13_plt[0].get_color()
-    plt.plot(rrms_fullwav[2][0], rrms_fullwav[2][1], '^--', color=aHO13_color)
-    plt.xlabel('$N_{max}$')
-    plt.ylabel('$R_{rms}$ (fm)')
+    axs[0].plot(rrms_fullwav[2][0], rrms_fullwav[2][1], '^--', color=aHO13_color)
+    axs[0].set_xlabel('$N_{max}$')
+    axs[0].set_ylabel('$R_{rms}$ (fm)')
     plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
-    plt.legend(['$a_{HO}=1.1$ fm, Fortsetzung', '$a_{HO}=1.1$ fm, Wellenfunktion',
+    axs[0].legend(['$a_{HO}=1.1$ fm, Fortsetzung', '$a_{HO}=1.1$ fm, Wellenfunktion',
                 '$a_{HO}=1.2$ fm, Fortsetzung', '$a_{HO}=1.2$ fm, Wellenfunktion',
-                '$a_{HO}=1.3$ fm, Fortsetzung', '$a_{HO}=1.3$ fm, Wellenfunktion'])
-    plt.grid(linestyle='--')
+                '$a_{HO}=1.3$ fm, Fortsetzung', '$a_{HO}=1.3$ fm, Wellenfunktion'], loc='lower right')
+    axs[0].grid(linestyle='--')
     
     ANN_lst = [1.766, 1.923, 1.927, 1.868, 1.895, 1.881, 1.917]
     ANN_err_lst = [[0.051, 0.051], [0.051, 0.051], [0.047, 0.047], [0.032, 0.032], [0.019, 0.019], [0.013, 0.017], [0.013, 0.013]]
     ANN_err_lst = [[0.051, 0.051, 0.047, 0.032, 0.019, 0.013, 0.013], [0.051, 0.051, 0.047, 0.032, 0.019, 0.017, 0.013]]
     
-    plt.subplot(122)
-    plt.errorbar(NNmax_lst, mean_lst, yerr=std_lst, fmt='o', capsize=5)
-    plt.errorbar(NNmax_lst, ANN_lst, yerr=ANN_err_lst, fmt='v', capsize=5)
-    plt.xlabel('$NN_{max}$')
-    plt.ylabel('$R_{rms}$ (fm)')
-    plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
-    plt.legend(['Mittelwert der Fortsetzungen', 'ANN Vorgersage'])
-    plt.grid(linestyle='--')
     
-ANN_comparison()
+    axs[1].errorbar(NNmax_lst, mean_lst, yerr=std_lst, fmt='o', capsize=5)
+    axs[1].errorbar(NNmax_lst, ANN_lst, yerr=ANN_err_lst, fmt='v', capsize=5)
+    axs[1].set_xlabel('$NN_{max}$')
+    # plt.ylabel('$R_{rms}$ (fm)')
+    # axs[1].yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
+    axs[1].legend(['Mittelwert der Fortsetzungen', 'ANN Vorgersage'], loc='lower right')
+    axs[1].grid(linestyle='--')
+    
+    if save:
+        plt.savefig("ANN_comparison_fitted_kappa.pdf", pad_inches=0)
+    
+ANN_comparison(True)
 
 # plot_density_continuation_rrms(r, 1.1, 60, 1, 1, 10, 50, False, True)
 
