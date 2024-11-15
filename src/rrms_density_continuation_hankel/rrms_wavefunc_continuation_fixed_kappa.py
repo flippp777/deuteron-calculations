@@ -241,7 +241,7 @@ def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
         plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO_lst[j]}_NNmax{NNmax}_Nstep{dNmax}_kappa{kappa}.pdf")
 
 
-def ANN_comparison():
+def ANN_comparison(save=False):
     Nmax_lst = np.arange(1, 11)
     aHO_lst = [1.1, 1.2, 1.3]
     NNmax_lst = np.arange(4, 11)
@@ -268,7 +268,7 @@ def ANN_comparison():
     print(std_lst)
         
     
-    plt.figure()
+    plt.figure(figsize=(12,7.45))
     plt.subplot(121)
     aHO11_plt = plt.plot(Nmax_lst, rrms_lsts[0], 'o-')
     aHO11_color = aHO11_plt[0].get_color()
@@ -291,7 +291,7 @@ def ANN_comparison():
     ANN_err_lst = [[0.051, 0.051], [0.051, 0.051], [0.047, 0.047], [0.032, 0.032], [0.019, 0.019], [0.013, 0.017], [0.013, 0.013]]
     ANN_err_lst = [[0.051, 0.051, 0.047, 0.032, 0.019, 0.013, 0.013], [0.051, 0.051, 0.047, 0.032, 0.019, 0.017, 0.013]]
     
-    plt.subplot(122)
+    plt.subplot(122, sharey=True)
     plt.errorbar(NNmax_lst, mean_lst, yerr=std_lst, fmt='o', capsize=5)
     plt.errorbar(NNmax_lst, ANN_lst, yerr=ANN_err_lst, fmt='v', capsize=5)
     plt.xlabel('$NN_{max}$')
@@ -300,10 +300,13 @@ def ANN_comparison():
     plt.legend(['Mittelwert der Fortsetzungen', 'ANN Vorgersage'])
     plt.grid(linestyle='--')
     
+    if save:
+        plt.savefig("ANN_comparison_fixed_kappa.pdf", pad_inches=0)
+    
     
          
     
-ANN_comparison()
+ANN_comparison(False)
 
 # plot_wavefunc_continuation_rrms(r, 60, 3, 5)
 # plt.plot(r, h2_sq_model(r, kappa))
