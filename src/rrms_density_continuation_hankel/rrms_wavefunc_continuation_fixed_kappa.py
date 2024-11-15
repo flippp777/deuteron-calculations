@@ -244,7 +244,7 @@ def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
 def ANN_comparison():
     Nmax_lst = np.arange(1, 11)
     aHO_lst = [1.1, 1.2, 1.3]
-    ANN_lst = np.arange(4, 11)
+    NNmax_lst = np.arange(4, 11)
     
     rrms_lsts = []
     rrms_fullwav = []
@@ -260,7 +260,7 @@ def ANN_comparison():
 
     mean_lst = []
     std_lst = []
-    for i in ANN_lst:
+    for i in NNmax_lst:
         mean_lst.append(np.mean(rrms_lsts[:, i-4:i].flatten()))
         std_lst.append(np.std(rrms_lsts[:, i-4:i].flatten()))
     
@@ -287,11 +287,17 @@ def ANN_comparison():
                 '$a_{HO}=1.3$ fm, Fortsetzung', '$a_{HO}=1.3$ fm, Wellenfunktion'])
     plt.grid(linestyle='--')
     
+    ANN_lst = [1.766, 1.923, 1.927, 1.868, 1.895, 1.881, 1.917]
+    ANN_err_lst = [[0.051, 0.051], [0.051, 0.051], [0.047, 0.047], [0.032, 0.032], [0.019, 0.019], [0.013, 0.017], [0.013, 0.013]]
+    ANN_err_lst = [[0.051, 0.051, 0.047, 0.032, 0.019, 0.013, 0.013], [0.051, 0.051, 0.047, 0.032, 0.019, 0.017, 0.013]]
+    
     plt.subplot(122)
-    plt.errorbar(ANN_lst, mean_lst, yerr=std_lst, fmt='o', capsize=5)
+    plt.errorbar(NNmax_lst, mean_lst, yerr=std_lst, fmt='o', capsize=5)
+    plt.errorbar(NNmax_lst, ANN_lst, yerr=ANN_err_lst, fmt='v', capsize=5)
     plt.xlabel('$NN_{max}$')
     plt.ylabel('$R_{rms}$ (fm)')
     plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
+    plt.legend(['Mittelwert der Fortsetzungen', 'ANN Vorgersage'])
     plt.grid(linestyle='--')
     
     
