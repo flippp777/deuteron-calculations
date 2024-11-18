@@ -63,13 +63,15 @@ def find_continuation_parameters(NNmax, aHO, number_at_least_collected_points=10
     
     
     # Finding the starting point of the fit range. Minimum in range (0, 4)
-    ddr_log_phi0 = derivative(r, log_phi0[1], 1)
-    r4_index = int(4/dr)
-    start_fit_index_phi0 = np.where(ddr_log_phi0[:r4_index] == min(ddr_log_phi0[:r4_index]))[0][0]
+    # ddr_log_phi0 = derivative(r, log_phi0[1], 1)
+    # r4_index = int(4/dr)
+    # start_fit_index_phi0 = np.where(ddr_log_phi0[:r4_index] == min(ddr_log_phi0[:r4_index]))[0][0]
+    start_fit_index_phi0 = int(3/dr)
     
-    ddr_log_phi2 = derivative(r, log_phi2[1], 1)
-    r4_index = int(4/dr)
-    start_fit_index_phi2 = np.where(ddr_log_phi2[:r4_index] == min(ddr_log_phi2[:r4_index]))[0][0]
+    # ddr_log_phi2 = derivative(r, log_phi2[1], 1)
+    # r4_index = int(4/dr)
+    # start_fit_index_phi2 = np.where(ddr_log_phi2[:r4_index] == min(ddr_log_phi2[:r4_index]))[0][0]
+    start_fit_index_phi2 = int(3/dr)
    
     # Difference between log density at Nmax_j to Nmax_i starting from the start point of the linear range
     diff_log_phi0 = np.abs(log_phi0[0, start_fit_index_phi0:] - log_phi0[1, start_fit_index_phi0:])
@@ -377,8 +379,8 @@ def ANN_comparison(save=False):
     
 # ANN_comparison(True)
 
-plot_density_continuation_rrms(r, 1.2, 60, 1, 1, 10, 50, True, False)
-plot_density_continuation_rrms(r, 2, 60, 1, 1, 10, 50, True, False)
+plot_density_continuation_rrms(r, 1.2, 60, 1, 1, 10, 50, True, True)
+# plot_density_continuation_rrms(r, 2, 60, 1, 1, 10, 50, True, False)
 
 # aHO_lst = np.array([2.0]) 
         

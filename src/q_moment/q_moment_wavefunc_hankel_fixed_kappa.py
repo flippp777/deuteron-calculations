@@ -55,17 +55,19 @@ def continue_q_wavefunc(Nmax, aHO):
     log_u = np.log(u_lst)
     log_w = np.log(w_lst)
     
-    start_index_u = np.where(log_u[1] == max(log_u[1]))[0][0]
+    # start_index_u = np.where(log_u[1] == max(log_u[1]))[0][0]
+    start_index_u = int(3/dr)
     diff_log_u = np.abs(log_u[0, start_index_u:] - log_u[1, start_index_u:])
-    start_index_w = np.where(log_w[1] == max(log_w[1]))[0][0]
+    # start_index_w = np.where(log_w[1] == max(log_w[1]))[0][0]
+    start_index_w = int(3/dr)
     diff_log_w = np.abs(log_w[0, start_index_w:] - log_w[1, start_index_w:])
     
-    distance = 0.001
+    distance = 0.01
     end_index_u = np.array([])
     while end_index_u.size < 3:
         distance += 10**(-3)
         end_index_u = np.append(end_index_u,np.where(diff_log_u < distance)[0] + start_index_u).flatten()
-    distance = 0.001
+    distance = 0.01
     end_index_w = np.array([])
     while end_index_w.size < 3:
         distance += 10**(-3)
@@ -190,8 +192,8 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, save=False):
             w_plot = plt.plot(r, w(r, Nmax, aHO))
             w_color = w_plot[0].get_color()
             plt.plot(r_cont_w, rh2_model_a(r_cont_w, a_w, kappa_w), "--", color=w_color)
-            # plt.scatter(fit_points_u[0], fit_points_u[1])
-            # plt.scatter(fit_points_w[0], fit_points_w[1])
+            plt.scatter(fit_points_u[0], fit_points_u[1])
+            plt.scatter(fit_points_w[0], fit_points_w[1])
             plt.semilogy()
             plt.grid(linestyle='--')
             Q_lst.append(Q)
@@ -227,8 +229,8 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, save=False):
 # plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, True)
 # plot_continuation_wavefunc_Q(r, 1.2, 15, 3, 1, 17.5, True)
 # plot_continuation_wavefunc_Q(r, 2.0, 15, 3, 1, 27, True)
-plot_continuation_wavefunc_Q(r, 2.4, 60, 3, 1, 60, True)
-plot_continuation_wavefunc_Q(r, 2.6, 60, 3, 1, 65, True)
+# plot_continuation_wavefunc_Q(r, 2.4, 60, 3, 1, 60, True)
+# plot_continuation_wavefunc_Q(r, 2.6, 60, 3, 1, 65, True)
 
 # print(np.mean([Q_integral_trapz_Nmax(150, aho) for aho in [1.2, 1.4, 1.6, 1.8, 2.0]]))
 

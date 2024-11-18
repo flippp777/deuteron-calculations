@@ -56,9 +56,11 @@ def continue_q_wavefunc(Nmax, aHO, number_at_least_collected_points=10, number_u
     log_u = np.log(u_lst)
     log_w = np.log(w_lst)
     
-    start_index_u = np.where(log_u[1] == max(log_u[1]))[0][0]
+    # start_index_u = np.where(log_u[1] == max(log_u[1]))[0][0]
+    start_index_u = int(3/dr)
     diff_log_u = np.abs(log_u[0, start_index_u:] - log_u[1, start_index_u:])
-    start_index_w = np.where(log_w[1] == max(log_w[1]))[0][0]
+    # start_index_w = np.where(log_w[1] == max(log_w[1]))[0][0]
+    start_index_w = int(3/dr)
     diff_log_w = np.abs(log_w[0, start_index_w:] - log_w[1, start_index_w:])
     
     distance = 0.01
@@ -198,8 +200,8 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, fit_point_nu
             w_plot = plt.plot(r, w(r, Nmax, aHO))
             w_color = w_plot[0].get_color()
             plt.plot(r_cont_w, rh2_model_a(r_cont_w, a_w, kappa_w), "--", color=w_color)
-            # plt.scatter(fit_points_u[0], fit_points_u[1])
-            # plt.scatter(fit_points_w[0], fit_points_w[1])
+            plt.scatter(fit_points_u[0], fit_points_u[1])
+            plt.scatter(fit_points_w[0], fit_points_w[1])
             plt.semilogy()
             plt.grid(linestyle='--')
 
@@ -234,8 +236,8 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, fit_point_nu
     if save:
         plt.savefig(f"q_wavefunc_continuation_rrms_aHO{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
 
-plot_continuation_wavefunc_Q(r, 1.2, 60, 3, 1, 29, 10, 50, True)
-plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, True)
+plot_continuation_wavefunc_Q(r, 1.2, 60, 3, 1, 29, 10, 50, False)
+plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, False)
 # plot_continuation_wavefunc_Q(r, 1.2, 15, 3, 1, 17.5, True)
 # plot_continuation_wavefunc_Q(r, 2.0, 15, 3, 1, 27, False)
 # plot_continuation_wavefunc_Q(r, 2.4, 60, 3, 1, 60, 80, 40, True)
