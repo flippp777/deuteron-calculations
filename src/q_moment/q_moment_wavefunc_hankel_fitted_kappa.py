@@ -13,14 +13,6 @@ else:
 
 from make.position_space_wavefunc import deuteron_wavefunc
 
-def derivative(x, f, n):
-    dx = abs(x[0] - x[1])
-    
-    for i in range(n):
-        f = np.gradient(f) / dx
-        
-    return f
-
 def u(r, Nmax, aHO):
     return np.abs(r * deuteron_wavefunc(Nmax, aHO, r)[1])
 
@@ -58,9 +50,10 @@ def continue_q_wavefunc(Nmax, aHO, number_at_least_collected_points=10, number_u
     
     # start_index_u = np.where(log_u[1] == max(log_u[1]))[0][0]
     start_index_u = int(3/dr)
-    diff_log_u = np.abs(log_u[0, start_index_u:] - log_u[1, start_index_u:])
     # start_index_w = np.where(log_w[1] == max(log_w[1]))[0][0]
     start_index_w = int(3/dr)
+
+    diff_log_u = np.abs(log_u[0, start_index_u:] - log_u[1, start_index_u:])
     diff_log_w = np.abs(log_w[0, start_index_w:] - log_w[1, start_index_w:])
     
     distance = 0.01
@@ -71,11 +64,12 @@ def continue_q_wavefunc(Nmax, aHO, number_at_least_collected_points=10, number_u
         while np.unique(fit_points_indices_u).size < number_at_least_collected_points:
             distance += 10**(-3)
             fit_points_indices_u = np.append(fit_points_indices_u, np.where(diff_log_u < distance)[0] + start_index_u).flatten()
+
     distance = 0.01
-    
-    while np.unique(fit_points_indices_w).size < number_at_least_collected_points:
-        distance += 10**(-3)
-        fit_points_indices_w = np.append(fit_points_indices_w,np.where(diff_log_w < distance)[0] + start_index_w).flatten()
+    if np.unique(fit_points_indices_w).size < number_at_least_collected_points:
+        while np.unique(fit_points_indices_w).size < number_at_least_collected_points:
+            distance += 10**(-3)
+            fit_points_indices_w = np.append(fit_points_indices_w,np.where(diff_log_w < distance)[0] + start_index_w).flatten()
 
     fit_points_indices_u = np.unique(fit_points_indices_u)
     fit_points_indices_w = np.unique(fit_points_indices_w)
@@ -96,22 +90,34 @@ def continue_q_wavefunc(Nmax, aHO, number_at_least_collected_points=10, number_u
     fit_points_w = np.array([r[fit_points_indices_w], w_lst[1, fit_points_indices_w]])
 
     # Fit
-    params_u = create_params(a=1, kappa=dict(value=0.2305, min=0.2, max=0.4))
+    params_u = create_params(a=1, kappa=dict(value=0.2305))
     
     h0model = Model(rh0_model_a)
     h0result = h0model.fit(fit_points_u[1], r=fit_points_u[0], params=params_u)
     kappa_u = h0result.best_values["kappa"]
     
-    params_w = create_params(a=0.01, kappa=dict(value=0.2305, min=0.2, max=0.4))
+    params_w = create_params(a=0.01, kappa=dict(value=0.2305))
     
     h2model = Model(rh2_model_a)
     h2result = h2model.fit(fit_points_w[1], r=fit_points_w[0], params=params_w)
     kappa_w = h2result.best_values["kappa"]
 
-    # Finding a point that has the same slope as the found one 
-    d_dr_u = derivative(r, u_lst[1, fit_points_indices_u], 1)
+    # plt.figure()
+    # plt.plot(r, np.gradient(np.log(w_lst[1]), r))
+    # plt.plot(r, np.gradient(np.log(rh2_model(r, kappa_w)), r))
+    # plt.scatter(fit_points_w[0], fit_points_w[1])
+    # plt.legend(['u', 'rh0_model'])
+    # plt.xlim(0, 20)
+    # plt.ylim(-10,10)
+    
+    # plt.show()
+    
+    # sys.exit()
+
+    # Finding a point that has the same slope as the found one (the gradient of the log is used to get rid of the "a" dependence)
+    d_dr_u = np.gradient(np.log(fit_points_u[1]), fit_points_u[0])
     rh0 = rh0_model(r[fit_points_indices_u], kappa_u)
-    d_dr_rh0 = derivative(r[fit_points_indices_u], rh0, 1)
+    d_dr_rh0 = np.gradient(np.log(rh0), fit_points_u[0])
     connection_point_u = np.array([])
     delta = 10**(-3)
     while connection_point_u.size == 0:
@@ -119,9 +125,9 @@ def continue_q_wavefunc(Nmax, aHO, number_at_least_collected_points=10, number_u
         delta += 10**(-3)
     connection_point_u = connection_point_u[0]
     
-    d_dr_w = derivative(r, w_lst[1, fit_points_indices_w], 1)
+    d_dr_w = np.gradient(np.log(fit_points_w[1]), fit_points_w[0])
     rh2 = rh2_model(r[fit_points_indices_w], kappa_w)
-    d_dr_rh2 = derivative(r[fit_points_indices_w], rh2, 1)
+    d_dr_rh2 = np.gradient(np.log(rh2), fit_points_w[0])
     connection_point_w = np.array([])
     delta = 10**(-3)
     while connection_point_w.size == 0:
@@ -156,6 +162,7 @@ def continue_q_wavefunc(Nmax, aHO, number_at_least_collected_points=10, number_u
     return kappa_u, a_u, connection_point_u, kappa_w, a_w, connection_point_w, Q, fit_points_u, fit_points_w
 
 
+
 def Q_integral_trapz_Nmax(Nmax, aHO):
     dr = 0.1
     r = np.arange(0, 100 + dr, dr)
@@ -184,32 +191,30 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, fit_point_nu
     # plt.subplot(121)
 
     Q_lst = []
-    err_fit = []
+    counter = 0
     plot_wavefunc = 0
     for Nmax in Nmax_lst:
-        try:
-            kappa_u , a_u, connect_u, kappa_w , a_w, connect_w, Q, fit_points_u, fit_points_w = continue_q_wavefunc(Nmax, aHO, fit_point_num1, fit_point_num2)
-            
-            r_cont_u = np.arange(connect_u, xmax+0.1, 0.1)
-            r_cont_w = np.arange(connect_w, xmax+0.1, 0.1)
+        kappa_u , a_u, connect_u, kappa_w , a_w, connect_w, Q, fit_points_u, fit_points_w = continue_q_wavefunc(Nmax, aHO, fit_point_num1, fit_point_num2)
+        
+        r_cont_u = np.arange(connect_u, xmax+0.1, 0.1)
+        r_cont_w = np.arange(connect_w, xmax+0.1, 0.1)
 
-            u_plot = plt.plot(r, u(r, Nmax, aHO))
-            u_color = u_plot[0].get_color()
-            plt.plot(r_cont_u, rh0_model_a(r_cont_u, a_u, kappa_u), '--', color=u_color)
+        u_plot = plt.plot(r, u(r, Nmax, aHO))
+        u_color = u_plot[0].get_color()
+        plt.plot(r_cont_u, rh0_model_a(r_cont_u, a_u, kappa_u), '--', color=u_color)
 
-            w_plot = plt.plot(r, w(r, Nmax, aHO))
-            w_color = w_plot[0].get_color()
-            plt.plot(r_cont_w, rh2_model_a(r_cont_w, a_w, kappa_w), "--", color=w_color)
-            plt.scatter(fit_points_u[0], fit_points_u[1])
-            plt.scatter(fit_points_w[0], fit_points_w[1])
-            plt.semilogy()
-            plt.grid(linestyle='--')
+        w_plot = plt.plot(r, w(r, Nmax, aHO))
+        w_color = w_plot[0].get_color()
+        plt.plot(r_cont_w, rh2_model_a(r_cont_w, a_w, kappa_w), "--", color=w_color)
+        plt.scatter(fit_points_u[0], fit_points_u[1])
+        plt.scatter(fit_points_w[0], fit_points_w[1])
+        plt.semilogy()
+        plt.grid(linestyle='--')
 
-            Q_lst.append(Q)
-        except:
-            err_fit.append(np.where(Nmax == Nmax_lst)[0][0])
-            print(err_fit)
-        plot_wavefunc = plot_wavefunc + 1
+        Q_lst.append(Q)
+        counter += 1
+        print(f"Nmax = {Nmax} ({100*counter/len(Nmax_lst)} %)")
+        print(f'kappa_u = {kappa_u}, kappa_w = {kappa_w}')
     
     plt.title("$u(r)$ und $w(r)$ sowie deren Fortzetzung für aHO = " + str(aHO) + " fm (logaryhtmische y-Axhse)") 
     plt.ylim(10**(-6), 10)
@@ -225,7 +230,7 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, fit_point_nu
     # plt.subplot(122)
     plt.figure(figsize=(12, 7.45))
     plt.plot(Q_full_wave[0], Q_full_wave[1], 'x-')
-    plt.plot(np.delete(Nmax_lst, err_fit), Q_lst, 'x-')
+    plt.plot(Nmax_lst, Q_lst, 'x-')
     plt.yticks([0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.2709, 0.3, 0.35, 0.4])
     plt.title('$Q$ bei $a_{HO} = $' + str(aHO) + ' fm aus Wellenfunktion und Fortsetzung')
     plt.legend(["Wellenfunktion", 'Wellenfunktion + Fortsetzung'])
@@ -236,8 +241,8 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, fit_point_nu
     if save:
         plt.savefig(f"q_wavefunc_continuation_rrms_aHO{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
 
-plot_continuation_wavefunc_Q(r, 1.2, 60, 3, 1, 29, 10, 50, False)
-plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, False)
+plot_continuation_wavefunc_Q(r, 1.2, 60, 1, 1, 29, 10, 50, False)
+# plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, False)
 # plot_continuation_wavefunc_Q(r, 1.2, 15, 3, 1, 17.5, True)
 # plot_continuation_wavefunc_Q(r, 2.0, 15, 3, 1, 27, False)
 # plot_continuation_wavefunc_Q(r, 2.4, 60, 3, 1, 60, 80, 40, True)
