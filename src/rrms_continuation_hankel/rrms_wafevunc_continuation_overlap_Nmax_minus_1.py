@@ -185,24 +185,24 @@ def find_continuation_parameters(NNmax, aHO, number_at_least_collected_points=10
     
     
     # Finding a point that has the same slope as the fitted one (up to a factor)
-    d_dr_phi0 = np.gradient(np.log(fit_points_phi0[1]), fit_points_phi0[0])
+    d_dr_phi0 = np.gradient(np.log(fit_points_phi0[1]), fit_points_phi0[0])[1:-1]
     h0 = np.log(h0_model(r_fit_phi0, kappa_phi0))
-    ddr_h0 = np.gradient(h0, r_fit_phi0)
+    ddr_h0 = np.gradient(h0, r_fit_phi0)[1:-1]
     connection_point_phi0 = np.array([])
     delta = 10**(-3)
     while connection_point_phi0.size == 0:
-        connection_point_phi0 = r_fit_phi0[((d_dr_phi0 > ddr_h0 - delta) & (d_dr_phi0 < ddr_h0 + delta))]
+        connection_point_phi0 = r_fit_phi0[1:-1][((d_dr_phi0 > ddr_h0 - delta) & (d_dr_phi0 < ddr_h0 + delta))]
         # print(f'phi0: Nmax={NNmax}, delta={delta}')
         delta += 10**(-3)
     connection_point_phi0 = connection_point_phi0[0]
     
-    d_dr_phi2 = np.gradient(np.log(fit_points_phi2[1]), fit_points_phi2[0])
+    d_dr_phi2 = np.gradient(np.log(fit_points_phi2[1]), fit_points_phi2[0])[1:-1]
     h2 = np.log(h2_model(r_fit_phi2, kappa_phi2))
-    ddr_h2 = np.gradient(h2, r_fit_phi2)
+    ddr_h2 = np.gradient(h2, r_fit_phi2)[1:-1]
     connection_point_phi2 = np.array([])
     delta = 10**(-3)
     while connection_point_phi2.size == 0:
-        connection_point_phi2 = r_fit_phi2[((d_dr_phi2 > ddr_h2 - delta) & (d_dr_phi2 < ddr_h2 + delta))]
+        connection_point_phi2 = r_fit_phi2[1:-1][((d_dr_phi2 > ddr_h2 - delta) & (d_dr_phi2 < ddr_h2 + delta))]
         # print(f'phi2: Nmax={NNmax}, delta={delta}')
         delta += 10**(-3)
     connection_point_phi2 = connection_point_phi2[0]

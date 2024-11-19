@@ -106,25 +106,25 @@ def find_continuation_parameters(NNmax, aHO, number_at_leat_collected_points=10,
         fit_points_indices_phi2 = fit_points_indices_phi2[three_quater_index - int(number_maximally_used_points / 2):three_quater_index + int(number_maximally_used_points / 2)]
     
     # Finding a point that has the same slope as the fitted one 
-    d_dr_phi0= np.gradient(phi0_lst[1, fit_points_indices_phi0], r[fit_points_indices_phi0])
+    d_dr_phi0= np.gradient(phi0_lst[1, fit_points_indices_phi0], r[fit_points_indices_phi0])[1:-1]
     h0_sq = h0_sq_model(r[fit_points_indices_phi0], kappa)
-    d_dr_h0_sq = np.gradient(h0_sq, r[fit_points_indices_phi0])
+    d_dr_h0_sq = np.gradient(h0_sq, r[fit_points_indices_phi0])[1:-1]
 
-    d_dr_phi2= np.gradient(phi2_lst[1, fit_points_indices_phi2], r[fit_points_indices_phi2])
+    d_dr_phi2= np.gradient(phi2_lst[1, fit_points_indices_phi2], r[fit_points_indices_phi2])[1:-1]
     h2_sq = h2_sq_model(r[fit_points_indices_phi2], kappa)
-    d_dr_h2_sq = np.gradient(h2_sq, r[fit_points_indices_phi2])
+    d_dr_h2_sq = np.gradient(h2_sq, r[fit_points_indices_phi2])[1:-1]
 
     connection_point_phi0 = np.array([])
     delta = 10**(-3)
     while connection_point_phi0.size == 0:
-        connection_point_phi0 = r[fit_points_indices_phi0][((d_dr_phi0> d_dr_h0_sq - delta) & (d_dr_phi0< d_dr_h0_sq + delta))]
+        connection_point_phi0 = r[fit_points_indices_phi0[1:-1]][((d_dr_phi0> d_dr_h0_sq - delta) & (d_dr_phi0< d_dr_h0_sq + delta))]
         delta += 10**(-3)
     connection_point_phi0 = connection_point_phi0[0]
 
     connection_point_phi2 = np.array([])
     delta = 10**(-3)
     while connection_point_phi2.size == 0:
-        connection_point_phi2 = r[fit_points_indices_phi2][((d_dr_phi2> d_dr_h2_sq - delta) & (d_dr_phi2< d_dr_h2_sq + delta))]
+        connection_point_phi2 = r[fit_points_indices_phi2[1:-1]][((d_dr_phi2> d_dr_h2_sq - delta) & (d_dr_phi2< d_dr_h2_sq + delta))]
         delta += 10**(-3)
     connection_point_phi2 = connection_point_phi2[0]
     
@@ -187,6 +187,7 @@ def plot_wavefunc_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least
     # plt.subplot(121)
 
     rrms_lst = []
+    counter = 1
     for Nmax in Nmax_lst:
         kappa, a0, connect0, a2, connect2, rrms, fit_points0, fit_points2 = find_continuation_parameters(Nmax, aHO, number_at_least_collected_points, number_maximal_used_points)
         r_cont0 = r[r>connect0]
@@ -201,6 +202,8 @@ def plot_wavefunc_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least
         plt.semilogy()
         plt.grid(linestyle='--')
         rrms_lst.append(rrms)
+        print(f"Nmax = {Nmax} ({100*counter/len(Nmax_lst)} %)")
+        counter += 1
         
     plt.title("Betragsquadrat der Wellenfunktionen und  Fortzetzung mit festem $\kappa = $" + str(kappa) + " 1/fm für aHO = " + str(aHO) + " fm (logaryhtmische y-Axhse)") 
     plt.ylim(10**(-6), 1)
