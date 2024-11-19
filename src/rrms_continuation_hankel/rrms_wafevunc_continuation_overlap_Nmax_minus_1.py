@@ -266,8 +266,6 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_
 
     rrms_lst = []
     N_err_lst = []
-    err_fitpoints_phi0 = []
-    err_fitpoints_phi2 = []
     counter = 0
     if print_info:
         for Nmax in Nmax_lst:
