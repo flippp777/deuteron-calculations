@@ -265,7 +265,6 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_
     # plt.subplot(121)
 
     rrms_lst = []
-    N_err_lst = []
     counter = 0
     if print_info:
         for Nmax in Nmax_lst:
@@ -325,7 +324,7 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_
     # plt.subplot(122)
     plt.figure(figsize=(12,7.45))
     plt.plot(rrms_full_wave[0], rrms_full_wave[1], 'x-')
-    plt.plot(np.delete(Nmax_lst, N_err_lst), rrms_lst, 'x-')
+    plt.plot(Nmax_lst, rrms_lst, 'x-')
     plt.title('$R_{rms}$ bei $a_{HO} = $' + str(aHO) + ' fm aus Wellenfunktion und angepasster Fortsetzung')
     plt.legend(["Wellenfunktion", 'Wellenfunktion + Fortsetzung'])
     plt.xlabel('$N_{max}$')
