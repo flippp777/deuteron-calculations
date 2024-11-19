@@ -17,14 +17,6 @@ from make.position_space_wavefunc import deuteron_wavefunc
 def deut_density(r, Nmax, aHO):
     return deuteron_wavefunc(Nmax, aHO, r)[3]
 
-def derivative(x, f, n):
-    dx = abs(x[0] - x[1])
-    
-    for i in range(n):
-        f = np.gradient(f) / dx
-        
-    return f
-
 def phi0(r, Nmax, aHO):
     return np.abs(deuteron_wavefunc(Nmax, aHO, r)[1])
 
@@ -131,11 +123,12 @@ def find_continuation_parameters(NNmax, aHO, number_at_least_collected_points=10
 
     
 
-    h0params = create_params(a=1, kappa=dict(value=0.2305, min=0.2, max=0.4))
+    h0params = create_params(a=1, kappa=dict(value=0.2305))
     
     h0model = Model(h0_model_a)
     h0result = h0model.fit(fit_points_phi0[1], r=fit_points_phi0[0], params=h0params)
     kappa_phi0 = h0result.best_values["kappa"]
+    a0_fit = h0result.best_values["a"]
     # plt.figure()
     # h0result.plot_fit()
     
@@ -145,11 +138,12 @@ def find_continuation_parameters(NNmax, aHO, number_at_least_collected_points=10
     # plt.xlim(min(fit_points_phi0[0])-1, max(fit_points_phi0[0])+1)
     # plt.show()
     
-    h2params = create_params(a=0.01, kappa=dict(value=0.2305, min=0.2, max=0.4))
+    h2params = create_params(a=0.01, kappa=dict(value=0.2305))
     
     h2model = Model(h2_model_a)
     h2result = h2model.fit(fit_points_phi2[1], r=fit_points_phi2[0], params=h2params)
     kappa_phi2 = h2result.best_values["kappa"]
+    a2_fit = h2result.best_values["a"]
     # plt.figure()
     # h2result.plot_fit()
     # plt.figure()
@@ -160,30 +154,56 @@ def find_continuation_parameters(NNmax, aHO, number_at_least_collected_points=10
     # plt.show()
     
     # plt.plot(r, h2_model_a(r, h2result.best_values['a'], kappa_phi2))
+    # plt.plot(r, phi2_lst[1])
     # plt.scatter(fit_points_phi2[0], fit_points_phi2[1])
-    # plt.ylim(min(fit_points_phi2[1])-1, max(fit_points_phi2[1])+1)
-    # plt.xlim(min(fit_points_phi2[0])-1, max(fit_points_phi2[0])+1)
+    # plt.legend(['Fit', 'phi2', 'fit points'])
+    # plt.semilogy()
+    # plt.ylim(10**(-6), 10)
+    # plt.xlim(0,20)
+
+    # plt.figure()
+    # plt.plot(r, np.abs(np.gradient(np.log(h2_model(r, kappa_phi2)), r)))
+    # plt.plot(r, np.abs(np.gradient(np.log(phi2_lst[1]), r)))
+    # # plt.scatter(fit_points_phi2[0], fit_points_phi2[1])
+    # # plt.legend(['Fit', 'phi2', 'fit points'])
+    # # plt.semilogy()
+    # # plt.ylim(10**(-6), 10)
+    # # plt.xlim(0,20)
+
+    # plt.figure()
+    # plt.plot(r, np.gradient(h2_model_a(r, h2result.best_values['a'], kappa_phi2), r))
+    # plt.plot(r, np.gradient(phi2_lst[1], r))
+    # plt.legend(['Fit', 'phi2'])
+    # plt.semilogy()
+    # plt.ylim(10**(-10), 10)
+    # plt.xlim(0,20)
+
     # plt.show()
     
     
-    # Finding a point that has the same slope as the fitted one 
-    d_dr_phi0 = derivative(r, phi0_lst[1, fit_points_indices_phi0], 1)
-    h0 = h0_model(r_fit_phi0, kappa_phi0)
-    ddr_h0 = derivative(r_fit_phi0, h0, 1)
+    # sys.exit()
+    
+    
+    # Finding a point that has the same slope as the fitted one (up to a factor)
+    d_dr_phi0 = np.gradient(np.log(fit_points_phi0[1]), fit_points_phi0[0])
+    h0 = np.log(h0_model(r_fit_phi0, kappa_phi0))
+    ddr_h0 = np.gradient(h0, r_fit_phi0)
     connection_point_phi0 = np.array([])
     delta = 10**(-3)
     while connection_point_phi0.size == 0:
         connection_point_phi0 = r_fit_phi0[((d_dr_phi0 > ddr_h0 - delta) & (d_dr_phi0 < ddr_h0 + delta))]
+        # print(f'phi0: Nmax={NNmax}, delta={delta}')
         delta += 10**(-3)
     connection_point_phi0 = connection_point_phi0[0]
     
-    d_dr_phi2 = derivative(r, phi2_lst[1, fit_points_indices_phi2], 1)
-    h2 = h2_model(r_fit_phi2, kappa_phi2)
-    ddr_h2 = derivative(r_fit_phi2, h2, 1)
+    d_dr_phi2 = np.gradient(np.log(fit_points_phi2[1]), fit_points_phi2[0])
+    h2 = np.log(h2_model(r_fit_phi2, kappa_phi2))
+    ddr_h2 = np.gradient(h2, r_fit_phi2)
     connection_point_phi2 = np.array([])
     delta = 10**(-3)
     while connection_point_phi2.size == 0:
         connection_point_phi2 = r_fit_phi2[((d_dr_phi2 > ddr_h2 - delta) & (d_dr_phi2 < ddr_h2 + delta))]
+        # print(f'phi2: Nmax={NNmax}, delta={delta}')
         delta += 10**(-3)
     connection_point_phi2 = connection_point_phi2[0]
 
@@ -211,6 +231,8 @@ def find_continuation_parameters(NNmax, aHO, number_at_least_collected_points=10
     rrms = np.sqrt(trapezoid((phi0_cont(r)**2 + phi2_cont(r)**2) * r**4, x=r)/4)
 
     return kappa_phi0, a_phi0, connection_point_phi0, kappa_phi2, a_phi2, connection_point_phi2, rrms, fit_points_phi0, fit_points_phi2
+
+# find_continuation_parameters(4, 1.2)
     
 def rsq_integral_trapz(Nmax, aHO, rmax, dr):
     r_size = int(np.round(rmax / dr))
@@ -234,7 +256,6 @@ def rrms_integral_trapz(Nmax, Nmin, aHO, Nstep, rmax, dr):
 
 r = np.linspace(0, 100, 1000)
 
-# find_continuation(5, 1.2, 10, 20)
 
 
 def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_collected_points, number_used_points, save=False, print_info=False):
@@ -355,7 +376,7 @@ def ANN_comparison(save=False):
     axs[0].plot(rrms_fullwav[2][0], rrms_fullwav[2][1], '^--', color=aHO13_color)
     axs[0].set_xlabel('$N_{max}$')
     axs[0].set_ylabel('$R_{rms}$ (fm)')
-    plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
+    plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2, 2.4, 2.6, 2.8, 3])
     axs[0].legend(['$a_{HO}=1.1$ fm, Fortsetzung', '$a_{HO}=1.1$ fm, Wellenfunktion',
                 '$a_{HO}=1.2$ fm, Fortsetzung', '$a_{HO}=1.2$ fm, Wellenfunktion',
                 '$a_{HO}=1.3$ fm, Fortsetzung', '$a_{HO}=1.3$ fm, Wellenfunktion'], loc='lower right')
@@ -377,9 +398,9 @@ def ANN_comparison(save=False):
     if save:
         plt.savefig("ANN_comparison_fitted_kappa.pdf", pad_inches=0)
     
-# ANN_comparison(True)
+# ANN_comparison(False)
 
-plot_density_continuation_rrms(r, 1.2, 60, 1, 1, 10, 50, True, True)
+plot_density_continuation_rrms(r, 1.2, 60, 1, 1, 10, 50, False, True)
 # plot_density_continuation_rrms(r, 2, 60, 1, 1, 10, 50, True, False)
 
 # aHO_lst = np.array([2.0]) 
