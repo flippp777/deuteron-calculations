@@ -40,7 +40,7 @@ def Q_trapz(r, Nmax, aHO):
 
 def continue_q_wavefunc(Nmax, aHO, number_at_least_collected_points=10, number_used_points=50):
     dr = 0.1
-    r = np.arange(0, 100 + dr, dr)
+    r = np.arange(0, 150 + dr, dr)
     
     u_lst = np.array([u(r, Nmax-1, aHO), u(r, Nmax, aHO)])
     w_lst = np.array([w(r, Nmax-1, aHO), w(r, Nmax, aHO)])
