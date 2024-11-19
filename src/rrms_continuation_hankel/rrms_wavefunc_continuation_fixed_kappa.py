@@ -23,14 +23,6 @@ def phi0(r, Nmax, aHO):
 def phi2(r, Nmax, aHO):
     return deuteron_wavefunc(Nmax, aHO, r)[2]**2
 
-def derivative(x, f, n):
-    dx = abs(x[0] - x[1])
-    
-    for i in range(n):
-        f = np.gradient(f) / dx
-        
-    return f
-
 def h0_sq_model(r, kappa):
     return 1 / (kappa * r)**2 * np.exp(-2 * kappa * r)
 
@@ -46,7 +38,7 @@ def h2_sq_model_a(r, a, kappa):
 kappa = 0.2307 # kappa from real energy
 # kappa = 0.2171 # kappa from found energy
 
-def find_continuation_parameters(NNmax, aHO):
+def find_continuation_parameters(NNmax, aHO, number_at_leat_collected_points=10, number_maximally_used_points=50):
     # NNmax has to be bigger than 3 because Nmax=2 is the firts referece point to check for same densities
     if NNmax < 1:
         sys.exit("NNmax muss mindestens 1 sein / NNmin darf nicht kleiner als 1 sein")
@@ -84,14 +76,14 @@ def find_continuation_parameters(NNmax, aHO):
     fit_points_indices_phi2 = np.where(diff_log_phi2 < distance)[0] + start_fit_index_phi2
     
     # condition to have two differen points in order to fit something
-    if np.unique(fit_points_indices_phi0).size < 2:
+    if np.unique(fit_points_indices_phi0).size < number_at_leat_collected_points:
         delta = distance + 10**(-3)
-        while np.unique(fit_points_indices_phi0).size < 2:
+        while np.unique(fit_points_indices_phi0).size < number_at_leat_collected_points:
             fit_points_indices_phi0 = np.append(fit_points_indices_phi0, np.where(diff_log_phi0 < delta)[0] + start_fit_index_phi0)
             delta += 10**(-3)
-    if np.unique(fit_points_indices_phi2).size < 2:
+    if np.unique(fit_points_indices_phi2).size < number_at_leat_collected_points:
         delta = distance + 10**(-3)
-        while np.unique(fit_points_indices_phi2).size < 2:
+        while np.unique(fit_points_indices_phi2).size < number_at_leat_collected_points:
             fit_points_indices_phi2 = np.append(fit_points_indices_phi2, np.where(diff_log_phi2 < delta)[0] + start_fit_index_phi2)
             delta += 10**(-3)
     
@@ -99,31 +91,28 @@ def find_continuation_parameters(NNmax, aHO):
     fit_points_indices_phi0 = np.unique(fit_points_indices_phi0).astype(int)
     fit_points_indices_phi2 = np.unique(fit_points_indices_phi2).astype(int)
 
-    end_fit_index = max(fit_points_indices_phi0) + 1
-    
     # use only the fit_point_num number of points in the middle of the list
-    fit_point_num = 10
-    if fit_points_indices_phi0.size > fit_point_num:
+    if fit_points_indices_phi0.size > number_maximally_used_points:
         middle_index = int(fit_points_indices_phi0.size / 2)
         # two_third_index = int(fit_points_indices.size * 2 / 3)
         three_quater_index = middle_index + int(fit_points_indices_phi0.size / 4)
-        fit_points_indices_phi0 = fit_points_indices_phi0[three_quater_index - int(fit_point_num / 2):three_quater_index + int(fit_point_num / 2)]
+        fit_points_indices_phi0 = fit_points_indices_phi0[three_quater_index - int(number_maximally_used_points / 2):three_quater_index + int(number_maximally_used_points / 2)]
     
-    fit_point_num = 10
-    if fit_points_indices_phi2.size > fit_point_num:
+    number_maximally_used_points = 10
+    if fit_points_indices_phi2.size > number_maximally_used_points:
         middle_index = int(fit_points_indices_phi2.size / 2)
         # two_third_index = int(fit_points_indices.size * 2 / 3)
         three_quater_index = middle_index + int(fit_points_indices_phi2.size / 4)
-        fit_points_indices_phi2 = fit_points_indices_phi2[three_quater_index - int(fit_point_num / 2):three_quater_index + int(fit_point_num / 2)]
+        fit_points_indices_phi2 = fit_points_indices_phi2[three_quater_index - int(number_maximally_used_points / 2):three_quater_index + int(number_maximally_used_points / 2)]
     
     # Finding a point that has the same slope as the fitted one 
-    d_dr_phi0= derivative(r, phi0_lst[1, fit_points_indices_phi0], 1)
+    d_dr_phi0= np.gradient(phi0_lst[1, fit_points_indices_phi0], r[fit_points_indices_phi0])
     h0_sq = h0_sq_model(r[fit_points_indices_phi0], kappa)
-    d_dr_h0_sq = derivative(r[fit_points_indices_phi0], h0_sq, 1)
+    d_dr_h0_sq = np.gradient(h0_sq, r[fit_points_indices_phi0])
 
-    d_dr_phi2= derivative(r, phi2_lst[1, fit_points_indices_phi2], 1)
+    d_dr_phi2= np.gradient(phi2_lst[1, fit_points_indices_phi2], r[fit_points_indices_phi2])
     h2_sq = h2_sq_model(r[fit_points_indices_phi2], kappa)
-    d_dr_h2_sq = derivative(r[fit_points_indices_phi2], h2_sq, 1)
+    d_dr_h2_sq = np.gradient(h2_sq, r[fit_points_indices_phi2])
 
     connection_point_phi0 = np.array([])
     delta = 10**(-3)
@@ -191,56 +180,58 @@ aHO_lst = np.array([2.4, 2.6])
 r = np.arange(0, 150.01, 0.01)
 
 
-def plot_wavefunc_continuation_rrms(r, NNmax, NNmin, dNmax):
+def plot_wavefunc_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_collected_points, number_maximal_used_points, save=False):
     Nmax_lst = np.arange(NNmin, NNmax + 1, dNmax)
     
-    for j in range(aHO_lst.size):
-        plt.figure(figsize=(17,10.6))
-        # plt.subplot(121)
+    plt.figure(figsize=(17,10.6))
+    # plt.subplot(121)
 
-        rrms_lst = []
-        for Nmax in Nmax_lst:
-            kappa, a0, connect0, a2, connect2, rrms, fit_points0, fit_points2 = find_continuation_parameters(Nmax, aHO_lst[j])
-            r_cont0 = r[r>connect0]
-            r_cont2 = r[r>connect2]
-            phi0_plt = plt.plot(r, phi0(r, Nmax, aHO_lst[j]))
-            phi0_color = phi0_plt[0].get_color()
-            plt.plot(r_cont0, h0_sq_model_a(r_cont0, a0, kappa), "--", color=phi0_color)
-            phi2_plt = plt.plot(r, phi2(r, Nmax, aHO_lst[j]))
-            phi2_color = phi2_plt[0].get_color()
-            plt.plot(r_cont2, h2_sq_model_a(r_cont2, a2, kappa), "--", color=phi2_color)
-            # plt.scatter(fit_points[0], np.exp(fit_points[1]))
-            plt.semilogy()
-            plt.grid(linestyle='--')
-            rrms_lst.append(rrms)
-        
-        plt.title("Betragsquadrat der Wellenfunktionen und  Fortzetzung mit festem $\kappa = $" + str(kappa) + " 1/fm für aHO = " + str(aHO_lst[j]) + " fm (logaryhtmische y-Axhse)") 
-        plt.ylim(10**(-6), 1)
-        plt.xlim(0, 20)
-        plt.xlabel("r (fm)")
-        plt.ylabel('$|\Phi(r)|^2$')
-        legend_phi0 = np.array(["$N_{max} = $" + str(Nmax) + ", $\Phi_0(r)^2$" for Nmax in Nmax_lst])
-        legend_h0 = np.array(["$N_{max} = $" + str(Nmax) + ", $\Phi_0(r)^2$-Fortsetzung" for Nmax in Nmax_lst])
-        legend_phi2 = np.array(["$N_{max} = $" + str(Nmax) + ", $\Phi_2(r)^2$" for Nmax in Nmax_lst])
-        legend_h2 = np.array(["$N_{max} = $" + str(Nmax) + ", $\Phi_2(r)^2$-Fortsetzung" for Nmax in Nmax_lst])
-        legend = np.array([legend_phi0, legend_h0, legend_phi2, legend_h2]).transpose().flatten()
-        plt.legend(legend, ncol=2)
-        
-        plt.savefig(f"rrms_wavefunc_continuation_wavefuncs_aHO{aHO_lst[j]}_NNmax{NNmax}_Nstep{dNmax}_kappa{kappa}.pdf", pad_inches=0.05)
-        
-        rmax, dr = max(r), r[1]-r[0]
-        rrms_full_wave = rrms_integral_trapz(NNmax, NNmin-3, aHO_lst[j], dNmax, rmax, dr)
-        # plt.subplot(122)
-        plt.figure(figsize=(12,7.45))
-        plt.plot(rrms_full_wave[0], rrms_full_wave[1], 'x-')
-        plt.plot(Nmax_lst, rrms_lst, 'x-')
-        plt.title('$R_{rms}$ bei $a_{HO} = $' + str(aHO_lst[j]) + ' fm aus Wellenfunktion und Wellenfunktion mit Fortsetzung mit festem $\kappa = $' + str(kappa) + ' 1/fm')
-        plt.legend(["Wellenfunktion", 'Wellenfunktion + Fortsetzung'])
-        plt.xlabel('$N_{max}$')
-        plt.ylabel("$R_{rms}$ (fm)")
-        plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
+    rrms_lst = []
+    for Nmax in Nmax_lst:
+        kappa, a0, connect0, a2, connect2, rrms, fit_points0, fit_points2 = find_continuation_parameters(Nmax, aHO, number_at_least_collected_points, number_maximal_used_points)
+        r_cont0 = r[r>connect0]
+        r_cont2 = r[r>connect2]
+        phi0_plt = plt.plot(r, phi0(r, Nmax, aHO))
+        phi0_color = phi0_plt[0].get_color()
+        plt.plot(r_cont0, h0_sq_model_a(r_cont0, a0, kappa), "--", color=phi0_color)
+        phi2_plt = plt.plot(r, phi2(r, Nmax, aHO))
+        phi2_color = phi2_plt[0].get_color()
+        plt.plot(r_cont2, h2_sq_model_a(r_cont2, a2, kappa), "--", color=phi2_color)
+        # plt.scatter(fit_points[0], np.exp(fit_points[1]))
+        plt.semilogy()
         plt.grid(linestyle='--')
-        plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO_lst[j]}_NNmax{NNmax}_Nstep{dNmax}_kappa{kappa}.pdf")
+        rrms_lst.append(rrms)
+        
+    plt.title("Betragsquadrat der Wellenfunktionen und  Fortzetzung mit festem $\kappa = $" + str(kappa) + " 1/fm für aHO = " + str(aHO) + " fm (logaryhtmische y-Axhse)") 
+    plt.ylim(10**(-6), 1)
+    plt.xlim(0, 20)
+    plt.xlabel("r (fm)")
+    plt.ylabel('$|\Phi(r)|^2$')
+    legend_phi0 = np.array(["$N_{max} = $" + str(Nmax) + ", $\Phi_0(r)^2$" for Nmax in Nmax_lst])
+    legend_h0 = np.array(["$N_{max} = $" + str(Nmax) + ", $\Phi_0(r)^2$-Fortsetzung" for Nmax in Nmax_lst])
+    legend_phi2 = np.array(["$N_{max} = $" + str(Nmax) + ", $\Phi_2(r)^2$" for Nmax in Nmax_lst])
+    legend_h2 = np.array(["$N_{max} = $" + str(Nmax) + ", $\Phi_2(r)^2$-Fortsetzung" for Nmax in Nmax_lst])
+    legend = np.array([legend_phi0, legend_h0, legend_phi2, legend_h2]).transpose().flatten()
+    plt.legend(legend, ncol=2)
+    
+    if save:
+        plt.savefig(f"rrms_wavefunc_continuation_wavefuncs_aHO{aHO}_NNmax{NNmax}_Nstep{dNmax}_kappa{kappa}.pdf", pad_inches=0.05)
+    
+    rmax, dr = max(r), r[1]-r[0]
+    rrms_full_wave = rrms_integral_trapz(NNmax, NNmin-1, aHO, dNmax, rmax, dr)
+    # plt.subplot(122)
+    plt.figure(figsize=(12,7.45))
+    plt.plot(rrms_full_wave[0], rrms_full_wave[1], 'x-')
+    plt.plot(Nmax_lst, rrms_lst, 'x-')
+    plt.title('$R_{rms}$ bei $a_{HO} = $' + str(aHO) + ' fm aus Wellenfunktion und Wellenfunktion mit Fortsetzung mit festem $\kappa = $' + str(kappa) + ' 1/fm')
+    plt.legend(["Wellenfunktion", 'Wellenfunktion + Fortsetzung'])
+    plt.xlabel('$N_{max}$')
+    plt.ylabel("$R_{rms}$ (fm)")
+    plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
+    plt.grid(linestyle='--')
+    
+    if save:
+        plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO}_NNmax{NNmax}_Nstep{dNmax}_kappa{kappa}.pdf")
 
 
 def ANN_comparison(save=False):
@@ -307,9 +298,9 @@ def ANN_comparison(save=False):
     
          
     
-ANN_comparison(True)
+ANN_comparison(False)
 
-# plot_wavefunc_continuation_rrms(r, 60, 3, 5)
+plot_wavefunc_continuation_rrms(r, 1.2, 60, 1, 1, 10, 50)
 # plt.plot(r, h2_sq_model(r, kappa))
 
 
