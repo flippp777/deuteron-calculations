@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-arr=np.append([1.2, 1.4, 1.6, 1.8, 1.96998],np.arange(2, 3+0.2, 0.2))
+arr= np.array([1,2,3,4,5,6,7,8,9,10])
 
-print(arr)
+print(arr[-9-3:-3])

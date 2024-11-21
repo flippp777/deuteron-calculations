@@ -56,7 +56,7 @@ def continue_q_wavefunc(Nmax, aHO, number_at_least_collected_points=10, number_u
     diff_log_u = np.abs(log_u[0, start_index_u:] - log_u[1, start_index_u:])
     diff_log_w = np.abs(log_w[0, start_index_w:] - log_w[1, start_index_w:])
     
-    distance = 0.01
+    distance = 0.1
     fit_points_indices_u = np.where(diff_log_u < distance)[0] + start_index_u
     fit_points_indices_w = np.where(diff_log_w < distance)[0] + start_index_w
 
@@ -65,7 +65,7 @@ def continue_q_wavefunc(Nmax, aHO, number_at_least_collected_points=10, number_u
             distance += 10**(-3)
             fit_points_indices_u = np.append(fit_points_indices_u, np.where(diff_log_u < distance)[0] + start_index_u).flatten()
 
-    distance = 0.01
+    distance = 0.1
     if np.unique(fit_points_indices_w).size < number_at_least_collected_points:
         while np.unique(fit_points_indices_w).size < number_at_least_collected_points:
             distance += 10**(-3)
@@ -74,16 +74,17 @@ def continue_q_wavefunc(Nmax, aHO, number_at_least_collected_points=10, number_u
     fit_points_indices_u = np.unique(fit_points_indices_u)
     fit_points_indices_w = np.unique(fit_points_indices_w)
     
+    cutoff_index =15 
     if fit_points_indices_u.size > number_used_points:
         middle_index = int(fit_points_indices_u.size / 2)
-        # two_third_index = int(fit_points_indices.size * 2 / 3)
         three_quater_index = middle_index + int(fit_points_indices_u.size / 4)
         fit_points_indices_u = fit_points_indices_u[three_quater_index - int(number_used_points / 2):three_quater_index + int(number_used_points / 2)]
+        # fit_points_indices_u = fit_points_indices_u[-number_used_points-cutoff_index:-cutoff_index]
     if fit_points_indices_w.size > number_used_points:
         middle_index = int(fit_points_indices_u.size / 2)
-        # two_third_index = int(fit_points_indices.size * 2 / 3)
         three_quater_index = middle_index + int(fit_points_indices_w.size / 4)
         fit_points_indices_w = fit_points_indices_w[three_quater_index - int(number_used_points / 2):three_quater_index + int(number_used_points / 2)]
+        # fit_points_indices_w = fit_points_indices_w[-number_used_points-cutoff_index:-cutoff_index]
     
     # finding the slope with the mean of the derivative
     fit_points_u = np.array([r[fit_points_indices_u], u_lst[1, fit_points_indices_u]])
@@ -201,11 +202,11 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, fit_point_nu
 
         u_plot = plt.plot(r, u(r, Nmax, aHO))
         u_color = u_plot[0].get_color()
-        plt.plot(r_cont_u, rh0_model_a(r_cont_u, a_u, kappa_u), '--', color=u_color)
+        # plt.plot(r_cont_u, rh0_model_a(r_cont_u, a_u, kappa_u), '--', color=u_color)
 
         w_plot = plt.plot(r, w(r, Nmax, aHO))
         w_color = w_plot[0].get_color()
-        plt.plot(r_cont_w, rh2_model_a(r_cont_w, a_w, kappa_w), "--", color=w_color)
+        # plt.plot(r_cont_w, rh2_model_a(r_cont_w, a_w, kappa_w), "--", color=w_color)
         plt.scatter(fit_points_u[0], fit_points_u[1])
         plt.scatter(fit_points_w[0], fit_points_w[1])
         plt.semilogy()
@@ -216,12 +217,13 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, fit_point_nu
         print(f"Nmax = {Nmax} ({100*counter/len(Nmax_lst)} %)")
         print(f'kappa_u = {kappa_u}, kappa_w = {kappa_w}')
     
-    plt.title("$u(r)$ und $w(r)$ sowie deren Fortzetzung für aHO = " + str(aHO) + " fm (logaryhtmische y-Axhse)") 
+    plt.title("und $w(r)$ sowie deren Fortzetzung für aHO = " + str(aHO) + " fm (logaryhtmische y-Axhse)") 
     plt.ylim(10**(-6), 10)
     plt.xlim(0, xmax)
     plt.xlabel('r (fm)')
     plt.ylabel("$|r\Phi(r)|$")
-    plt.legend(["u", "u continuation", "w", "w continuation"])
+    plt.legend(["u(r)", "u(r) continuation", "w(r)", "w(r) continuation"])
+    # plt.legend(np.array([[f"Nmax={Nmax}, Wellenfunktion", f"Nmax={Nmax}, Fortsetzung", f"Nmax={Nmax}, Fitpunkte"] for Nmax in Nmax_lst]).flatten())
 
     if save:
         plt.savefig(f"q_wavefunc_continuation_wavefuncs_aHO{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
@@ -241,8 +243,8 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, fit_point_nu
     if save:
         plt.savefig(f"q_wavefunc_continuation_rrms_aHO{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
 
-plot_continuation_wavefunc_Q(r, 1.2, 60, 1, 1, 29, 10, 50, True)
-plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, True)
+plot_continuation_wavefunc_Q(r, 1.2, 60, 1, 2, 29, 10, 50, True)
+# plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, True)
 # plot_continuation_wavefunc_Q(r, 1.2, 15, 3, 1, 17.5, True)
 # plot_continuation_wavefunc_Q(r, 2.0, 15, 3, 1, 27, False)
 # plot_continuation_wavefunc_Q(r, 2.4, 60, 3, 1, 60, 80, 40, True)
