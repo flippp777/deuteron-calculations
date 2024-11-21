@@ -217,8 +217,8 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, number_at_le
     if save:
         plt.savefig(f"q_wavefunc_continuation_rrms_aHO{aHO}_NNmax{NNmax}_Nstep{dNmax}_fixed_kappa0.2307.pdf")
 
-plot_continuation_wavefunc_Q(r, 1.2, 6, 6, 1, 29, 10, 50, False)
-# plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, True)
+plot_continuation_wavefunc_Q(r, 1.2, 60, 1, 1, 29, 10, 50, True)
+plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, True)
 # plot_continuation_wavefunc_Q(r, 1.2, 15, 3, 1, 17.5, True)
 # plot_continuation_wavefunc_Q(r, 2.0, 15, 3, 1, 27, True)
 # plot_continuation_wavefunc_Q(r, 2.4, 60, 3, 1, 60, True)

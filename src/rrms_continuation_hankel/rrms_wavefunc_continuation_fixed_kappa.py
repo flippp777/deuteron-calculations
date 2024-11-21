@@ -75,6 +75,9 @@ def find_continuation_parameters(NNmax, aHO, number_at_leat_collected_points=10,
     fit_points_indices_phi0 = np.where(diff_log_phi0 < distance)[0] + start_fit_index_phi0
     fit_points_indices_phi2 = np.where(diff_log_phi2 < distance)[0] + start_fit_index_phi2
     
+    if number_at_leat_collected_points < 4:
+        sys.exit("number_at_least_used_points has to be at least 4")
+    
     # condition to have two differen points in order to fit something
     if np.unique(fit_points_indices_phi0).size < number_at_leat_collected_points:
         delta = distance + 10**(-3)
@@ -98,7 +101,7 @@ def find_continuation_parameters(NNmax, aHO, number_at_leat_collected_points=10,
         three_quater_index = middle_index + int(fit_points_indices_phi0.size / 4)
         fit_points_indices_phi0 = fit_points_indices_phi0[three_quater_index - int(number_maximally_used_points / 2):three_quater_index + int(number_maximally_used_points / 2)]
     
-    number_maximally_used_points = 10
+
     if fit_points_indices_phi2.size > number_maximally_used_points:
         middle_index = int(fit_points_indices_phi2.size / 2)
         # two_third_index = int(fit_points_indices.size * 2 / 3)
@@ -301,10 +304,10 @@ def ANN_comparison(save=False):
     
          
     
-ANN_comparison(False)
+ANN_comparison(True)
 
-plot_wavefunc_continuation_rrms(r, 1.2, 60, 1, 1, 10, 50)
-# plt.plot(r, h2_sq_model(r, kappa))
+plot_wavefunc_continuation_rrms(r, 1.2, 60, 1, 1, 10, 50, True)
+plot_wavefunc_continuation_rrms(r, 2, 60, 1, 1, 10, 50, True)
 
 
 plt.show()

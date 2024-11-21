@@ -90,13 +90,13 @@ def continue_q_wavefunc(Nmax, aHO, number_at_least_collected_points=10, number_u
     fit_points_w = np.array([r[fit_points_indices_w], w_lst[1, fit_points_indices_w]])
 
     # Fit
-    params_u = create_params(a=1, kappa=dict(value=0.2305))
+    params_u = create_params(a=1, kappa=dict(value=0.2305, min=0.1, max=0.4))
     
     h0model = Model(rh0_model_a)
     h0result = h0model.fit(fit_points_u[1], r=fit_points_u[0], params=params_u)
     kappa_u = h0result.best_values["kappa"]
     
-    params_w = create_params(a=0.01, kappa=dict(value=0.2305))
+    params_w = create_params(a=0.01, kappa=dict(value=0.2305, min=0.1, max=0.4))
     
     h2model = Model(rh2_model_a)
     h2result = h2model.fit(fit_points_w[1], r=fit_points_w[0], params=params_w)
@@ -231,7 +231,7 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, fit_point_nu
     plt.figure(figsize=(12, 7.45))
     plt.plot(Q_full_wave[0], Q_full_wave[1], 'x-')
     plt.plot(Nmax_lst, Q_lst, 'x-')
-    plt.yticks([0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.2709, 0.3, 0.35, 0.4])
+    plt.yticks(np.append([0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.2709], np.arange(0.3, max(Q_lst)+0.05, 0.05)))
     plt.title('$Q$ bei $a_{HO} = $' + str(aHO) + ' fm aus Wellenfunktion und Fortsetzung')
     plt.legend(["Wellenfunktion", 'Wellenfunktion + Fortsetzung'])
     plt.xlabel('$N_{max}$')
@@ -241,8 +241,8 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, fit_point_nu
     if save:
         plt.savefig(f"q_wavefunc_continuation_rrms_aHO{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
 
-plot_continuation_wavefunc_Q(r, 1.2, 60, 1, 1, 29, 10, 50, False)
-# plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, False)
+plot_continuation_wavefunc_Q(r, 1.2, 60, 1, 1, 29, 10, 50, True)
+plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, True)
 # plot_continuation_wavefunc_Q(r, 1.2, 15, 3, 1, 17.5, True)
 # plot_continuation_wavefunc_Q(r, 2.0, 15, 3, 1, 27, False)
 # plot_continuation_wavefunc_Q(r, 2.4, 60, 3, 1, 60, 80, 40, True)

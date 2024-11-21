@@ -123,7 +123,7 @@ def find_continuation_parameters(NNmax, aHO, number_at_least_collected_points=10
 
     
 
-    h0params = create_params(a=1, kappa=dict(value=0.2305))
+    h0params = create_params(a=1, kappa=dict(value=0.2305, min=0.1, max=0.4))
     
     h0model = Model(h0_model_a)
     h0result = h0model.fit(fit_points_phi0[1], r=fit_points_phi0[0], params=h0params)
@@ -138,7 +138,7 @@ def find_continuation_parameters(NNmax, aHO, number_at_least_collected_points=10
     # plt.xlim(min(fit_points_phi0[0])-1, max(fit_points_phi0[0])+1)
     # plt.show()
     
-    h2params = create_params(a=0.01, kappa=dict(value=0.2305))
+    h2params = create_params(a=0.01, kappa=dict(value=0.2305, min=0.1, max=0.4))
     
     h2model = Model(h2_model_a)
     h2result = h2model.fit(fit_points_phi2[1], r=fit_points_phi2[0], params=h2params)
@@ -329,7 +329,7 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_
     plt.legend(["Wellenfunktion", 'Wellenfunktion + Fortsetzung'])
     plt.xlabel('$N_{max}$')
     plt.ylabel("$R_{rms}$ (fm)")
-    plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
+    plt.yticks(np.append([1.2, 1.4, 1.6, 1.8, 1.96998], np.arange(2, max(rrms_lst)+0.2, 0.2)))
     plt.grid(linestyle='--')
     
     if save:
@@ -395,10 +395,10 @@ def ANN_comparison(save=False):
     if save:
         plt.savefig("ANN_comparison_fitted_kappa.pdf", pad_inches=0)
     
-# ANN_comparison(False)
+ANN_comparison(True)
 
-plot_density_continuation_rrms(r, 1.2, 60, 1, 1, 10, 50, False, True)
-# plot_density_continuation_rrms(r, 2, 60, 1, 1, 10, 50, True, False)
+# plot_density_continuation_rrms(r, 1.2, 60, 1, 1, 10, 50, True, True)
+# plot_density_continuation_rrms(r, 2, 60, 1, 1, 10, 50, True, True)
 
 # aHO_lst = np.array([2.0]) 
         
