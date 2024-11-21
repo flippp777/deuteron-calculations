@@ -58,32 +58,32 @@ def find_continuation_parameters(NNmax, aHO, number_at_least_collected_points=10
     # ddr_log_phi0 = derivative(r, log_phi0[1], 1)
     # r4_index = int(4/dr)
     # start_fit_index_phi0 = np.where(ddr_log_phi0[:r4_index] == min(ddr_log_phi0[:r4_index]))[0][0]
-    start_fit_index_phi0 = int(3/dr)
+    start_index_phi0 = int(3/dr)
     
     # ddr_log_phi2 = derivative(r, log_phi2[1], 1)
     # r4_index = int(4/dr)
     # start_fit_index_phi2 = np.where(ddr_log_phi2[:r4_index] == min(ddr_log_phi2[:r4_index]))[0][0]
-    start_fit_index_phi2 = int(3/dr)
+    start_index_phi2 = int(3/dr)
    
     # Difference between log density at Nmax_j to Nmax_i starting from the start point of the linear range
-    diff_log_phi0 = np.abs(log_phi0[0, start_fit_index_phi0:] - log_phi0[1, start_fit_index_phi0:])
-    diff_log_phi2 = np.abs(log_phi2[0, start_fit_index_phi2:] - log_phi2[1, start_fit_index_phi2:])
+    diff_log_phi0 = np.abs(log_phi0[0, start_index_phi0:] - log_phi0[1, start_index_phi0:])
+    diff_log_phi2 = np.abs(log_phi2[0, start_index_phi2:] - log_phi2[1, start_index_phi2:])
     
     # Indiexes are at the points, where the difference in log densities is smaller 0.1
     distance = 0.01
-    fit_points_indices_phi0 = np.where(diff_log_phi0 < distance)[0] + start_fit_index_phi0
-    fit_points_indices_phi2 = np.where(diff_log_phi2 < distance)[0] + start_fit_index_phi2
+    fit_points_indices_phi0 = np.where(diff_log_phi0 < distance)[0] + start_index_phi0
+    fit_points_indices_phi2 = np.where(diff_log_phi2 < distance)[0] + start_index_phi2
     
     # condition to have two differen points in order to fit something
     if np.unique(fit_points_indices_phi0).size < number_at_least_collected_points:
         delta = distance + 10**(-3)
         while np.unique(fit_points_indices_phi0).size < number_at_least_collected_points:
-            fit_points_indices_phi0 = np.append(fit_points_indices_phi0, np.where(diff_log_phi0 < delta)[0] + start_fit_index_phi0)
+            fit_points_indices_phi0 = np.append(fit_points_indices_phi0, np.where(diff_log_phi0 < delta)[0] + start_index_phi0)
             delta += 10**(-3)
     if np.unique(fit_points_indices_phi2).size < number_at_least_collected_points:
         delta = distance + 10**(-3)
         while np.unique(fit_points_indices_phi2).size < number_at_least_collected_points:
-            fit_points_indices_phi2 = np.append(fit_points_indices_phi2, np.where(diff_log_phi2 < delta)[0] + start_fit_index_phi2)
+            fit_points_indices_phi2 = np.append(fit_points_indices_phi2, np.where(diff_log_phi2 < delta)[0] + start_index_phi2)
             delta += 10**(-3)
     
     # Removing duplicates
@@ -265,14 +265,16 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_
     # plt.subplot(121)
 
     rrms_lst = []
+    kappa_phi0_lst = []
+    kappa_phi2_lst = []
     counter = 0
     if print_info:
         for Nmax in Nmax_lst:
             counter += 1
             kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, rrms, fit_points_phi0, fit_points_phi2 = find_continuation_parameters(Nmax, aHO, number_at_least_collected_points, number_used_points)
 
-            r_cont_phi0 = np.arange(connect_phi0, 20.1, 0.1)
-            r_cont_phi2 = np.arange(connect_phi2, 20.1, 0.1)
+            r_cont_phi0 = np.arange(connect_phi0, 29.1, 0.1)
+            r_cont_phi2 = np.arange(connect_phi2, 29.1, 0.1)
 
             phi0_plot = plt.plot(r, phi0(r, Nmax, aHO))
             phi0_color = phi0_plot[0].get_color()
@@ -280,11 +282,13 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_
             phi2_plot = plt.plot(r, phi2(r, Nmax, aHO))
             phi2_color = phi2_plot[0].get_color()
             plt.plot(r_cont_phi2, h2_model_a(r_cont_phi2, c_phi2, kappa_phi2), "--", color=phi2_color)
-            plt.scatter(fit_points_phi0[0], fit_points_phi0[1])
-            plt.scatter(fit_points_phi2[0], fit_points_phi2[1])
+            plt.scatter(fit_points_phi0[0], fit_points_phi0[1], color=phi0_color)
+            plt.scatter(fit_points_phi2[0], fit_points_phi2[1], color=phi2_color)
             plt.semilogy()
             plt.grid(linestyle='--')
             rrms_lst.append(rrms)
+            kappa_phi0_lst.append(round(kappa_phi0,4))
+            kappa_phi2_lst.append(round(kappa_phi2,4))
             print(f"Nmax = {Nmax} ({100*counter/len(Nmax_lst)} %)")
             print(f'kappa_phi0 = {kappa_phi0}, kappa_phi2 = {kappa_phi2}')
     else:
@@ -298,23 +302,29 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_
             phi0_plot = plt.plot(r, phi0(r, Nmax, aHO))
             phi0_color = phi0_plot[0].get_color()
             plt.plot(r_cont_phi0, h0_model_a(r_cont_phi0, c_phi0, kappa_phi0), '--', color=phi0_color)
+            plt.scatter(fit_points_phi0[0], fit_points_phi0[1], color=phi0_color)
+
             phi2_plot = plt.plot(r, phi2(r, Nmax, aHO))
             phi2_color = phi2_plot[0].get_color()
             plt.plot(r_cont_phi2, h2_model_a(r_cont_phi2, c_phi2, kappa_phi2), "--", color=phi2_color)
-            plt.scatter(fit_points_phi0[0], fit_points_phi0[1])
-            plt.scatter(fit_points_phi2[0], fit_points_phi2[1])
+            plt.scatter(fit_points_phi2[0], fit_points_phi2[1], color=phi2_color)
+
             plt.semilogy()
             plt.grid(linestyle='--')
             rrms_lst.append(rrms)
+            kappa_phi0_lst.append(round(kappa_phi0,4))
+            kappa_phi2_lst.append(round(kappa_phi2,4))
         
     
     plt.title("Wellenfunktionen und angepasster Fortzetzung für aHO = " + str(aHO) + " fm (logaryhtmische y-Axhse)") 
     plt.ylim(10**(-6), 1)
-    plt.xlim(0, 20)
+    plt.xlim(0, 29)
     plt.xlabel('r (fm)')
     plt.ylabel('$|\Phi(r)|$')
     legend = ['$\Phi_0(r)$', '$\Phi_0(r)$-Fortsetzung', '$\Phi_2(r)$', '$\Phi_2(r)$-Fortsetzung']
-    plt.legend(legend, ncol=2)
+    # plt.legend(legend, ncol=2)
+    plt.legend(np.array([[f"Nmax={Nmax_lst[i]}, $\Phi_0(r)$", f"Nmax={Nmax_lst[i]}, $\Phi_0(r)$-Fortsetzung, $\kappa$={kappa_phi0_lst[i]}", f"Nmax={Nmax_lst[i]}, $\Phi_0(r)$-Fitpunkte", 
+                          f"Nmax={Nmax_lst[i]}, $\Phi_2(r)$", f"Nmax={Nmax_lst[i]}, $\Phi_2(r)$-Fortsetzung, $\kappa$={kappa_phi2_lst[i]}", f"Nmax={Nmax_lst[i]}, $\Phi_2(r)$-Fitpunkte"] for i in range(0,Nmax_lst.size)]).flatten())
     
     if save:
         plt.savefig(f"rrms_wavefunc_continuation_wavefuncs_aHO{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf", pad_inches=0.01)
@@ -329,7 +339,8 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_
     plt.legend(["Wellenfunktion", 'Wellenfunktion + Fortsetzung'])
     plt.xlabel('$N_{max}$')
     plt.ylabel("$R_{rms}$ (fm)")
-    plt.yticks(np.append([1.2, 1.4, 1.6, 1.8, 1.96998], np.arange(2, max(rrms_lst)+0.2, 0.2)))
+    # plt.yticks(np.append([1.2, 1.4, 1.6, 1.8, 1.96998], np.arange(2, max(rrms_lst)+0.2, 0.2)))
+    plt.yticks([1.75, 1.8, 1.85, 1.9, 1.95, 1.97, 2.0, 2.05, 2.1])
     plt.grid(linestyle='--')
     
     if save:
@@ -395,9 +406,9 @@ def ANN_comparison(save=False):
     if save:
         plt.savefig("ANN_comparison_fitted_kappa.pdf", pad_inches=0)
     
-ANN_comparison(True)
+# ANN_comparison(True)
 
-# plot_density_continuation_rrms(r, 1.2, 60, 1, 1, 10, 50, True, True)
+plot_density_continuation_rrms(r, 1.2, 16, 13, 1, 10, 50, True, True)
 # plot_density_continuation_rrms(r, 2, 60, 1, 1, 10, 50, True, True)
 
 # aHO_lst = np.array([2.0]) 
