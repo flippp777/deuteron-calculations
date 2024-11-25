@@ -282,8 +282,8 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_
             phi2_plot = plt.plot(r, phi2(r, Nmax, aHO))
             phi2_color = phi2_plot[0].get_color()
             plt.plot(r_cont_phi2, h2_model_a(r_cont_phi2, c_phi2, kappa_phi2), "--", color=phi2_color)
-            plt.scatter(fit_points_phi0[0], fit_points_phi0[1], color=phi0_color)
-            plt.scatter(fit_points_phi2[0], fit_points_phi2[1], color=phi2_color)
+            # plt.scatter(fit_points_phi0[0], fit_points_phi0[1], color=phi0_color)
+            # plt.scatter(fit_points_phi2[0], fit_points_phi2[1], color=phi2_color)
             plt.semilogy()
             plt.grid(linestyle='--')
             rrms_lst.append(rrms)
@@ -315,10 +315,11 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least_
             kappa_phi0_lst.append(round(kappa_phi0,4))
             kappa_phi2_lst.append(round(kappa_phi2,4))
         
-    
+    # np.savetxt(f'phi_fitted_kappas_aHO{aHO}.txt', np.array([Nmax_lst, kappa_phi0_lst, kappa_phi2_lst]).transpose())
+
     plt.title("Wellenfunktionen und angepasster Fortzetzung für aHO = " + str(aHO) + " fm (logaryhtmische y-Axhse)") 
     plt.ylim(10**(-6), 1)
-    plt.xlim(0, 29)
+    plt.xlim(0, 45)
     plt.xlabel('r (fm)')
     plt.ylabel('$|\Phi(r)|$')
     legend = ['$\Phi_0(r)$', '$\Phi_0(r)$-Fortsetzung', '$\Phi_2(r)$', '$\Phi_2(r)$-Fortsetzung']
@@ -408,8 +409,8 @@ def ANN_comparison(save=False):
     
 # ANN_comparison(True)
 
-plot_density_continuation_rrms(r, 1.2, 16, 13, 1, 10, 50, True, True)
-# plot_density_continuation_rrms(r, 2, 60, 1, 1, 10, 50, True, True)
+# plot_density_continuation_rrms(r, 1.2, 16, 13, 1, 10, 50, True, True)
+plot_density_continuation_rrms(r, 2, 60, 1, 1, 10, 50, True, True)
 
 # aHO_lst = np.array([2.0]) 
         

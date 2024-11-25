@@ -205,13 +205,13 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, fit_point_nu
 
         u_plot = plt.plot(r, u(r, Nmax, aHO))
         u_color = u_plot[0].get_color()
-        plt.plot(r_cont_u, rh0_model_a(r_cont_u, a_u, kappa_u), '--', color=u_color)
-        plt.scatter(fit_points_u[0], fit_points_u[1], color=u_color)
+        # plt.plot(r_cont_u, rh0_model_a(r_cont_u, a_u, kappa_u), '--', color=u_color)
+        # plt.scatter(fit_points_u[0], fit_points_u[1], color=u_color)
 
         w_plot = plt.plot(r, w(r, Nmax, aHO))
         w_color = w_plot[0].get_color()
-        plt.plot(r_cont_w, rh2_model_a(r_cont_w, a_w, kappa_w), "--", color=w_color)
-        plt.scatter(fit_points_w[0], fit_points_w[1], color=w_color)
+        # plt.plot(r_cont_w, rh2_model_a(r_cont_w, a_w, kappa_w), "--", color=w_color)
+        # plt.scatter(fit_points_w[0], fit_points_w[1], color=w_color)
         plt.semilogy()
         plt.grid(linestyle='--')
 
@@ -221,6 +221,8 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, fit_point_nu
         counter += 1
         print(f"Nmax = {Nmax} ({100*counter/len(Nmax_lst)} %)")
         print(f'kappa_u = {kappa_u}, kappa_w = {kappa_w}')
+
+    # np.savetxt(f'uw_fitted_kappas_aHO{aHO}.txt', np.array([Nmax_lst, kappa_u_lst, kappa_w_lst]).transpose())
     
     plt.title("und $w(r)$ sowie deren Fortzetzung für aHO = " + str(aHO) + " fm (logaryhtmische y-Axhse)") 
     plt.ylim(10**(-6), 10)
@@ -250,8 +252,8 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, fit_point_nu
     if save:
         plt.savefig(f"q_wavefunc_continuation_q_aHO{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
 
-plot_continuation_wavefunc_Q(r, 1.2, 60, 1, 1, 29, 10, 50, True)
-# plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, True)
+# plot_continuation_wavefunc_Q(r, 1.2, 60, 1, 1, 29, 10, 50, True)
+plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, True)
 # plot_continuation_wavefunc_Q(r, 1.2, 15, 3, 1, 17.5, True)
 # plot_continuation_wavefunc_Q(r, 2.0, 15, 3, 1, 27, False)
 # plot_continuation_wavefunc_Q(r, 2.4, 60, 3, 1, 60, 80, 40, True)
