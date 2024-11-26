@@ -395,7 +395,7 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, wavefunc, number
     plt.grid(linestyle='--')
     
     if save:
-        plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
+        plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO}_NNmax{NNmax}_Nstep{dNmax}_" + wavefunc + "_fitted_kappa.pdf")
             
 def ANN_comparison(save=False):
     Nmax_lst = np.arange(1, 11)
