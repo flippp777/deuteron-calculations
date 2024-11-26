@@ -178,6 +178,7 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
 
     result_L0 = Model_L0.fit(fit_points_L0[1], r=fit_points_L0[0], params=params)
     kappa_L0 = result_L0.best_values["kappa"]
+    kappa_L2 = kappa_L0
 
     # a0_fit = result_L0.best_values["a"]
     # plt.figure()
@@ -188,11 +189,6 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     # plt.ylim(min(fit_points_phi0[1])-1, max(fit_points_phi0[1])+1)
     # plt.xlim(min(fit_points_phi0[0])-1, max(fit_points_phi0[0])+1)
     # plt.show()
-
-    Model_L2 = Model(model_a_L2)
-
-    result_L2 = Model_L2.fit(fit_points_L2[1], r=fit_points_L2[0], params=params)
-    kappa_L2 = result_L2.best_values["kappa"]
 
     # a2_fit = result_L2.best_values["a"]
     # plt.figure()
@@ -395,7 +391,7 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, wavefunc, number
     plt.grid(linestyle='--')
     
     if save:
-        plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
+        plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO}_NNmax{NNmax}_Nstep{dNmax}_" + wavefunc + "_onlyL0_fitted_kappa.pdf")
             
 def ANN_comparison(save=False):
     Nmax_lst = np.arange(1, 11)
@@ -460,7 +456,7 @@ def ANN_comparison(save=False):
 # ANN_comparison(True)
 
 # plot_density_continuation_rrms(r, 1.2, 16, 13, 1, 10, 50, True)
-plot_density_continuation_rrms(r, 1.2, 60, 1, 1, 'u/w', 10, 50, True)
+plot_density_continuation_rrms(r, 1.2, 60, 1, 1, 'u/w', 10, 50, False)
 
 # aHO_lst = np.array([2.0]) 
         
