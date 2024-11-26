@@ -36,6 +36,7 @@ def h2_sq_model_a(r, a, kappa):
     return a/(kappa * r)**2 * np.exp(-2 * kappa * r) * (1 + 3/(kappa * r) + 3/(kappa * r)**2)**2
 
 kappa = 0.2307 # kappa from real energy
+kappa = 0.236
 # kappa = 0.2171 # kappa from found energy
 
 def find_continuation_parameters(NNmax, aHO, number_at_leat_collected_points=10, number_maximally_used_points=50):
@@ -304,10 +305,10 @@ def ANN_comparison(save=False):
     
          
     
-ANN_comparison(True)
+# ANN_comparison(True)
 
-plot_wavefunc_continuation_rrms(r, 1.2, 60, 1, 1, 10, 50, True)
-plot_wavefunc_continuation_rrms(r, 2, 60, 1, 1, 10, 50, True)
+plot_wavefunc_continuation_rrms(r, 1.2, 60, 1, 1, 10, 50, False)
+# plot_wavefunc_continuation_rrms(r, 2, 60, 1, 1, 10, 50, True)
 
 
 plt.show()

@@ -232,7 +232,9 @@ def plotsE0aHO():
     plt.ylabel('$E_0$ (MeV)')
     plt.grid(linestyle='--')
 
-plotsE0Nmax()
-plotsE0aHO()
+# plotsE0Nmax()
+# plotsE0aHO()
+
+print(E0(chi_Nmax150_aHO12, 1.2, 150))
 
 plt.show()

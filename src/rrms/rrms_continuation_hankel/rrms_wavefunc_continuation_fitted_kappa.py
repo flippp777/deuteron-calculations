@@ -460,7 +460,8 @@ def ANN_comparison(save=False):
 # ANN_comparison(True)
 
 # plot_density_continuation_rrms(r, 1.2, 16, 13, 1, 10, 50, True)
-plot_density_continuation_rrms(r, 1.2, 60, 1, 1, 'u/w', 10, 50, True)
+# plot_density_continuation_rrms(r, 1.2, 60, 1, 1, 'u/w', 10, 50, True)
+print(find_continuation_parameters(150, 1.2, 'u/w', 10, 50))
 
 # aHO_lst = np.array([2.0]) 
         
