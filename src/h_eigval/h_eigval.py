@@ -3,6 +3,13 @@ import matplotlib as mpl
 from matplotlib import pyplot as plt
 from sys import exit
 
+mpl.use("pgf")
+mpl.rcParams.update({
+    "pgf.texsystem": "pdflatex",
+    'font.family': 'serif',
+    'text.usetex': True,
+    'pgf.rcfonts': False,
+})
 
 chi_Nmax150_aHO12 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.20.meho', skiprows=1)
 chi_Nmax150_aHO14 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.40.meho', skiprows=1)
@@ -116,7 +123,7 @@ def plotsE0Nmax(Nmax_lst, aHO_lst, save=False):
 
     # plt.title('$E_0$ bei verschiedenen $a_{HO}$')
     plt.legend(legend)
-    plt.xlabel('$N_{max}$')
+    plt.xlabel('$n_{max}$')
     plt.ylabel('$E_0$ (MeV)')
     plt.yticks([-2.225, -2, -1, 0, 1, 2, 3])
     plt.grid(linestyle='--')
@@ -124,7 +131,7 @@ def plotsE0Nmax(Nmax_lst, aHO_lst, save=False):
     # plt.ylim(-2.5, 3.5)
 
     if save: 
-        plt.savefig(f'E0_Nmax.pdf')
+        plt.savefig(f'final_plots/energy/E0_nmax.pgf', pad_inches=0)
         
 
  
@@ -150,7 +157,7 @@ def plotsE0aHO(Nmax_lst, aHO_lst, save=False):
 
     legend = np.array([])
     for i in Nmax_lst:
-        legend = np.append(legend,'$N_{max}$ = '+ str(i))
+        legend = np.append(legend,'$n_{max}$ = '+ str(i))
 
     plt.legend(legend)
     plt.yticks([-2.225, -2, -1, 0, 1, 2, 3])
@@ -160,11 +167,16 @@ def plotsE0aHO(Nmax_lst, aHO_lst, save=False):
     plt.grid(linestyle='--')
 
     if save: 
-        plt.savefig(f'E0_aHO.pdf')
+        plt.savefig(f'final_plots/energy/E0_aHO.pgf', pad_inches=0)
 
 
 plotsE0Nmax(np.arange(0, 26,1), [1.2, 1.4, 1.6, 1.8, 2], True)
 
 plotsE0aHO(np.arange(0, 11, 1), [1.2, 1.4, 1.6, 1.8, 2], True)
 
-plt.show()
+# E0_lst =[E0(chi_Nmax150_aHO12, 1.2, 150), E0(chi_Nmax150_aHO12, 1.2, 150), E0(chi_Nmax150_aHO12, 1.2, 150), E0(chi_Nmax150_aHO12, 1.2, 150), E0(chi_Nmax150_aHO12, 1.2, 150)]
+# print(E0_lst)
+# print(np.mean(E0_lst))
+# print(np.std(E0_lst))
+
+# plt.show()
