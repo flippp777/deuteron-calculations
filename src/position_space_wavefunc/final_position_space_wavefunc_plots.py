@@ -118,21 +118,23 @@ def final_wavefunc_plots(save=False):
         else:
             return -deuteron_wavefunc(Nmax, aHO, r)[0]
     
-    for i in range(n):
-        axs[0].plot(r_model, psi(i, 1.2, r_model), color=colorFader(purple, black, i/n))
-        axs[0].plot(r_model, u(i, 1.2, r_model), color=colorFader(blue, black, i/n))
-        axs[0].plot(r_model, w(i, 1.2, r_model), color=colorFader(red, black, i/n))
-    axs[0].set_xlim(0,10)
+    legend = ['$\psi_0(r)$', '$u(r)$', '$w(r)$']
+    
+    axs[0].plot(r_model, psi(150, 1.2, r_model), color=purple)
+    axs[0].plot(r_model, u(150, 1.2, r_model), color=blue)
+    axs[0].plot(r_model, w(150, 1.2, r_model), color=red)
+    axs[0].set_xlim(0,15)
+    axs[0].legend(legend)
     axs[0].set_xlabel('$r$ (fm)')
-    axs[0].set_ylabel('$\phi$')
+    axs[0].set_ylabel('$\phi(r)$')
     axs[0].grid(linestyle='--')
 
-    for i in range(n):
-        axs[1].plot(r_model, psi(i, 2, r_model), color=colorFader(purple, black, i/n))
-        axs[1].plot(r_model, u(i, 2, r_model), color=colorFader(blue, black, i/n))
-        axs[1].plot(r_model, w(i, 2, r_model), color=colorFader(red, black, i/n))
+    axs[1].plot(r_model, psi(150, 2, r_model), color=purple)
+    axs[1].plot(r_model, u(150, 2, r_model), color=blue)
+    axs[1].plot(r_model, w(150, 2, r_model), color=red)
     # axs[1].semilogy()
-    axs[1].set_xlim(0,20)
+    axs[1].set_xlim(0,15)
+    axs[1].legend(legend)
     axs[1].set_xlabel('$r$ (fm)')
     axs[1].grid(linestyle='--')
     
