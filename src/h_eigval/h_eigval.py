@@ -3,13 +3,52 @@ import matplotlib as mpl
 from matplotlib import pyplot as plt
 from sys import exit
 
-mpl.use("pgf")
-mpl.rcParams.update({
-    "pgf.texsystem": "pdflatex",
-    'font.family': 'serif',
-    'text.usetex': True,
-    'pgf.rcfonts': False,
-})
+def set_size(width, fraction=1, subplots=(1, 1)):
+    """Set figure dimensions to avoid scaling in LaTeX.
+
+    Parameters
+    ----------
+    width: float or string
+            Document width in points, or string of predined document type
+    fraction: float, optional
+            Fraction of the width which you wish the figure to occupy
+    subplots: array-like, optional
+            The number of rows and columns of subplots.
+    Returns
+    -------
+    fig_dim: tuple
+            Dimensions of figure in inches
+    """
+    if width == 'thesis':
+        width_pt = 426.79135
+    elif width == 'beamer':
+        width_pt = 307.28987
+    else:
+        width_pt = width
+
+    # Width of figure (in pts)
+    fig_width_pt = width_pt * fraction
+    # Convert from pt to inches
+    inches_per_pt = 1 / 72.27
+
+    # Golden ratio to set aesthetic figure height
+    # https://disq.us/p/2940ij3
+    golden_ratio = (5**.5 - 1) / 2
+
+    # Figure width in inches
+    fig_width_in = fig_width_pt * inches_per_pt
+    # Figure height in inches
+    fig_height_in = fig_width_in * golden_ratio * (subplots[0] / subplots[1])
+
+    return (fig_width_in, fig_height_in)
+
+# mpl.use("pgf")
+# mpl.rcParams.update({
+#     "pgf.texsystem": "pdflatex",
+#     'font.family': 'serif',
+#     'text.usetex': True,
+#     'pgf.rcfonts': False,
+# })
 
 chi_Nmax150_aHO12 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.20.meho', skiprows=1)
 chi_Nmax150_aHO14 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.40.meho', skiprows=1)
@@ -88,6 +127,8 @@ def colorFader(c1,c2,mix=0): #fade (linear interpolate) from color c1 (at mix=0)
     c2=np.array(mpl.colors.to_rgb(c2))
     return mpl.colors.to_hex((1-mix)*c1 + mix*c2)
 
+figsize = set_size(418.25555, 2)
+
 
 testmat = mat(chi_Nmax150_aHO20, 150)
 eigvec, eigval = np.linalg.eig(testmat + mat(trel_Nmax150,150)*1/2**2)
@@ -113,7 +154,7 @@ def plotsE0Nmax(Nmax_lst, aHO_lst, save=False):
     purple = '#FF00FF'
     n = len(aHO_lst)
     
-    plt.figure(figsize=(12,7.45))
+    plt.figure(figsize=figsize)
     for i in range(E0_Nmax.shape[0]):
         plt.plot(Nmax_lst,E0_Nmax[i], 'x-', color=colorFader(purple, black, i/n))
 
@@ -131,7 +172,7 @@ def plotsE0Nmax(Nmax_lst, aHO_lst, save=False):
     # plt.ylim(-2.5, 3.5)
 
     if save: 
-        plt.savefig(f'final_plots/energy/E0_nmax.pgf', pad_inches=0)
+        plt.savefig(f'final_plots/energy/E0_nmax.pdf', pad_inches=0)
         
 
  
@@ -140,7 +181,7 @@ def plotsE0aHO(Nmax_lst, aHO_lst, save=False):
     for m in Nmax_lst:
         E0_aHOm = []
         for i in range(len(aHO_lst)):
-            E0_aHOm.append(E0(chi[i], aHO[i], m))
+            E0_aHOm.append(E0(chi[i], aHO_lst[i], m))
         E0_aHO.append(E0_aHOm)
 
     E0_aHO = np.array(E0_aHO)
@@ -151,7 +192,7 @@ def plotsE0aHO(Nmax_lst, aHO_lst, save=False):
     purple = '#FF00FF'
     n = len(Nmax_lst)
     
-    plt.figure(figsize=(12,7.45))
+    plt.figure(figsize=figsize)
     for i in range(E0_aHO.shape[0]):
         plt.plot(aHO_lst, E0_aHO[i], 'x-', color=colorFader(purple, black, i/n))
 
@@ -165,18 +206,88 @@ def plotsE0aHO(Nmax_lst, aHO_lst, save=False):
     plt.xlabel('$a_{HO}$ (fm)')
     plt.ylabel('$E_0$ (MeV)')
     plt.grid(linestyle='--')
-
+    
     if save: 
-        plt.savefig(f'final_plots/energy/E0_aHO.pgf', pad_inches=0)
+        plt.savefig(f'final_plots/energy/E0_aHO.pdf', pad_inches=0)
 
+def plotsE0(Nmax_Nmax, aHO_Nmax, Nmax_aHO, aHO_aHO, save=False):
+    E0_Nmax = []
+    for m in range(len(aHO_Nmax)):
+        E0_Nmaxm = []
+        for Nmax in Nmax_Nmax:
+            E0_Nmaxm.append(E0(chi[m], aHO_Nmax[m], Nmax))
+        E0_Nmax.append(E0_Nmaxm)
+
+    E0_Nmax = np.array(E0_Nmax) 
+
+    red = '#FF0000'
+    blue = '#0000FF'
+    black = '#000000'
+    purple = '#FF00FF'
+    n = len(aHO_Nmax)
+    
+    plt.figure(figsize=set_size(418.25555, fraction=2, subplots=(1,2)))
+
+    plt.subplot(121)
+    for i in range(E0_Nmax.shape[0]):
+        plt.plot(Nmax_Nmax,E0_Nmax[i], 'x-', color=colorFader(purple, black, i/n))
+
+    legend = np.array([])
+    for i in aHO:
+        legend = np.append(legend,'$a_{HO}$ = '+ str(i) + ' fm')
+
+    # plt.title('$E_0$ bei verschiedenen $a_{HO}$')
+    plt.legend(legend)
+    plt.xlabel('$n_{max}$')
+    plt.ylabel('$E_0$ (MeV)')
+    plt.yticks([-2.225, -2, -1, 0, 1, 2, 3])
+    plt.grid(linestyle='--')
+    # plt.xlim(0,25)
+    # plt.ylim(-2.5, 3.5)
+    
+
+    E0_aHO = []
+    for m in Nmax_aHO:
+        E0_aHOm = []
+        for i in range(len(aHO_aHO)):
+            E0_aHOm.append(E0(chi[i], aHO_aHO[i], m))
+        E0_aHO.append(E0_aHOm)
+
+    E0_aHO = np.array(E0_aHO)
+
+    red = '#FF0000'
+    blue = '#0000FF'
+    black = '#000000'
+    purple = '#FF00FF'
+    n = len(Nmax_aHO)
+    
+    plt.subplot(122)
+    for i in range(E0_aHO.shape[0]):
+        plt.plot(aHO_aHO, E0_aHO[i], 'x-', color=colorFader(purple, black, i/n))
+
+    legend = np.array([])
+    for i in Nmax_aHO:
+        legend = np.append(legend,'$n_{max}$ = '+ str(i))
+
+    plt.legend(legend)
+    plt.yticks([-2.225, -2, -1, 0, 1, 2, 3])
+    plt.xticks([1.2, 1.4, 1.6, 1.8, 2])
+    plt.xlabel('$a_{HO}$ (fm)')
+    plt.ylabel('$E_0$ (MeV)')
+    plt.grid(linestyle='--')
+    
+    if save: 
+        plt.savefig(f'final_plots/energy/E0.pdf', pad_inches=0)
 
 plotsE0Nmax(np.arange(0, 26,1), [1.2, 1.4, 1.6, 1.8, 2], True)
 
 plotsE0aHO(np.arange(0, 11, 1), [1.2, 1.4, 1.6, 1.8, 2], True)
+
+# plotsE0(np.arange(0, 26,1), [1.2, 1.4, 1.6, 1.8, 2],np.arange(0, 11, 1), [1.2, 1.4, 1.6, 1.8, 2], True)
 
 # E0_lst =[E0(chi_Nmax150_aHO12, 1.2, 150), E0(chi_Nmax150_aHO12, 1.2, 150), E0(chi_Nmax150_aHO12, 1.2, 150), E0(chi_Nmax150_aHO12, 1.2, 150), E0(chi_Nmax150_aHO12, 1.2, 150)]
 # print(E0_lst)
 # print(np.mean(E0_lst))
 # print(np.std(E0_lst))
 
-# plt.show()
+plt.show()
