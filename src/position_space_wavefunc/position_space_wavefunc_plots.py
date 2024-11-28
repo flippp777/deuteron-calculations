@@ -4,7 +4,7 @@ from scipy import integrate
 import sys
 
 if sys.platform == "win32":
-    sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelorthesis\deuteron-calculations\src')
+    sys.path.insert(1, r'C:\Users\phili.DESKTOP\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
 else:
     sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 
@@ -28,12 +28,8 @@ from make.position_space_wavefunc import deuteron_wavefunc
 #     print(integrate.quad(lambda r: deuteron_wavefunc(i, 2.0, r)[3] * r**2, 0, np.inf))
 
 def derivative(x, f, n):
-    dx = abs(x[0] - x[1])
-    
-    for i in range(n):
-        f = np.gradient(f) / dx
-        
-    return f
+    return np.gradient(f, x=x)
+
 
 def plot_wavefunc_Nmax(Nmax, aHO):
     x_model = np.linspace(0, 15, 500)
@@ -281,13 +277,13 @@ def logplots_density_Nmax_lim(aHO, NNmax, NNmin, dNmax, xmin, xmax, ymin, ymax):
     plt.legend(['$N_{max} = $' + str(N) for N in range(0, NNmax + 1, dNmax)])
     plt.grid(linestyle='--')
     
-logplots_density_Nmax_lim(1.2, 150, 20, 10, 0, 42, 10**(-12), 1)
-logplots_density_Nmax_lim(1.4, 150, 20, 10, 0, 50, 10**(-14), 1)
-logplots_density_Nmax_lim(1.6, 150, 20, 10, 0, 55, 10**(-16), 1)
-logplots_density_Nmax_lim(1.8, 150, 20, 10, 0, 62, 10**(-16), 1)
-logplots_density_Nmax_lim(2.0, 150, 20, 10, 0, 70, 10**(-18), 1)
+# logplots_density_Nmax_lim(1.2, 150, 20, 10, 0, 42, 10**(-12), 1)
+# logplots_density_Nmax_lim(1.4, 150, 20, 10, 0, 50, 10**(-14), 1)
+# logplots_density_Nmax_lim(1.6, 150, 20, 10, 0, 55, 10**(-16), 1)
+# logplots_density_Nmax_lim(1.8, 150, 20, 10, 0, 62, 10**(-16), 1)
+# logplots_density_Nmax_lim(2.0, 150, 20, 10, 0, 70, 10**(-18), 1)
 
-# plots_wavefunc_Nmax(1.2, 60, 10)
+plots_wavefunc_Nmax(1.2, 60, 10)
 # plots_wavefunc_Nmax(1.4, 60, 10)
 # plots_wavefunc_Nmax(1.6, 60, 10)
 # plots_wavefunc_Nmax(1.8, 60, 10)

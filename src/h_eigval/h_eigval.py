@@ -127,7 +127,7 @@ def colorFader(c1,c2,mix=0): #fade (linear interpolate) from color c1 (at mix=0)
     c2=np.array(mpl.colors.to_rgb(c2))
     return mpl.colors.to_hex((1-mix)*c1 + mix*c2)
 
-figsize = set_size(418.25555, 2)
+figsize = set_size(502.14963, 1/2)
 
 
 testmat = mat(chi_Nmax150_aHO20, 150)
@@ -155,6 +155,8 @@ def plotsE0Nmax(Nmax_lst, aHO_lst, save=False):
     n = len(aHO_lst)
     
     plt.figure(figsize=figsize)
+    plt.tight_layout()
+    
     for i in range(E0_Nmax.shape[0]):
         plt.plot(Nmax_lst,E0_Nmax[i], 'x-', color=colorFader(purple, black, i/n))
 
@@ -166,13 +168,13 @@ def plotsE0Nmax(Nmax_lst, aHO_lst, save=False):
     plt.legend(legend)
     plt.xlabel('$n_{max}$')
     plt.ylabel('$E_0$ (MeV)')
-    plt.yticks([-2.225, -2, -1, 0, 1, 2, 3])
+    plt.yticks([-2.225, -2, -1, 0, 1, 2, 3], ['-2.225', '','-1.00', '0.00', '1.00', '2.00', 3.00])
     plt.grid(linestyle='--')
     # plt.xlim(0,25)
     # plt.ylim(-2.5, 3.5)
 
     if save: 
-        plt.savefig(f'final_plots/energy/E0_nmax.pdf', pad_inches=0)
+        plt.savefig(f'final_plots/energy/E0_nmax.pdf', bbox_inches='tight')
         
 
  
@@ -193,6 +195,7 @@ def plotsE0aHO(Nmax_lst, aHO_lst, save=False):
     n = len(Nmax_lst)
     
     plt.figure(figsize=figsize)
+    plt.tight_layout(pad=0)
     for i in range(E0_aHO.shape[0]):
         plt.plot(aHO_lst, E0_aHO[i], 'x-', color=colorFader(purple, black, i/n))
 
@@ -201,14 +204,15 @@ def plotsE0aHO(Nmax_lst, aHO_lst, save=False):
         legend = np.append(legend,'$n_{max}$ = '+ str(i))
 
     plt.legend(legend)
-    plt.yticks([-2.225, -2, -1, 0, 1, 2, 3])
+    plt.yticks([-2.225, -2, -1, 0, 1, 2, 3], ['-2.225', '','-1.00', '0.00', '1.00', '2.00', 3.00])
     plt.xticks([1.2, 1.4, 1.6, 1.8, 2])
     plt.xlabel('$a_{HO}$ (fm)')
     plt.ylabel('$E_0$ (MeV)')
     plt.grid(linestyle='--')
     
     if save: 
-        plt.savefig(f'final_plots/energy/E0_aHO.pdf', pad_inches=0)
+        plt.savefig(f'final_plots/energy/E0_aHO.pdf', bbox_inches='tight')
+        
 
 def plotsE0(Nmax_Nmax, aHO_Nmax, Nmax_aHO, aHO_aHO, save=False):
     E0_Nmax = []
@@ -224,24 +228,27 @@ def plotsE0(Nmax_Nmax, aHO_Nmax, Nmax_aHO, aHO_aHO, save=False):
     blue = '#0000FF'
     black = '#000000'
     purple = '#FF00FF'
-    n = len(aHO_Nmax)
-    
-    plt.figure(figsize=set_size(418.25555, fraction=2, subplots=(1,2)))
+    n_Nmax = len(aHO_Nmax)
+    n_aHO = len(Nmax_aHO)
 
-    plt.subplot(121)
+    # fig = plt.figure(figsize=set_size(418.25555))
+    fig = plt.figure(figsize=set_size(502.14963))
+    gs = fig.add_gridspec(1, 2, wspace=0)
+    axs = gs.subplots(sharey=True)
+
     for i in range(E0_Nmax.shape[0]):
-        plt.plot(Nmax_Nmax,E0_Nmax[i], 'x-', color=colorFader(purple, black, i/n))
+        axs[0].plot(Nmax_Nmax,E0_Nmax[i], 'x-', color=colorFader(purple, black, i/n_Nmax))
 
     legend = np.array([])
     for i in aHO:
         legend = np.append(legend,'$a_{HO}$ = '+ str(i) + ' fm')
 
     # plt.title('$E_0$ bei verschiedenen $a_{HO}$')
-    plt.legend(legend)
-    plt.xlabel('$n_{max}$')
-    plt.ylabel('$E_0$ (MeV)')
-    plt.yticks([-2.225, -2, -1, 0, 1, 2, 3])
-    plt.grid(linestyle='--')
+    axs[0].legend(legend, loc=1)
+    axs[0].set_xlabel('$n_{max}$')
+    axs[0].set_ylabel('$E_0$ (MeV)')
+    plt.yticks([-2.225, -2, -1, 0, 1, 2, 3], ['-2.225', '','-1.000', '0.000', '1.000', '2.000', 3.000])
+    axs[0].grid(linestyle='--')
     # plt.xlim(0,25)
     # plt.ylim(-2.5, 3.5)
     
@@ -255,39 +262,34 @@ def plotsE0(Nmax_Nmax, aHO_Nmax, Nmax_aHO, aHO_aHO, save=False):
 
     E0_aHO = np.array(E0_aHO)
 
-    red = '#FF0000'
-    blue = '#0000FF'
-    black = '#000000'
-    purple = '#FF00FF'
-    n = len(Nmax_aHO)
-    
-    plt.subplot(122)
     for i in range(E0_aHO.shape[0]):
-        plt.plot(aHO_aHO, E0_aHO[i], 'x-', color=colorFader(purple, black, i/n))
+        axs[1].plot(aHO_aHO, E0_aHO[i], 'x-', color=colorFader(purple, black, i/n_aHO))
 
     legend = np.array([])
     for i in Nmax_aHO:
         legend = np.append(legend,'$n_{max}$ = '+ str(i))
 
-    plt.legend(legend)
-    plt.yticks([-2.225, -2, -1, 0, 1, 2, 3])
-    plt.xticks([1.2, 1.4, 1.6, 1.8, 2])
-    plt.xlabel('$a_{HO}$ (fm)')
-    plt.ylabel('$E_0$ (MeV)')
-    plt.grid(linestyle='--')
+    axs[1].legend(legend, loc=1)
+    axs[1].set_xticks([1.2, 1.4, 1.6, 1.8, 2])
+    axs[1].set_xlabel('$a_{HO}$ (fm)')
+    axs[1].grid(linestyle='--')
     
     if save: 
-        plt.savefig(f'final_plots/energy/E0.pdf', pad_inches=0)
+        plt.savefig(f'final_plots/energy/E0.pdf', bbox_inches='tight')
 
-plotsE0Nmax(np.arange(0, 26,1), [1.2, 1.4, 1.6, 1.8, 2], True)
+# plotsE0Nmax(np.arange(0, 21,1), [1.2, 1.4, 1.6, 1.8, 2], True)
 
-plotsE0aHO(np.arange(0, 11, 1), [1.2, 1.4, 1.6, 1.8, 2], True)
+# plotsE0aHO(np.arange(0, 11, 1), [1.2, 1.4, 1.6, 1.8, 2], True)
 
-# plotsE0(np.arange(0, 26,1), [1.2, 1.4, 1.6, 1.8, 2],np.arange(0, 11, 1), [1.2, 1.4, 1.6, 1.8, 2], True)
+plotsE0(np.arange(0, 26,1), [1.2, 1.4, 1.6, 1.8, 2],np.arange(0, 6, 1), [1.2, 1.4, 1.6, 1.8, 2], True)
 
-# E0_lst =[E0(chi_Nmax150_aHO12, 1.2, 150), E0(chi_Nmax150_aHO12, 1.2, 150), E0(chi_Nmax150_aHO12, 1.2, 150), E0(chi_Nmax150_aHO12, 1.2, 150), E0(chi_Nmax150_aHO12, 1.2, 150)]
-# print(E0_lst)
-# print(np.mean(E0_lst))
-# print(np.std(E0_lst))
+# E0_lst_150 = [E0(chi[i], aHO[i], 150) for i in range(5)]
+# print(E0_lst_150)
+# print(np.mean(E0_lst_150))
+# print(np.std(E0_lst_150))
+# E0_lst_25 = [E0(chi[i], aHO[i], 20) for i in range(5)]
+# print(E0_lst_25)
+# print(np.mean(E0_lst_25))
+# print(np.std(E0_lst_25))
 
 plt.show()
