@@ -36,7 +36,7 @@ def h2_sq_model_a(r, a, kappa):
     return a/(kappa * r)**2 * np.exp(-2 * kappa * r) * (1 + 3/(kappa * r) + 3/(kappa * r)**2)**2
 
 kappa = 0.2307 # kappa from real energy
-kappa = 0.236
+kappa = 0.2316
 # kappa = 0.2171 # kappa from found energy
 
 def find_continuation_parameters(NNmax, aHO, number_at_leat_collected_points=10, number_maximally_used_points=50):
@@ -211,7 +211,7 @@ def plot_wavefunc_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, number_at_least
         
     plt.title("Betragsquadrat der Wellenfunktionen und  Fortzetzung mit festem $\kappa = $" + str(kappa) + " 1/fm für aHO = " + str(aHO) + " fm (logaryhtmische y-Axhse)") 
     plt.ylim(10**(-6), 1)
-    plt.xlim(0, 20)
+    plt.xlim(0, 30)
     plt.xlabel("r (fm)")
     plt.ylabel('$|\Phi(r)|^2$')
     legend_phi0 = np.array(["$N_{max} = $" + str(Nmax) + ", $\Phi_0(r)^2$" for Nmax in Nmax_lst])

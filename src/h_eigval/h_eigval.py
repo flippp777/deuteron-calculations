@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib as mpl
 from matplotlib import pyplot as plt
 from sys import exit
 
@@ -75,6 +76,11 @@ def E0(chi, aHO, Nmax):
         E0 = min(np.linalg.eigvalsh(mat(chi, Nmax) + mat(trel_Nmax150, Nmax)*1/(aHO**2)))
         return E0
     
+def colorFader(c1,c2,mix=0): #fade (linear interpolate) from color c1 (at mix=0) to c2 (mix=1)
+    c1=np.array(mpl.colors.to_rgb(c1))
+    c2=np.array(mpl.colors.to_rgb(c2))
+    return mpl.colors.to_hex((1-mix)*c1 + mix*c2)
+
 
 testmat = mat(chi_Nmax150_aHO20, 150)
 eigvec, eigval = np.linalg.eig(testmat + mat(trel_Nmax150,150)*1/2**2)
@@ -84,157 +90,81 @@ Nmax_step75 = np.array([75,150])
 Nmax_step30 = np.arange(0, 121, 30)
 Nmax_step2 = np.arange(0,152,2)
 
-def plotsE0Nmax():
-    E0_Nmax = np.zeros((2,76))
-    for m in range(chi.shape[0]):
-        E0_Nmaxm = np.array([])
-        for i in Nmax_step2:
-            E0_Nmaxm = np.append(E0_Nmaxm, [E0(chi[m], aHO[m], i)], axis=0)
-        E0_Nmax = np.append(E0_Nmax, [E0_Nmaxm], axis = 0)
+def plotsE0Nmax(Nmax_lst, aHO_lst, save=False):
+    E0_Nmax = []
+    for m in range(len(aHO_lst)):
+        E0_Nmaxm = []
+        for Nmax in Nmax_lst:
+            E0_Nmaxm.append(E0(chi[m], aHO_lst[m], Nmax))
+        E0_Nmax.append(E0_Nmaxm)
 
-    E0_Nmax = np.delete(E0_Nmax,[0,1], axis=0)
+    E0_Nmax = np.array(E0_Nmax) 
+
+    red = '#FF0000'
+    blue = '#0000FF'
+    black = '#000000'
+    purple = '#FF00FF'
+    n = len(aHO_lst)
     
-    print(np.mean(E0_Nmax[:, 75]))
-    
-    for i  in range(4):
-        np.savetxt(f'E0(Nmax)_{aHO[i]}.txt', np.array([Nmax_step2, E0_Nmax[i]]))
-
-    # Plot
-    plt.figure()
-
-    # aHO=1.2
-    plt.subplot(231)
-    plt.plot(Nmax_step2,E0_Nmax[0], 'x-')
-    plt.title('$E_0$ bei $a_{HO}$=1.2 fm')
-    plt.xlabel('$N_{max}$')
-    plt.ylabel('$E_0$ (MeV)')
-    plt.yticks([-2.5, E0_Nmax[0,75], -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5])
-    plt.grid(linestyle='--')
-
-    # aHO = 1.4
-    plt.subplot(232)
-    plt.plot(Nmax_step2,E0_Nmax[1], 'x-')
-    plt.title('$E_0$ bei $a_{HO}$=1.4 fm')
-    plt.xlabel('$N_{max}$')
-    plt.ylabel('$E_0$ (MeV)')
-    plt.yticks([-2.5, E0_Nmax[1,75], -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5])
-    plt.grid(linestyle='--')
-
-    # aHO = 1.6
-    plt.subplot(233)
-    plt.plot(Nmax_step2,E0_Nmax[2], 'x-')
-    plt.title('$E_0$ bei $a_{HO}$=1.6 fm')
-    plt.xlabel('$N_{max}$')
-    plt.ylabel('$E_0$ (MeV)')
-    plt.yticks([-2.5, E0_Nmax[2,75], -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5])
-    plt.grid(linestyle='--')
-
-    # aHO = 1.8
-    plt.subplot(234)
-    plt.plot(Nmax_step2,E0_Nmax[3], 'x-')
-    plt.title('$E_0$ bei $a_{HO}$=1.8 fm')
-    plt.xlabel('$N_{max}$')
-    plt.ylabel('$E_0$ (MeV)')
-    plt.yticks([-2.5, E0_Nmax[3,75], -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5])
-    plt.grid(linestyle='--')
-
-    # aHO = 2.0
-    plt.subplot(235)
-    plt.plot(Nmax_step2,E0_Nmax[4], 'x-')
-    plt.title('$E_0$ bei $a_{HO}$=2.0 fm')
-    plt.xlabel('$N_{max}$')
-    plt.ylabel('$E_0$ (MeV)')
-    plt.yticks([-2.5, E0_Nmax[4,75], -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5])
-    plt.grid(linestyle='--')
-    
-    # alle zusammen
-    plt.subplot(236)
+    plt.figure(figsize=(12,7.45))
     for i in range(E0_Nmax.shape[0]):
-        plt.plot(Nmax_step2,E0_Nmax[i], 'x-')
+        plt.plot(Nmax_lst,E0_Nmax[i], 'x-', color=colorFader(purple, black, i/n))
 
     legend = np.array([])
     for i in aHO:
         legend = np.append(legend,'$a_{HO}$ = '+ str(i) + ' fm')
 
-    plt.title('$E_0$ bei verschiedenen $a_{HO}$')
+    # plt.title('$E_0$ bei verschiedenen $a_{HO}$')
     plt.legend(legend)
     plt.xlabel('$N_{max}$')
     plt.ylabel('$E_0$ (MeV)')
-    plt.yticks([-2.5, np.mean(E0_Nmax[:, 75]), -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5])
+    plt.yticks([-2.225, -2, -1, 0, 1, 2, 3])
     plt.grid(linestyle='--')
+    # plt.xlim(0,25)
+    # plt.ylim(-2.5, 3.5)
+
+    if save: 
+        plt.savefig(f'E0_Nmax.pdf')
+        
 
  
-def plotsE0aHO():
-    E0_aHO = np.zeros((2,5))
-    for m in Nmax_step30:
-        E0_aHOm = np.array([])
-        for i in range(chi.shape[0]):
-            E0_aHOm = np.append(E0_aHOm, [E0(chi[i], aHO[i], m)], axis=0)
-        E0_aHO = np.append(E0_aHO, [E0_aHOm], axis = 0)
+def plotsE0aHO(Nmax_lst, aHO_lst, save=False):
+    E0_aHO = []
+    for m in Nmax_lst:
+        E0_aHOm = []
+        for i in range(len(aHO_lst)):
+            E0_aHOm.append(E0(chi[i], aHO[i], m))
+        E0_aHO.append(E0_aHOm)
 
-    E0_aHO = np.delete(E0_aHO,[0,1], axis=0)
-        # Plot
-    plt.figure()
+    E0_aHO = np.array(E0_aHO)
+
+    red = '#FF0000'
+    blue = '#0000FF'
+    black = '#000000'
+    purple = '#FF00FF'
+    n = len(Nmax_lst)
     
-
-    # Nmax = 0
-    plt.subplot(231)
-    plt.plot(aHO,E0_aHO[0], 'x-')
-    plt.title('$E_0$ bei $N_{max}$=0')
-    plt.xlabel('$a_{HO}$ (fm)')
-    plt.ylabel('$E_0$ (MeV)')
-    plt.grid(linestyle='--')
-
-    # Nmax = 30
-    plt.subplot(232)
-    plt.plot(aHO,E0_aHO[1], 'x-')
-    plt.title('$E_0$ bei $N_{max}$=30')
-    plt.xlabel('$a_{HO}$ (fm)')
-    plt.ylabel('$E_0$ (MeV)')
-    plt.grid(linestyle='--')
-
-    # Nmax = 60
-    plt.subplot(233)
-    plt.plot(aHO,E0_aHO[2], 'x-')
-    plt.title('$E_0$ bei $N_{max}$=60')
-    plt.xlabel('$a_{HO}$ (fm)')
-    plt.ylabel('$E_0$ (MeV)')
-    plt.grid(linestyle='--')
-
-    # Nmax = 90
-    plt.subplot(234)
-    plt.plot(aHO,E0_aHO[3], 'x-')
-    plt.title('$E_0$ bei $N_{max}$=90')
-    plt.xlabel('$a_{HO}$ (fm)')
-    plt.ylabel('$E_0$ (MeV)')
-    plt.grid(linestyle='--')
-
-    # Nmax = 120
-    plt.subplot(235)
-    plt.plot(aHO,E0_aHO[4], 'x-')
-    plt.title('$E_0$ bei $N_{max}$=120')
-    plt.xlabel('$a_{HO}$ (fm)')
-    plt.ylabel('$E_0$ (MeV)')
-    plt.grid(linestyle='--')
-    
-    # alle zusammen
-    plt.subplot(236)
+    plt.figure(figsize=(12,7.45))
     for i in range(E0_aHO.shape[0]):
-        plt.plot(aHO,E0_aHO[i], 'x-')
+        plt.plot(aHO_lst, E0_aHO[i], 'x-', color=colorFader(purple, black, i/n))
 
     legend = np.array([])
-    for i in Nmax_step30:
+    for i in Nmax_lst:
         legend = np.append(legend,'$N_{max}$ = '+ str(i))
 
-    plt.title('$E_0$ bei verschiedenen $N_{max}$')
     plt.legend(legend)
+    plt.yticks([-2.225, -2, -1, 0, 1, 2, 3])
+    plt.xticks([1.2, 1.4, 1.6, 1.8, 2])
     plt.xlabel('$a_{HO}$ (fm)')
     plt.ylabel('$E_0$ (MeV)')
     plt.grid(linestyle='--')
 
-# plotsE0Nmax()
-# plotsE0aHO()
+    if save: 
+        plt.savefig(f'E0_aHO.pdf')
 
-print(E0(chi_Nmax150_aHO12, 1.2, 150))
+
+plotsE0Nmax(np.arange(0, 26,1), [1.2, 1.4, 1.6, 1.8, 2], True)
+
+plotsE0aHO(np.arange(0, 11, 1), [1.2, 1.4, 1.6, 1.8, 2], True)
 
 plt.show()
