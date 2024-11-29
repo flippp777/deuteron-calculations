@@ -3,9 +3,17 @@ from matplotlib import pyplot as plt
 from joblib import Parallel, delayed
 from concurrent.futures import ThreadPoolExecutor
 from scipy.integrate import quad
+import sys
+
+if sys.platform == "win32":
+    sys.path.insert(1, r'C:\Users\phili.DESKTOP\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
+else:
+    sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 
 from make.position_space_wavefunc import deuteron_wavefunc
 from make.matrix import mat
+from plotstyle.colorFader import colorFader
+from plotstyle.set_size import set_size
 
 
 chi_Nmax150_aHO12 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.20.meho', skiprows=1)
@@ -97,19 +105,25 @@ def rrms_aHO(j, Nstep):
     return np.array([Nmax_lst, rrms])
 
 rrms_operator = np.array(Parallel(n_jobs=-1)(delayed(rrms_aHO)(j, 1) for j in range(aHO_lst.shape[0])))
-Rrms = 1.9635 
+Rrms = 1.97
 rrms_wavefunc = np.array(Parallel(n_jobs=-1)(delayed(rrms_integral_trapz)(60, aHO, 1, 100, 0.1) for aHO in aHO_lst))
 
+# print((np.mean(rrms_wavefunc[:,1,150]), np.std(rrms_wavefunc[:,1,150])))
+# print((np.mean(rrms_wavefunc[:,1,60]), np.std(rrms_wavefunc[:,1,60])))
+
+
+plt.figure(figsize=set_size(502.14963))
 for i in range(aHO_lst.shape[0]):
-    plt.figure()
-    plt.plot(rrms_operator[i, 0], rrms_operator[i, 1], 'x-')
-    plt.plot(rrms_wavefunc[i, 0], rrms_wavefunc[i, 1], 'x-')
-    plt.title('$R_{rms}$ für $a_{HO} = $' + str(aHO_lst[i]) + ' fm')
-    plt.legend(['Operator', 'Wellenfunktion' ])
-    plt.ylabel("$R_{rms}$ (fm)")
-    plt.yticks([1.2, 1.4, 1.6, 1.8, Rrms, 2.0, 2.2])
-    plt.xlabel('$N_{max}$')
-    plt.xlim(0, 60)
-    plt.grid(linestyle='--')
+    plot = plt.plot(rrms_operator[i, 0], rrms_operator[i, 1], 'x-', color=colorFader('#0000FF', '#00004c', i/len(aHO_lst)), markersize=4)
+    plt.plot(rrms_wavefunc[i, 0], rrms_wavefunc[i, 1], 'x', linestyle='-.', color=colorFader('#FF0000', '#4c0000', i/len(aHO_lst)), markersize=4)
+legend = np.array([['$a_{HO}$=' + str(aHO)+' fm, Operator', '$a_{HO}$='+ str(aHO)+' fm, Wave function'] for aHO in aHO_lst]).flatten()
+plt.legend(legend, loc='lower right', ncol=2)
+plt.ylabel("$R_{rms}$ (fm)")
+plt.yticks([1.2, 1.4, 1.6, 1.8, Rrms, 2.0, 2.2], ['1.20', '1.40', '1.60', '1.80', '1.97', '', '2.20'])
+plt.xlabel('$n_{max}$')
+plt.xlim(0, 60)
+plt.grid(linestyle='--')
+
+plt.savefig('rrms_Nmax60.pdf', bbox_inches='tight')
 
 plt.show()
