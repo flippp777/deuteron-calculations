@@ -206,7 +206,7 @@ def final_wavefunc_plots(save=False):
     if save:
         plt.savefig('wave_functions_nmax0-50_nstep5_aHO1.2-2.0_log.pdf', bbox_inches='tight')
 
-final_wavefunc_plots(True)
+final_wavefunc_plots(False)
 
     
     
