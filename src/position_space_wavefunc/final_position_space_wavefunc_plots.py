@@ -88,11 +88,14 @@ def plot_wavefunc_aHO_L2(Nmax, aHO):
 
 def final_wavefunc_plots(save=False):
     r_model = np.arange(0, 150, 0.1)
-    Nmax = np.arange(0, 20, 2)
+    Nmax = np.arange(0, 51, 5)
     
     purple = '#FF00FF'
+    dark_purple = '#190019'
     blue = '#0000FF'
+    dark_blue = '#000019'
     red = '#FF0000'
+    dark_red = '#190000'
     black = '#000000'
     n = len(Nmax)
     
@@ -118,27 +121,92 @@ def final_wavefunc_plots(save=False):
         else:
             return -deuteron_wavefunc(Nmax, aHO, r)[0]
     
-    legend = ['$\psi_0(r)$', '$u(r)$', '$w(r)$']
+    legend = ['$u(r)$', '$w(r)$', '$\psi_0(r)$']
     
-    axs[0].plot(r_model, psi(150, 1.2, r_model), color=purple)
     axs[0].plot(r_model, u(150, 1.2, r_model), color=blue)
     axs[0].plot(r_model, w(150, 1.2, r_model), color=red)
+    axs[0].plot(r_model, psi(150, 1.2, r_model), color=purple)
+    axs[0].text(10, 0.37, '$a_{HO}=1.2$ fm')
     axs[0].set_xlim(0,15)
+    axs[0].set_xticks([0, 2.5, 5, 7.5, 10, 12.5])
     axs[0].legend(legend)
     axs[0].set_xlabel('$r$ (fm)')
     axs[0].set_ylabel('$\phi(r)$')
     axs[0].grid(linestyle='--')
 
-    axs[1].plot(r_model, psi(150, 2, r_model), color=purple)
     axs[1].plot(r_model, u(150, 2, r_model), color=blue)
     axs[1].plot(r_model, w(150, 2, r_model), color=red)
-    # axs[1].semilogy()
+    axs[1].plot(r_model, psi(150, 2, r_model), color=purple)
+    axs[1].text(10, 0.37, '$a_{HO}=2.0$ fm')
     axs[1].set_xlim(0,15)
     axs[1].legend(legend)
     axs[1].set_xlabel('$r$ (fm)')
     axs[1].grid(linestyle='--')
+
+    if save:
+        plt.savefig('wave_functions_nmax150_aHO1.2-2.0.pdf', bbox_inches='tight')
+
     
-final_wavefunc_plots()
+    fig = plt.figure(figsize=set_size(502.15))
+    gs = fig.add_gridspec(1, 2, wspace=0, hspace=0)
+    axs = gs.subplots(sharey=True)
+
+    for i in range(n):
+        axs[0].plot(r_model, u(i, 1.2, r_model), color=colorFader(blue, dark_blue, i/n))
+        axs[0].plot(r_model, w(i, 1.2, r_model), color=colorFader(red, dark_red, i/n))
+        axs[0].plot(r_model, psi(i, 1.2, r_model), color=colorFader(purple, dark_purple, i/n))
+    axs[0].text(10, 0.46, '$a_{HO}=1.2$ fm')
+    axs[0].set_xlim(0,15)
+    axs[0].set_xticks([0, 2.5, 5, 7.5, 10, 12.5])
+    axs[0].legend(legend)
+    axs[0].set_xlabel('$r$ (fm)')
+    axs[0].set_ylabel('$\phi(r)$')
+    axs[0].grid(linestyle='--')
+
+    for i in range(n):
+        axs[1].plot(r_model, u(i, 2, r_model), color=colorFader(blue, black, i/n))
+        axs[1].plot(r_model, w(i, 2, r_model), color=colorFader(red, black, i/n))
+        axs[1].plot(r_model, psi(i, 2, r_model), color=colorFader(purple, black, i/n))
+    axs[1].text(10, 0.46, '$a_{HO}=2.0$ fm')
+    axs[1].set_xlim(0,15)
+    axs[1].legend(legend)
+    axs[1].set_xlabel('$r$ (fm)')
+    axs[1].grid(linestyle='--')
+    if save:
+        plt.savefig('wave_functions_nmax0-50_nstep5_aHO1.2-2.0.pdf', bbox_inches='tight')
+
+
+    fig = plt.figure(figsize=set_size(502.15))
+    gs = fig.add_gridspec(1, 2, wspace=0, hspace=0)
+    axs = gs.subplots(sharey=True)
+
+    legend = ['$|u(r)|$', '$|w(r)$|'] 
+    
+    for i in range(n):
+        axs[0].plot(r_model, np.abs(u(i, 1.2, r_model)), color=colorFader(blue, dark_blue, i/n))
+        axs[0].plot(r_model, np.abs(w(i, 1.2, r_model)), color=colorFader(red, dark_red, i/n))
+    axs[0].text(1, 1.5*10**(-5), '$a_{HO}=1.2$ fm')
+    axs[0].set_xlim(0,12.5)
+    axs[0].set_xticks([0, 2.5, 5, 7.5, 10, 12.5])
+    axs[0].legend(legend)
+    axs[0].set_xlabel('$r$ (fm)')
+    axs[0].set_ylabel('$\phi(r)$')
+    axs[0].grid(linestyle='--')
+
+    for i in range(n):
+        axs[1].plot(r_model, np.abs(u(i, 2, r_model)), color=colorFader(blue, black, i/n))
+        axs[1].plot(r_model, np.abs(w(i, 2, r_model)), color=colorFader(red, black, i/n))
+    axs[1].text(1, 1.5*10**(-5), '$a_{HO}=2.0$ fm')
+    axs[1].semilogy()
+    axs[1].set_ylim(10**(-5),1)
+    axs[1].set_xlim(0,22.5)
+    axs[1].legend(legend)
+    axs[1].set_xlabel('$r$ (fm)')
+    axs[1].grid(linestyle='--')
+    if save:
+        plt.savefig('wave_functions_nmax0-50_nstep5_aHO1.2-2.0_log.pdf', bbox_inches='tight')
+
+final_wavefunc_plots(True)
 
     
     
