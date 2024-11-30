@@ -157,8 +157,15 @@ def final_plot_normal(save=False):
     plt.xlim(0, 60)
     plt.grid(linestyle='--')
     
-final_plot(True)
+# final_plot(True)
 
 # plot_Q(60, 0, 1)
 
 plt.show()
+
+
+print(np.mean([Q_integral_trapz_Nmax(150, aHO) for aHO in aHO_lst]), np.std([Q_integral_trapz_Nmax(150, aHO) for aHO in aHO_lst]))
+print(np.mean([Q_integral_trapz_Nmax(60, aHO) for aHO in aHO_lst]), np.std([Q_integral_trapz_Nmax(60, aHO) for aHO in aHO_lst]))
+print('\n')
+print(np.mean([Q_integral_trapz_Nmax_normal(150, aHO) for aHO in aHO_lst]), np.std([Q_integral_trapz_Nmax_normal(150, aHO) for aHO in aHO_lst]))
+print(np.mean([Q_integral_trapz_Nmax_normal(60, aHO) for aHO in aHO_lst]), np.std([Q_integral_trapz_Nmax_normal(60, aHO) for aHO in aHO_lst]))
