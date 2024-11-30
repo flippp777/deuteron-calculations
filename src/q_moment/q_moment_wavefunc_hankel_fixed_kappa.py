@@ -6,7 +6,7 @@ from concurrent.futures import ThreadPoolExecutor
 from scipy.optimize import curve_fit
 
 if sys.platform == "win32":
-    sys.path.insert(1, r'C:\Users\Phili\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
+    sys.path.insert(1, r'C:\Users\phili.DESKTOP\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
 else:
     sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 
@@ -89,27 +89,39 @@ def continue_q_wavefunc(Nmax, aHO, number_at_least_collected_points=10, number_m
     fit_points_u = np.array([r[fit_points_indices_u], u_lst[1, fit_points_indices_u]])
     fit_points_w = np.array([r[fit_points_indices_w], w_lst[1, fit_points_indices_w]])
 
+    fit_point_mean_u = np.mean(fit_points_u[1])
+    fit_point_std_u = np.std(fit_points_u[1])
+    fit_points_u = fit_points_u.transpose()[(
+        (fit_points_u[1] <= fit_point_mean_u + 1.5 * fit_point_std_u) & 
+        (fit_points_u[1] >= fit_point_mean_u - 1.5 * fit_point_std_u))].transpose()
+
+    fit_point_mean_w = np.mean(fit_points_w[1])
+    fit_point_std_w = np.std(fit_points_w[1])
+    fit_points_w = fit_points_w.transpose()[(
+        (fit_points_w[1] <= fit_point_mean_w + 1.5 * fit_point_std_w) & 
+        (fit_points_w[1] >= fit_point_mean_w - 1.5 * fit_point_std_w))].transpose()
+
     kappa_u = 0.2307
     kappa_w = 0.2307
 
     # Finding a point that has the same slope as the found one 
     d_dr_u = np.gradient(fit_points_u[1], fit_points_u[0])[1:-1]
-    rh0 = rh0_model(r[fit_points_indices_u], kappa_u)
+    rh0 = rh0_model(fit_points_u[0], kappa_u)
     d_dr_rh0 = np.gradient(rh0, fit_points_u[0])[1:-1]
     connection_point_u = np.array([])
     delta = 10**(-3)
     while connection_point_u.size == 0:
-        connection_point_u = r[fit_points_indices_u[1:-1]][((d_dr_u > d_dr_rh0 - delta) & (d_dr_u < d_dr_rh0 + delta))]
+        connection_point_u = fit_points_u[0][1:-1][((d_dr_u > d_dr_rh0 - delta) & (d_dr_u < d_dr_rh0 + delta))]
         delta += 10**(-3)
     connection_point_u = connection_point_u[0]
     
     d_dr_w = np.gradient(fit_points_w[1], fit_points_w[0])[1:-1]
-    rh2 = rh2_model(r[fit_points_indices_w], kappa_w)
+    rh2 = rh2_model(fit_points_w[0], kappa_w)
     d_dr_rh2 = np.gradient(rh2, fit_points_w[0])[1:-1]
     connection_point_w = np.array([])
     delta = 10**(-3)
     while connection_point_w.size == 0:
-        connection_point_w = r[fit_points_indices_w[1:-1]][((d_dr_w > d_dr_rh2 - delta) & (d_dr_w < d_dr_rh2 + delta))]
+        connection_point_w = fit_points_w[0][1:-1][((d_dr_w > d_dr_rh2 - delta) & (d_dr_w < d_dr_rh2 + delta))]
         delta += 10**(-3)
     connection_point_w = connection_point_w[0]
 
