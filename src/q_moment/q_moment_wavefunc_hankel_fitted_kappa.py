@@ -91,6 +91,18 @@ def continue_q_wavefunc(Nmax, aHO, number_at_least_collected_points=10, number_u
     fit_points_u = np.array([r[fit_points_indices_u], u_lst[1, fit_points_indices_u]])
     fit_points_w = np.array([r[fit_points_indices_w], w_lst[1, fit_points_indices_w]])
 
+    fit_point_mean_u = np.mean(fit_points_u[1])
+    fit_point_std_u = np.std(fit_points_u[1])
+    fit_points_u = fit_points_u.transpose()[(
+        (fit_points_u[1] <= fit_point_mean_u + 1.5 * fit_point_std_u) & 
+        (fit_points_u[1] >= fit_point_mean_u - 1.5 * fit_point_std_u))].transpose()
+
+    fit_point_mean_w = np.mean(fit_points_w[1])
+    fit_point_std_w = np.std(fit_points_w[1])
+    fit_points_w = fit_points_w.transpose()[(
+        (fit_points_w[1] <= fit_point_mean_w + 1.5 * fit_point_std_w) & 
+        (fit_points_w[1] >= fit_point_mean_w - 1.5 * fit_point_std_w))].transpose()
+
     # Fit
     params_u = create_params(a=1, kappa=dict(value=0.2305, min=0.1, max=0.4))
     
@@ -118,22 +130,22 @@ def continue_q_wavefunc(Nmax, aHO, number_at_least_collected_points=10, number_u
 
     # Finding a point that has the same slope as the found one (the gradient of the log is used to get rid of the "a" dependence)
     d_dr_u = np.gradient(np.log(fit_points_u[1]), fit_points_u[0])[1:-1]
-    rh0 = rh0_model(r[fit_points_indices_u], kappa_u)
+    rh0 = rh0_model(fit_points_u[0], kappa_u)
     d_dr_rh0 = np.gradient(np.log(rh0), fit_points_u[0])[1:-1]
     connection_point_u = np.array([])
     delta = 10**(-3)
     while connection_point_u.size == 0:
-        connection_point_u = r[fit_points_indices_u[1:-1]][((d_dr_u > d_dr_rh0 - delta) & (d_dr_u < d_dr_rh0 + delta))]
+        connection_point_u = fit_points_u[0][1:-1][((d_dr_u > d_dr_rh0 - delta) & (d_dr_u < d_dr_rh0 + delta))]
         delta += 10**(-3)
     connection_point_u = connection_point_u[0]
     
     d_dr_w = np.gradient(np.log(fit_points_w[1]), fit_points_w[0])[1:-1]
-    rh2 = rh2_model(r[fit_points_indices_w], kappa_w)
+    rh2 = rh2_model(fit_points_w[0], kappa_w)
     d_dr_rh2 = np.gradient(np.log(rh2), fit_points_w[0])[1:-1]
     connection_point_w = np.array([])
     delta = 10**(-3)
     while connection_point_w.size == 0:
-        connection_point_w = r[fit_points_indices_w[1:-1]][((d_dr_w > d_dr_rh2 - delta) & (d_dr_w < d_dr_rh2 + delta))]
+        connection_point_w = fit_points_w[0][1:-1][((d_dr_w > d_dr_rh2 - delta) & (d_dr_w < d_dr_rh2 + delta))]
         delta += 10**(-3)
     connection_point_w = connection_point_w[0]
 
@@ -253,7 +265,7 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, fit_point_nu
         plt.savefig(f"q_wavefunc_continuation_q_aHO{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
 
 plot_continuation_wavefunc_Q(r, 1.2, 60, 1, 1, 29, 10, 50, False)
-# plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, True)
+plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, False)
 # plot_continuation_wavefunc_Q(r, 1.2, 15, 3, 1, 17.5, True)
 # plot_continuation_wavefunc_Q(r, 2.0, 15, 3, 1, 27, False)
 # plot_continuation_wavefunc_Q(r, 2.4, 60, 3, 1, 60, 80, 40, True)

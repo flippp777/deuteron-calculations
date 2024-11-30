@@ -166,17 +166,17 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     fit_points_L0 = np.array([r[fit_points_indices_L0], wavefunc_L0[1, fit_points_indices_L0]])
     fit_points_L2 = np.array([r[fit_points_indices_L2], wavefunc_L2[1, fit_points_indices_L2]])    
     
-    # fit_point_mean_L0 = np.mean(fit_points_L0[1])
-    # fit_point_std_L0 = np.std(fit_points_L0[1])
-    # fit_points_L0 = fit_points_L0.transpose()[(
-    #     (fit_points_L0[1] <= fit_point_mean_L0 + fit_point_std_L0) & 
-    #     (fit_points_L0[1] >= fit_point_mean_L0 - fit_point_std_L0))].transpose()
+    fit_point_mean_L0 = np.mean(fit_points_L0[1])
+    fit_point_std_L0 = np.std(fit_points_L0[1])
+    fit_points_L0 = fit_points_L0.transpose()[(
+        (fit_points_L0[1] <= fit_point_mean_L0 + 1 * fit_point_std_L0) & 
+        (fit_points_L0[1] >= fit_point_mean_L0 - 1 * fit_point_std_L0))].transpose()
 
-    # fit_point_mean_L2 = np.mean(fit_points_L2[1])
-    # fit_point_std_L2 = np.std(fit_points_L2[1])
-    # fit_points_L2 = fit_points_L2.transpose()[(
-    #     (fit_points_L2[1] <= fit_point_mean_L2 + fit_point_std_L2) & 
-    #     (fit_points_L2[1] >= fit_point_mean_L2 - fit_point_std_L2))].transpose()
+    fit_point_mean_L2 = np.mean(fit_points_L2[1])
+    fit_point_std_L2 = np.std(fit_points_L2[1])
+    fit_points_L2 = fit_points_L2.transpose()[(
+        (fit_points_L2[1] <= fit_point_mean_L2 + 1 * fit_point_std_L2) & 
+        (fit_points_L2[1] >= fit_point_mean_L2 - 1 * fit_point_std_L2))].transpose()
     
     params = create_params(a=1, kappa=dict(value=0.2305, min=0.1, max=0.4))
     
@@ -401,7 +401,7 @@ def plot_wavefunc_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, wavefunc, numbe
     plt.grid(linestyle='--')
     
     if save:
-        plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO}_NNmax{NNmax}_Nstep{dNmax}_" + wavefunc + "_fitted_kappa.pdf")
+        plt.savefig(f"rrms_wavefunc_continuation_rrms_{aHO}_NNmax{NNmax}_Nstep{dNmax}_fitted_kappa.pdf")
             
 def ANN_comparison(save=False):
     Nmax_lst = np.arange(1, 11)
@@ -465,8 +465,8 @@ def ANN_comparison(save=False):
     
 # ANN_comparison(True)
 
-# plot_wavefunc_continuation_rrms(r, 2, 60, 1, 1, 'u/w', 10, 50, False)
-plot_wavefunc_continuation_rrms(r, 1.2, 60, 1, 1, 'u/w', 10, 50, False)
+plot_wavefunc_continuation_rrms(r, 2, 60, 1, 1, 'u/w', 10, 50, False)
+# plot_wavefunc_continuation_rrms(r, 1.2, 60, 1, 1, 'u/w', 10, 50, True)
 # print(find_continuation_parameters(150, 1.4, 'u/w', 10, 50))
 
 # aHO_lst = np.array([2.0]) 
