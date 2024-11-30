@@ -169,14 +169,14 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     fit_point_mean_L0 = np.mean(fit_points_L0[1])
     fit_point_std_L0 = np.std(fit_points_L0[1])
     fit_points_L0 = fit_points_L0.transpose()[(
-        (fit_points_L0[1] <= fit_point_mean_L0 + fit_point_std_L0) & 
-        (fit_points_L0[1] >= fit_point_mean_L0 - fit_point_std_L0))].transpose()
+        (fit_points_L0[1] <= fit_point_mean_L0 + 1.5 * fit_point_std_L0) & 
+        (fit_points_L0[1] >= fit_point_mean_L0 - 1.5 * fit_point_std_L0))].transpose()
 
     fit_point_mean_L2 = np.mean(fit_points_L2[1])
     fit_point_std_L2 = np.std(fit_points_L2[1])
     fit_points_L2 = fit_points_L2.transpose()[(
-        (fit_points_L2[1] <= fit_point_mean_L2 + fit_point_std_L2) & 
-        (fit_points_L2[1] >= fit_point_mean_L2 - fit_point_std_L2))].transpose()
+        (fit_points_L2[1] <= fit_point_mean_L2 + 1.5 * fit_point_std_L2) & 
+        (fit_points_L2[1] >= fit_point_mean_L2 - 1.5 * fit_point_std_L2))].transpose()
 
     # Finding a point that has the same slope as the fitted one (up to a factor)
     d_dr_L0 = np.gradient(np.log(fit_points_L0[1]), fit_points_L0[0])[1:-1]
