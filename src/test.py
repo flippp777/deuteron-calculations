@@ -1,6 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-arr= np.array([1,2,3,4,5,6,7,8,9,10])
+arr= np.array([[1,2,3], [4,5,6]])
 
-print(arr[-9-3:-3])
+
+arr = arr.transpose()[arr[1]<=5].transpose()
+
+print(arr)

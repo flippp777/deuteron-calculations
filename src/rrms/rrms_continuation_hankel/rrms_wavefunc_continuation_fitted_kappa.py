@@ -165,12 +165,18 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     # fit points from fit_pint_indexes
     fit_points_L0 = np.array([r[fit_points_indices_L0], wavefunc_L0[1, fit_points_indices_L0]])
     fit_points_L2 = np.array([r[fit_points_indices_L2], wavefunc_L2[1, fit_points_indices_L2]])    
-    # plt.figure()
-    # plt.scatter(fit_points_phi2[0], fit_points_phi2[1])
-    # plt.plot(r, phi2_lst[1])
-    # plt.ylim(bottom=10**(-6))
-    # plt.xlim(0,12)
-    # plt.semilogy()
+    
+    # fit_point_mean_L0 = np.mean(fit_points_L0[1])
+    # fit_point_std_L0 = np.std(fit_points_L0[1])
+    # fit_points_L0 = fit_points_L0.transpose()[(
+    #     (fit_points_L0[1] <= fit_point_mean_L0 + fit_point_std_L0) & 
+    #     (fit_points_L0[1] >= fit_point_mean_L0 - fit_point_std_L0))].transpose()
+
+    # fit_point_mean_L2 = np.mean(fit_points_L2[1])
+    # fit_point_std_L2 = np.std(fit_points_L2[1])
+    # fit_points_L2 = fit_points_L2.transpose()[(
+    #     (fit_points_L2[1] <= fit_point_mean_L2 + fit_point_std_L2) & 
+    #     (fit_points_L2[1] >= fit_point_mean_L2 - fit_point_std_L2))].transpose()
     
     params = create_params(a=1, kappa=dict(value=0.2305, min=0.1, max=0.4))
     
