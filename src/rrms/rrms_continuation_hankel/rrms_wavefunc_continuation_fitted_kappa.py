@@ -311,7 +311,7 @@ r = np.linspace(0, 100, 1000)
 
 
 
-def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, wavefunc, number_at_least_collected_points, number_used_points, save=False):
+def plot_wavefunc_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, wavefunc, number_at_least_collected_points, number_used_points, save=False):
     Nmax_lst = np.arange(NNmin, NNmax + 1, dNmax)
 
     if wavefunc == 'phi':
@@ -350,13 +350,13 @@ def plot_density_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, wavefunc, number
         r_cont_phi2 = np.arange(connect_phi2, 30.1, 0.1)
 
         phi0_plot = plt.plot(r, L0(r, Nmax, aHO))
-        phi0_color = phi0_plot[0].get_color()
-        plt.plot(r_cont_phi0, model_a_L0(r_cont_phi0, c_phi0, kappa_phi0), '--', color=phi0_color)
-        # phi2_plot = plt.plot(r, L2(r, Nmax, aHO))
-        # phi2_color = phi2_plot[0].get_color()
+        # phi0_color = phi0_plot[0].get_color()
+        # plt.plot(r_cont_phi0, model_a_L0(r_cont_phi0, c_phi0, kappa_phi0), '--', color=phi0_color)
+        phi2_plot = plt.plot(r, L2(r, Nmax, aHO))
+        phi2_color = phi2_plot[0].get_color()
         # plt.plot(r_cont_phi2, model_a_L2(r_cont_phi2, c_phi2, kappa_phi2), "--", color=phi2_color)
         # plt.scatter(fit_points_phi0[0], fit_points_phi0[1], color=phi0_color)
-        # plt.scatter(fit_points_phi2[0], fit_points_phi2[1], color=phi2_color)
+        plt.scatter(fit_points_phi2[0], fit_points_phi2[1], color=phi2_color)
         plt.semilogy()
         plt.grid(linestyle='--')
         rrms_lst.append(rrms)
@@ -459,8 +459,8 @@ def ANN_comparison(save=False):
     
 # ANN_comparison(True)
 
-plot_density_continuation_rrms(r, 2, 60, 1, 1, 'u/w', 10, 50, False)
-# plot_density_continuation_rrms(r, 1.2, 60, 1, 1, 'u/w', 10, 50, True)
+# plot_wavefunc_continuation_rrms(r, 2, 60, 1, 1, 'u/w', 10, 50, False)
+plot_wavefunc_continuation_rrms(r, 1.2, 60, 1, 1, 'u/w', 10, 50, False)
 # print(find_continuation_parameters(150, 1.4, 'u/w', 10, 50))
 
 # aHO_lst = np.array([2.0]) 
