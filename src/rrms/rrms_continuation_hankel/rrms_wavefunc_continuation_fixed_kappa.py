@@ -11,6 +11,8 @@ else:
     sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 
 from make.position_space_wavefunc import deuteron_wavefunc
+from plotstyle.colorFader import colorFader
+from plotstyle.set_size import set_size
 
 plt.style.use('tableau-colorblind10')
 
@@ -404,13 +406,113 @@ def ANN_comparison(save=False):
     if save:
         plt.savefig("ANN_comparison_fixed_kappa.pdf", pad_inches=0)
     
+
+def plot_wavefunc_continuation_rrms_final(save=False):
+    r = np.arange(0, 150, 0.1)
+    Nmax_lst = np.arange(1, 30 + 1, 1)
     
+    wavefunc = 'u/w'
+    if wavefunc == 'phi':
+        def model_a_L0(r, a, kappa):
+           return h0_model_a(r, a, kappa) 
+        def model_a_L2(r, a, kappa):
+           return h2_model_a(r, a, kappa) 
+
+        def L0(r, Nmax, aHO):
+            return phi0(r, Nmax, aHO)
+        def L2(r, Nmax, aHO):
+            return phi2(r, Nmax, aHO)
+    elif wavefunc == 'u/w':
+        def model_a_L0(r, a, kappa):
+           return rh0_model_a(r, a, kappa) 
+        def model_a_L2(r, a, kappa):
+           return rh2_model_a(r, a, kappa) 
+
+        def L0(r, Nmax, aHO):
+            return u(r, Nmax, aHO)
+        def L2(r, Nmax, aHO):
+            return w(r, Nmax, aHO)
+
+    purple = '#FF00FF'
+    blue = '#0000FF'
+    dark_blue = '#000019'
+    red = '#FF0000'
+    dark_red = '#190000'
+    black = '#000000'
+    n= len(Nmax_lst)
+ 
+
+    aHO_lst = [1.2, 2,0]
+    rrms_lst = [[0],[0]]
+    xlim_lst = [[0,21.5], [0,35]]
+    for j in range(2):
+        fig = plt.figure(figsize=set_size(502.14963))
+        for i in range(n):
+            kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, rrms, fit_points_phi0, fit_points_phi2 = find_continuation_parameters(Nmax_lst[i], aHO_lst[j], wavefunc, 10, 50)
+
+            r_cont_phi0 = np.arange(connect_phi0, 60, 0.1)
+            r_cont_phi2 = np.arange(connect_phi2, 60, 0.1)
+
+            phi0_plot = plt.plot(r, L0(r, Nmax_lst[i], aHO_lst[j]), color=colorFader(blue, black, i/n))
+            phi0_color = phi0_plot[0].get_color()
+            plt.plot(r_cont_phi0, model_a_L0(r_cont_phi0, c_phi0, kappa_phi0), '--', color=phi0_color)
+            phi2_plot = plt.plot(r, L2(r, Nmax_lst[i], aHO_lst[j]), color=colorFader(red, black, i/n))
+            phi2_color = phi2_plot[0].get_color()
+            plt.plot(r_cont_phi2, model_a_L2(r_cont_phi2, c_phi2, kappa_phi2), "--", color=phi2_color)
+            rrms_lst[j].append(rrms)
+        
+        if j == 0:
+            plt.text(1.25, 2*10**(-6), '$a_{HO}=1.2$ fm')
+        else:
+            plt.text(1.25, 2*10**(-6), '$a_{HO}=2.0$ fm')
+        plt.semilogy()
+        plt.grid(linestyle='--')
+        plt.ylim(10**(-6), 1)
+        plt.xlim(xlim_lst[j])
+        plt.xlabel('r (fm)')
+        plt.ylabel('$|\Phi(r)|$')
+        legend = ['$|u(r)|$', '$|u(r)|$-Continuation', '$|w(r)|$', '$|w(r)|$-Continuation']
+        plt.legend(legend, ncol=2, loc='upper right')
+        
+        
+        if save:
+            plt.savefig(f"wavefunc_continuation_aHO{aHO_lst[j]}_NNmax60_Nstep1_fixed_kappa.pdf", bbox_inches='tight')
+    
+    rrms_12 = np.delete(rrms_lst[0],0) 
+    rrms_20 = np.delete(rrms_lst[1],0) 
+    
+    rmax, dr = 150, 0.1
+    rrms_full_wave_12 = rrms_integral_trapz(30, 0, 1.2, 1, rmax, dr)
+    rrms_full_wave_20 = rrms_integral_trapz(30, 0, 2.0, 1, rmax, dr)
+    
+    fig = plt.figure(figsize=set_size(502.14963))
+    gs = fig.add_gridspec(1, 2, wspace=0, hspace=0)
+    axs = gs.subplots(sharey=True)
+
+    axs[0].plot(rrms_full_wave_12[0], rrms_full_wave_12[1], 'x-', color='black', markersize=4)
+    axs[0].plot(Nmax_lst, rrms_12, 'x-', color=purple, markersize=4)
+    axs[0].legend(["Wave functions", 'Continuated wave functions'], loc='upper right')
+    axs[0].set_xlabel('$n_{max}$')
+    axs[0].set_ylabel("$R_{rms}$ (fm)")
+    axs[0].set_ylim(1, 2.6)
+    axs[0].set_yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2, 2.2, 2.4, 2.6], ['1.2', '1.4', '1.6', '1.8', '1.97', '', '2.2', '2.4', '2.6'])
+    axs[0].grid(linestyle='--')
+    
+    axs[1].plot(rrms_full_wave_20[0], rrms_full_wave_20[1], 'x-', color='black', markersize=4)
+    axs[1].plot(Nmax_lst, rrms_20, 'x-', color=purple, markersize=4)
+    axs[1].legend(["Wave functions", 'Continuated wave functions'], loc='upper right')
+    axs[1].set_xlabel('$n_{max}$')
+    axs[1].grid(linestyle='--')
+
+    if save:
+        plt.savefig("rrms_continuation_1.2-2.0_NNmax60_Nstep1_fixed_kappa.pdf", bbox_inches='tight')
          
     
 # ANN_comparison(True)
 
-plot_wavefunc_continuation_rrms(r, 1.2, 60, 1, 1, 'u/w', 10, 50, False)
+# plot_wavefunc_continuation_rrms(r, 1.2, 60, 1, 1, 'u/w', 10, 50, False)
 # plot_wavefunc_continuation_rrms(r, 2, 60, 1, 1, 10, 50, True)
+plot_wavefunc_continuation_rrms_final(True)
 
 
 plt.show()

@@ -408,7 +408,7 @@ def plot_wavefunc_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, wavefunc, numbe
 
 def plot_wavefunc_continuation_rrms_final(save=False):
     r = np.arange(0, 150, 0.1)
-    Nmax_lst = np.arange(1, 60 + 1, 1)
+    Nmax_lst = np.arange(1, 30 + 1, 1)
     
     wavefunc = 'u/w'
     if wavefunc == 'phi':
@@ -443,7 +443,7 @@ def plot_wavefunc_continuation_rrms_final(save=False):
 
     aHO_lst = [1.2, 2,0]
     rrms_lst = [[0],[0]]
-    xlim_lst = [[0,30], [0,45]]
+    xlim_lst = [[0,21.5], [0,35]]
     for j in range(2):
         fig = plt.figure(figsize=set_size(502.14963))
         for i in range(n):
@@ -452,12 +452,12 @@ def plot_wavefunc_continuation_rrms_final(save=False):
             r_cont_phi0 = np.arange(connect_phi0, 60, 0.1)
             r_cont_phi2 = np.arange(connect_phi2, 60, 0.1)
 
-            phi2_plot = plt.plot(r, L2(r, Nmax_lst[i], aHO_lst[j]), color=colorFader(red, black, i/n))
-            phi2_color = phi2_plot[0].get_color()
-            plt.plot(r_cont_phi2, model_a_L2(r_cont_phi2, c_phi2, kappa_phi2), "--", color=phi2_color)
             phi0_plot = plt.plot(r, L0(r, Nmax_lst[i], aHO_lst[j]), color=colorFader(blue, black, i/n))
             phi0_color = phi0_plot[0].get_color()
             plt.plot(r_cont_phi0, model_a_L0(r_cont_phi0, c_phi0, kappa_phi0), '--', color=phi0_color)
+            phi2_plot = plt.plot(r, L2(r, Nmax_lst[i], aHO_lst[j]), color=colorFader(red, black, i/n))
+            phi2_color = phi2_plot[0].get_color()
+            plt.plot(r_cont_phi2, model_a_L2(r_cont_phi2, c_phi2, kappa_phi2), "--", color=phi2_color)
             rrms_lst[j].append(rrms)
         
         if j == 0:
@@ -475,14 +475,14 @@ def plot_wavefunc_continuation_rrms_final(save=False):
         
         
         if save:
-            plt.savefig(f"wavefuncs_aHO{aHO_lst[j]}_NNmax60_Nstep1_fitted_kappa.pdf", bbox_inches='tight')
+            plt.savefig(f"wavefunc_continuation_aHO{aHO_lst[j]}_NNmax60_Nstep1_fitted_kappa.pdf", bbox_inches='tight')
     
     rrms_12 = np.delete(rrms_lst[0],0) 
     rrms_20 = np.delete(rrms_lst[1],0) 
     
     rmax, dr = 150, 0.1
-    rrms_full_wave_12 = rrms_integral_trapz(60, 0, 1.2, 1, rmax, dr)
-    rrms_full_wave_20 = rrms_integral_trapz(60, 0, 2.0, 1, rmax, dr)
+    rrms_full_wave_12 = rrms_integral_trapz(30, 0, 1.2, 1, rmax, dr)
+    rrms_full_wave_20 = rrms_integral_trapz(30, 0, 2.0, 1, rmax, dr)
     
     fig = plt.figure(figsize=set_size(502.14963))
     gs = fig.add_gridspec(1, 2, wspace=0, hspace=0)
@@ -490,18 +490,17 @@ def plot_wavefunc_continuation_rrms_final(save=False):
 
     axs[0].plot(rrms_full_wave_12[0], rrms_full_wave_12[1], 'x-', color='black', markersize=4)
     axs[0].plot(Nmax_lst, rrms_12, 'x-', color=purple, markersize=4)
-    axs[0].legend(["Wave functions", 'Continuated wave functions'])
-    axs[0].set_xlabel('$N_{max}$')
+    axs[0].legend(["Wave functions", 'Continuated wave functions'], loc='upper right')
+    axs[0].set_xlabel('$n_{max}$')
     axs[0].set_ylabel("$R_{rms}$ (fm)")
     axs[0].set_ylim(1, 2.6)
     axs[0].set_yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2, 2.2, 2.4, 2.6], ['1.2', '1.4', '1.6', '1.8', '1.97', '', '2.2', '2.4', '2.6'])
     axs[0].grid(linestyle='--')
     
-    axs[1].plot(rrms_full_wave_20[0], rrms_full_wave_20[1], 'x-', color=purple, markersize=4)
-    axs[1].plot(Nmax_lst, rrms_20, 'x-', color='black', markersize=4)
+    axs[1].plot(rrms_full_wave_20[0], rrms_full_wave_20[1], 'x-', color='black', markersize=4)
+    axs[1].plot(Nmax_lst, rrms_20, 'x-', color=purple, markersize=4)
     axs[1].legend(["Wave functions", 'Continuated wave functions'])
-    axs[1].set_xlabel('$N_{max}$')
-    axs[1].set_ylabel("$R_{rms}$ (fm)")
+    axs[1].set_xlabel('$n_{max}$')
     axs[1].grid(linestyle='--')
 
     if save:

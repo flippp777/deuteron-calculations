@@ -11,6 +11,8 @@ else:
     sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 
 from make.position_space_wavefunc import deuteron_wavefunc
+from plotstyle.colorFader import colorFader
+from plotstyle.set_size import set_size
 
 def u(r, Nmax, aHO):
     return np.abs(r * deuteron_wavefunc(Nmax, aHO, r)[1])
@@ -227,10 +229,60 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, number_at_le
     plt.grid(linestyle='--')
 
     if save:
-        plt.savefig(f"q_wavefunc_continuation_rrms_aHO{aHO}_NNmax{NNmax}_Nstep{dNmax}_fixed_kappa0.2307.pdf")
+        plt.savefig(f"q_wavefunc_continuation_q_aHO{aHO}_NNmax{NNmax}_Nstep{dNmax}_fixed_kappa0.2307.pdf")
 
-plot_continuation_wavefunc_Q(r, 1.2, 60, 1, 1, 29, 10, 50, True)
-plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, True)
+
+def plot_wavefunc_continuation_q_final(save=False):
+    r = np.arange(0, 150, 0.1)
+    Nmax_lst = np.arange(1, 30 + 1, 1)
+    
+    purple = '#FF00FF'
+    blue = '#0000FF'
+    dark_blue = '#000019'
+    red = '#FF0000'
+    dark_red = '#190000'
+    black = '#000000'
+    n= len(Nmax_lst)
+ 
+
+    aHO_lst = [1.2, 2,0]
+    q_lst = [[0],[0]]
+    for j in range(2):
+        for i in range(n):
+            kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, q, fit_points_phi0, fit_points_phi2 = continue_q_wavefunc(Nmax_lst[i], aHO_lst[j], 10, 50)
+            q_lst[j].append(q)
+    
+    q_12 = np.delete(q_lst[0],0) 
+    q_20 = np.delete(q_lst[1],0) 
+    
+    q_full_wave_12 = Q_integral_trapz_aHO(30, 0, 1.2, 1)
+    q_full_wave_20 = Q_integral_trapz_aHO(30, 0, 2.0, 1)
+    
+    fig = plt.figure(figsize=set_size(502.14963))
+    gs = fig.add_gridspec(1, 2, wspace=0, hspace=0)
+    axs = gs.subplots(sharey=True)
+
+    axs[0].plot(q_full_wave_12[0], q_full_wave_12[1], 'x-', color='black', markersize=4)
+    axs[0].plot(Nmax_lst, q_12, 'x-', color=purple, markersize=4)
+    axs[0].legend(["Wave functions", 'Continuated wave functions'], loc='upper right')
+    axs[0].set_xlabel('$n_{max}$')
+    axs[0].set_ylabel("Q ($e_0$fm$^2$)")
+    axs[0].set_yticks([1.5, 0.2, 0.25, 0.2709, 0.3, 0.35, 0.4, 0.45])
+    axs[0].grid(linestyle='--')
+    
+    axs[1].plot(q_full_wave_20[0], q_full_wave_20[1], 'x-', color='black', markersize=4)
+    axs[1].plot(Nmax_lst, q_20, 'x-', color=purple, markersize=4)
+    axs[1].legend(["Wave functions", 'Continuated wave functions'], loc='upper right')
+    axs[1].set_xlabel('$n_{max}$')
+    axs[1].grid(linestyle='--')
+
+    if save:
+        plt.savefig("q_continuation_1.2-2.0_NNmax60_Nstep1_fixed_kappa.pdf", bbox_inches='tight')
+
+plot_wavefunc_continuation_q_final(True)
+
+# plot_continuation_wavefunc_Q(r, 1.2, 60, 1, 1, 29, 10, 50, True)
+# plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, True)
 # plot_continuation_wavefunc_Q(r, 1.2, 15, 3, 1, 17.5, True)
 # plot_continuation_wavefunc_Q(r, 2.0, 15, 3, 1, 27, True)
 # plot_continuation_wavefunc_Q(r, 2.4, 60, 3, 1, 60, True)
