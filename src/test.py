@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 arr= np.array([[1,2,3], [4,5,6]])
 
-
-arr = arr.transpose()[arr[1]<=5].transpose()
+arr = [[0],[0]]
+arr[0].append(5)
 
 print(arr)
