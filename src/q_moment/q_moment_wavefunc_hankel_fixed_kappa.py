@@ -156,7 +156,7 @@ def continue_q_wavefunc(Nmax, aHO, number_at_least_collected_points=10, number_m
 
 def Q_integral_trapz_Nmax(Nmax, aHO):
     dr = 0.1
-    r = np.arange(0, 50 + dr, dr)
+    r = np.arange(0, 250 + dr, dr)
     return sp.integrate.trapezoid(q(r, Nmax, aHO), dx=dr)
 
 def Q_integral_trapz_aHO(Nmax, Nmin, aHO, Nstep):
@@ -233,7 +233,7 @@ def plot_continuation_wavefunc_Q(r, aHO, NNmax, NNmin, dNmax, xmax, number_at_le
 
 
 def plot_wavefunc_continuation_q_final(save=False):
-    r = np.arange(0, 150, 0.1)
+    r = np.arange(0, 250, 0.1)
     Nmax_lst = np.arange(1, 30 + 1, 1)
     
     purple = '#FF00FF'

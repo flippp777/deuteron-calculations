@@ -408,7 +408,7 @@ def ANN_comparison(save=False):
     
 
 def plot_wavefunc_continuation_rrms_final(save=False):
-    r = np.arange(0, 150, 0.1)
+    r = np.arange(0, 250, 0.1)
     Nmax_lst = np.arange(1, 30 + 1, 1)
     
     wavefunc = 'u/w'
@@ -481,7 +481,7 @@ def plot_wavefunc_continuation_rrms_final(save=False):
     rrms_12 = np.delete(rrms_lst[0],0) 
     rrms_20 = np.delete(rrms_lst[1],0) 
     
-    rmax, dr = 150, 0.1
+    rmax, dr = 250, 0.1
     rrms_full_wave_12 = rrms_integral_trapz(30, 0, 1.2, 1, rmax, dr)
     rrms_full_wave_20 = rrms_integral_trapz(30, 0, 2.0, 1, rmax, dr)
     
