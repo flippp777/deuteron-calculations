@@ -506,13 +506,34 @@ def plot_wavefunc_continuation_rrms_final(save=False):
 
     if save:
         plt.savefig("rrms_continuation_1.2-2.0_NNmax60_Nstep1_fixed_kappa.pdf", bbox_inches='tight')
+
+def rrms_values(aHO, save=False):
+    Nmax = [2,5,8,11,16,20]
+    rrms_contiunuation = []
+    rrms_wavefunc = [] 
+    rrms_conv = 1.97
+    for i in Nmax:
+            kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, rrms, fit_points_phi0, fit_points_phi2 = find_continuation_parameters(i, aHO, 'u/w', 10, 50)
+            rrms_contiunuation.append(rrms)
+            rrms_wavefunc.append(np.sqrt(rsq_integral_trapz(i, aHO, 100, 0.1)))
+    
+    dev_continuation = np.abs((np.array(rrms_contiunuation)-rrms_conv)/rrms_conv)
+    dev_wavefunc = np.abs((np.array(rrms_wavefunc)-rrms_conv)/rrms_conv)
+    
+    full_arr = np.array([Nmax, rrms_contiunuation, dev_continuation, rrms_wavefunc, dev_wavefunc])
+    print(full_arr)
+    
+    if save:
+        np.savetxt(f'rrms_fixed_values_aHO{aHO}.txt', full_arr)
+        
+rrms_values(1.2, True)
          
     
 # ANN_comparison(True)
 
 # plot_wavefunc_continuation_rrms(r, 1.2, 60, 1, 1, 'u/w', 10, 50, False)
 # plot_wavefunc_continuation_rrms(r, 2, 60, 1, 1, 10, 50, True)
-plot_wavefunc_continuation_rrms_final(True)
+# plot_wavefunc_continuation_rrms_final(True)
 
 
 plt.show()

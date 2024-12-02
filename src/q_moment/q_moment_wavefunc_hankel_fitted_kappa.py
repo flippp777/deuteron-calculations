@@ -314,7 +314,28 @@ def plot_wavefunc_continuation_q_final(save=False):
     if save:
         plt.savefig("q_continuation_1.2-2.0_NNmax60_Nstep1_fitted_kappa.pdf", bbox_inches='tight')
 
-plot_wavefunc_continuation_q_final(True)
+def q_values(aHO, save=False):
+    Nmax = [2,5,8,11,16,20]
+    q_contiunuation = []
+    q_wavefunc = [] 
+    q_conv = 0.2709
+    for i in Nmax:
+            kappa_phi0, c_phi0, connect_phi0, kappa_phi2, c_phi2, connect_phi2, q, fit_points_phi0, fit_points_phi2 = continue_q_wavefunc(i, aHO, 10, 50)
+            q_contiunuation.append(q)
+            q_wavefunc.append(Q_integral_trapz_Nmax(i, aHO))
+    
+    dev_continuation = np.abs((np.array(q_contiunuation)-q_conv)/q_conv)
+    dev_wavefunc = np.abs((np.array(q_wavefunc)-q_conv)/q_conv)
+    
+    full_arr = np.array([Nmax, q_contiunuation, dev_continuation, q_wavefunc, dev_wavefunc])
+    print(full_arr)
+    
+    if save:
+        np.savetxt(f'q_fitted_values_aHO{aHO}.txt', full_arr)
+        
+q_values(2, True)
+
+# plot_wavefunc_continuation_q_final(True)
 
 # plot_continuation_wavefunc_Q(r, 1.2, 60, 1, 1, 29, 10, 50, False)
 # plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, False)
