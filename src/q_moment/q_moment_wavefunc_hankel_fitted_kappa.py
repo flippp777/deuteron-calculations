@@ -298,7 +298,7 @@ def plot_wavefunc_continuation_q_final(save=False):
 
     axs[0].plot(q_full_wave_12[0], q_full_wave_12[1], 'x-', color='black', markersize=4)
     axs[0].plot(Nmax_lst, q_12, 'x-', color=purple, markersize=4)
-    axs[0].legend(["Wave functions", 'Continuated wave functions'], loc='upper right')
+    axs[0].legend(["Wave functions", 'Continuated wave functions'])
     axs[0].set_xlabel('$n_{max}$')
     axs[0].set_ylabel("Q ($e_0$fm$^2$)")
     axs[0].set_ylim(0.15,0.45)
@@ -307,7 +307,7 @@ def plot_wavefunc_continuation_q_final(save=False):
     
     axs[1].plot(q_full_wave_20[0], q_full_wave_20[1], 'x-', color='black', markersize=4)
     axs[1].plot(Nmax_lst, q_20, 'x-', color=purple, markersize=4)
-    axs[1].legend(["Wave functions", 'Continuated wave functions'], loc='upper right')
+    axs[1].legend(["Wave functions", 'Continuated wave functions'])
     axs[1].set_xlabel('$n_{max}$')
     axs[1].grid(linestyle='--')
 
@@ -333,9 +333,9 @@ def q_values(aHO, save=False):
     if save:
         np.savetxt(f'q_fitted_values_aHO{aHO}.txt', full_arr)
         
-q_values(2, True)
+# q_values(2, True)
 
-# plot_wavefunc_continuation_q_final(True)
+plot_wavefunc_continuation_q_final(True)
 
 # plot_continuation_wavefunc_Q(r, 1.2, 60, 1, 1, 29, 10, 50, False)
 # plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, False)

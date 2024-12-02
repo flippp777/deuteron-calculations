@@ -491,7 +491,7 @@ def plot_wavefunc_continuation_rrms_final(save=False):
 
     axs[0].plot(rrms_full_wave_12[0], rrms_full_wave_12[1], 'x-', color='black', markersize=4)
     axs[0].plot(Nmax_lst, rrms_12, 'x-', color=purple, markersize=4)
-    axs[0].legend(["Wave functions", 'Continuated wave functions'], loc='upper right')
+    axs[0].legend(["Wave functions", 'Continuated wave functions'])
     axs[0].set_xlabel('$n_{max}$')
     axs[0].set_ylabel("$R_{rms}$ (fm)")
     axs[0].set_ylim(1, 2.6)
@@ -500,7 +500,7 @@ def plot_wavefunc_continuation_rrms_final(save=False):
     
     axs[1].plot(rrms_full_wave_20[0], rrms_full_wave_20[1], 'x-', color='black', markersize=4)
     axs[1].plot(Nmax_lst, rrms_20, 'x-', color=purple, markersize=4)
-    axs[1].legend(["Wave functions", 'Continuated wave functions'], loc='upper right')
+    axs[1].legend(["Wave functions", 'Continuated wave functions'])
     axs[1].set_xlabel('$n_{max}$')
     axs[1].grid(linestyle='--')
 
@@ -526,14 +526,14 @@ def rrms_values(aHO, save=False):
     if save:
         np.savetxt(f'rrms_fixed_values_aHO{aHO}.txt', full_arr)
         
-rrms_values(1.2, True)
+# rrms_values(1.2, True)
          
     
 # ANN_comparison(True)
 
 # plot_wavefunc_continuation_rrms(r, 1.2, 60, 1, 1, 'u/w', 10, 50, False)
 # plot_wavefunc_continuation_rrms(r, 2, 60, 1, 1, 10, 50, True)
-# plot_wavefunc_continuation_rrms_final(True)
+plot_wavefunc_continuation_rrms_final(True)
 
 
 plt.show()

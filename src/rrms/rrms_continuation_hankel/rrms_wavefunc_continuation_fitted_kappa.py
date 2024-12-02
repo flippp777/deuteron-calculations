@@ -551,7 +551,7 @@ def ANN_comparison(save=False):
     plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2, 2.4, 2.6, 2.8, 3])
     axs[0].legend(['$a_{HO}=1.1$ fm, Fortsetzung', '$a_{HO}=1.1$ fm, Wellenfunktion',
                 '$a_{HO}=1.2$ fm, Fortsetzung', '$a_{HO}=1.2$ fm, Wellenfunktion',
-                '$a_{HO}=1.3$ fm, Fortsetzung', '$a_{HO}=1.3$ fm, Wellenfunktion'], loc='lower right')
+                '$a_{HO}=1.3$ fm, Fortsetzung', '$a_{HO}=1.3$ fm, Wellenfunktion'])
     axs[0].grid(linestyle='--')
     
     ANN_lst = [1.766, 1.923, 1.927, 1.868, 1.895, 1.881, 1.917]
@@ -564,7 +564,7 @@ def ANN_comparison(save=False):
     axs[1].set_xlabel('$NN_{max}$')
     # plt.ylabel('$R_{rms}$ (fm)')
     # axs[1].yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
-    axs[1].legend(['Mittelwert der Fortsetzungen', 'ANN Vorgersage'], loc='lower right')
+    axs[1].legend(['Mittelwert der Fortsetzungen', 'ANN Vorgersage'])
     axs[1].grid(linestyle='--')
     
     if save:
@@ -590,6 +590,7 @@ def rrms_values(aHO, save=False):
         np.savetxt(f'rrms_fitted_values_aHO{aHO}.txt', full_arr)
         
 rrms_values(1.2, True)
+plot_wavefunc_continuation_rrms_final(True)
 
         
     
