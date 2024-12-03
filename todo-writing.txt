@@ -3,3 +3,7 @@
  - y-axis label for wave funtion plots.
  - Position of the legend.
  - Fitting constrains.
+ 
+ FINNISHED SECTIONS (MOSTLY)
+  - Introduction
+  - The Deuteron
