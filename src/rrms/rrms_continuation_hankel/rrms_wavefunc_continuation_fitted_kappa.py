@@ -469,8 +469,8 @@ def plot_wavefunc_continuation_rrms_final(save=False):
         plt.ylim(10**(-6), 1)
         plt.xlim(xlim_lst[j])
         plt.xlabel('r (fm)')
-        plt.ylabel('$|\Phi(r)|$')
-        legend = ['$|u(r)|$', '$|u(r)|$-Continuation', '$|w(r)|$', '$|w(r)|$-Continuation']
+        plt.ylabel('$\ln{|u(r)|}$ and $\ln{|w(r)|}$')
+        legend = ['$\ln{|u(r)|}$', '$\ln{|u(r)|}$-Continuation', '$\ln{|w(r)|}$', '$\ln{|w(r)|}$-Continuation']
         plt.legend(legend, ncol=2, loc='upper right')
         
         
@@ -589,7 +589,7 @@ def rrms_values(aHO, save=False):
     if save:
         np.savetxt(f'rrms_fitted_values_aHO{aHO}.txt', full_arr)
         
-rrms_values(1.2, True)
+# rrms_values(1.2, True)
 plot_wavefunc_continuation_rrms_final(True)
 
         
