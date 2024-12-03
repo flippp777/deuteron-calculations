@@ -1,9 +1,10 @@
  - degeneracy for m in Deuteron Ground state.
  - say that behavior is systematic for low aho when nmax is increased. not the case for larger aho.
  - y-axis label for wave funtion plots.
- - Position of the legend.
  - Fitting constrains.
  
  FINNISHED SECTIONS (MOSTLY)
   - Introduction
   - The Deuteron
+  - Investigated Observables
+  - introduction to NCSM
