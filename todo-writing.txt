@@ -1,6 +1,5 @@
  - degeneracy for m in Deuteron Ground state.
  - say that behavior is systematic for low aho when nmax is increased. not the case for larger aho.
- - y-axis label for wave funtion plots.
  - Fitting constrains.
  
  FINNISHED SECTIONS (MOSTLY)
