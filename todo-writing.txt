@@ -6,4 +6,8 @@
   - Introduction
   - The Deuteron
   - Investigated Observables
-  - introduction to NCSM
+  - NCSM
+  
+ - Obtaining Wave Fucntions & Observables (Introduction)
+ - Energy
+ - Wave Functions
