@@ -345,7 +345,7 @@ def plot_wavefunc_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, wavefunc, numbe
             
 
 
-def ANN_comparison(save=False):
+def ANN_comparison_11to13(save=False):
     Nmax_lst = np.arange(1, 11)
     aHO_lst = [1.1, 1.2, 1.3]
     NNmax_lst = np.arange(4, 11)
@@ -355,10 +355,10 @@ def ANN_comparison(save=False):
     for aHO in aHO_lst:
         rrms_lst = []
         for Nmax in Nmax_lst:
-            rrms_lst.append(find_continuation_parameters(Nmax, aHO)[5])
+            rrms_lst.append(find_continuation_parameters(Nmax, aHO, "u/w")[6])
         rrms_lsts.append(rrms_lst)
         rrms_fullwav.append(rrms_integral_trapz(10, 1, aHO, 1, 150, 0.01))
-        
+      
     rrms_lsts = np.array(rrms_lsts)
 
     mean_lst = []
@@ -406,6 +406,70 @@ def ANN_comparison(save=False):
     if save:
         plt.savefig("ANN_comparison_fixed_kappa.pdf", pad_inches=0)
     
+def ANN_comparison_11to14(save=False):
+    Nmax_lst = np.arange(1, 11)
+    aHO_lst = [1.1, 1.2, 1.3, 1.4]
+    NNmax_lst = np.arange(4, 11)
+    
+    rrms_lsts = []
+    rrms_fullwav = []
+    for aHO in aHO_lst:
+        rrms_lst = []
+        for Nmax in Nmax_lst:
+            rrms_lst.append(find_continuation_parameters(Nmax, aHO, "u/w")[6])
+        rrms_lsts.append(rrms_lst)
+        rrms_fullwav.append(rrms_integral_trapz(10, 1, aHO, 1, 150, 0.01))
+        
+    rrms_lsts = np.array(rrms_lsts)
+
+    mean_lst = []
+    std_lst = []
+    for i in NNmax_lst:
+        mean_lst.append(np.mean(rrms_lsts[:, i-4:i].flatten()))
+        std_lst.append(np.std(rrms_lsts[:, i-4:i].flatten()))
+    
+    
+    fig = plt.figure(figsize=(12,7.45))
+    gs = fig.add_gridspec(1, 2, wspace=0)
+    axs = gs.subplots(sharey=True)
+    
+    
+    aHO11_plt = axs[0].plot(Nmax_lst, rrms_lsts[0], 'o-')
+    aHO11_color = aHO11_plt[0].get_color()
+    axs[0].plot(rrms_fullwav[0][0], rrms_fullwav[0][1], 'o--', color = aHO11_color)
+    aHO12_plt = axs[0].plot(Nmax_lst, rrms_lsts[1], 'v-')
+    aHO12_color = aHO12_plt[0].get_color()
+    axs[0].plot(rrms_fullwav[1][0], rrms_fullwav[1][1], 'v--', color= aHO12_color)
+    aHO13_plt = axs[0].plot(Nmax_lst, rrms_lsts[2], '^-')
+    aHO13_color = aHO13_plt[0].get_color()
+    axs[0].plot(rrms_fullwav[2][0], rrms_fullwav[2][1], '^--', color=aHO13_color)
+    aHO14_plt = axs[0].plot(Nmax_lst, rrms_lsts[3], 'd-')
+    aHO14_color = aHO13_plt[0].get_color()
+    axs[0].plot(rrms_fullwav[3][0], rrms_fullwav[3][1], 'd--', color=aHO14_color)
+    axs[0].set_xlabel('$N_{max}$')
+    axs[0].set_ylabel('$R_{rms}$ (fm)')
+    plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
+    axs[0].legend(['$a_{HO}=1.1$ fm, Fortsetzung', '$a_{HO}=1.1$ fm, Wellenfunktion',
+                '$a_{HO}=1.2$ fm, Fortsetzung', '$a_{HO}=1.2$ fm, Wellenfunktion',
+                '$a_{HO}=1.3$ fm, Fortsetzung', '$a_{HO}=1.3$ fm, Wellenfunktion', 
+                '$a_{HO}=1.4$ fm, Fortsetzung', '$a_{HO}=1.4$ fm, Wellenfunktion'], loc='lower right')
+    axs[0].grid(linestyle='--')
+    
+    ANN_lst = [1.770, 1.959, 1.957, 1.904, 1.943, 1.899, 1.912]
+    ANN_err_lst = [[0.053, 0.084], [0.062, 0.062], [0.056, 0.047], [0.046, 0.042], [0.048, 0.030], [0.019, 0.018], [0.012, 0.016]]
+    ANN_err_lst = np.array(ANN_err_lst).transpose()
+    
+    
+    axs[1].errorbar(NNmax_lst, mean_lst, yerr=std_lst, fmt='o', capsize=5)
+    axs[1].errorbar(NNmax_lst, ANN_lst, yerr=ANN_err_lst, fmt='v', capsize=5)
+    axs[1].set_xlabel('$NN_{max}$')
+    # plt.ylabel('$R_{rms}$ (fm)')
+    # axs[1].yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
+    axs[1].legend(['Mittelwert der Fortsetzungen', 'ANN Vorgersage'], loc='lower right')
+    axs[1].grid(linestyle='--')
+    
+    if save:
+        plt.savefig("ANN_comparison_fixed_kappa.pdf", pad_inches=0)
 
 def plot_wavefunc_continuation_rrms_final(save=False):
     r = np.arange(0, 250, 0.1)
@@ -529,11 +593,13 @@ def rrms_values(aHO, save=False):
 # rrms_values(1.2, True)
          
     
-# ANN_comparison(True)
+ANN_comparison_11to13(False)
+ANN_comparison_11to14(False)
 
-# plot_wavefunc_continuation_rrms(r, 1.2, 60, 1, 1, 'u/w', 10, 50, False)
+
+# plot_wavefunc_continuation_rrms(r, 1.2, 20, 1, 1, 'u/w', 10, 50, False)
 # plot_wavefunc_continuation_rrms(r, 2, 60, 1, 1, 10, 50, True)
-plot_wavefunc_continuation_rrms_final(True)
+# plot_wavefunc_continuation_rrms_final(True)
 
 
 plt.show()
