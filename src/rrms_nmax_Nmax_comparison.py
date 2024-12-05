@@ -39,10 +39,11 @@ def rrms_integral_trapz(Nmax, Nmin, aHO, Nstep, rmax, dr):
     return np.array([Nmax_lst, rrms])
 
 
-aHO_lst = [1.1, 1.2, 1.3, 1.4]
+aho_lst = [1.1, 1.2, 1.3, 1.4]
+nmax_lst = np.arange(1,11,1)
 
 rrms_nmax = []
-for aho in aHO_lst:
+for aho in aho_lst:
     rrms_nmax.append(rrms_integral_trapz(10, 1, aho, 1, 150, 0.01))
 rrms_nmax = np.array(rrms_nmax)
 
@@ -51,3 +52,21 @@ rrms_Nmax = np.array([
     [1.236529, 1.322089, 1.454896, 1.473087, 1.577656, 1.578479, 1.642089, 1.664974, 1.703608, 1.732694],
     [1.313415, 1.420203, 1.533740, 1.545947, 1.665010, 1.648953, 1.721657, 1.713929, 1.763416, 1.777995],
     [1.392616, 1.525526, 1.614778, 1.626553, 1.740034, 1.716378, 1.806013, 1.769064, 1.824986, 1.812697]])
+
+plt.figure(figsize=set_size(502.14963))
+
+for i in range(len(aho_lst)):
+    plt.plot(rrms_nmax[i,0], rrms_nmax[i,1], 'x-', color=colorFader('#FF00FF', '#000000', i/4))
+    plt.plot(nmax_lst, rrms_Nmax[i], 'o--', color=colorFader('#FF00FF', '#000000', i/4))
+
+# for i in range(len(aho_lst)):
+#     plt.plot(nmax_lst, rrms_Nmax[i], 'o--', color=colorFader('#FF00FF', '#000000', i/4))
+
+plt.grid(linestyle='--')
+plt.xlabel('$n_{max}≈N_{max}/2$')
+plt.ylabel('$R_{rms}$ (fm)')
+plt.legend(np.array([['$a_{HO}=$'+str(aho)+' fm, $R_{rms}(n_{max})$', '$a_{HO}=$'+str(aho)+' fm, $R_{rms}(N_{max})$'] for aho in aho_lst]).flatten(), ncol=2)
+
+plt.savefig("rrms_nmax_Nmax_comparison.pdf", bbox_inches='tight')
+
+plt.show()
