@@ -67,6 +67,11 @@ plt.xlabel('$n_{max}≈N_{max}/2$')
 plt.ylabel('$R_{rms}$ (fm)')
 plt.legend(np.array([['$a_{HO}=$'+str(aho)+' fm, $R_{rms}(n_{max})$', '$a_{HO}=$'+str(aho)+' fm, $R_{rms}(N_{max})$'] for aho in aho_lst]).flatten(), ncol=2)
 
-plt.savefig("rrms_nmax_Nmax_comparison.pdf", bbox_inches='tight')
+# plt.savefig("rrms_nmax_Nmax_comparison.pdf", bbox_inches='tight')
 
-plt.show()
+# plt.show()
+
+
+values = np.array([nmax_lst, rrms_nmax[1,1], rrms_Nmax[1], np.abs((rrms_nmax[1,1]-rrms_Nmax[1])/rrms_Nmax[1])*100, 
+                    rrms_nmax[2,1], rrms_Nmax[2], np.abs((rrms_nmax[2,1]-rrms_Nmax[2])/rrms_Nmax[2])*100])
+np.savetxt('nmax_Nmax_comparison.txt', values.transpose())
