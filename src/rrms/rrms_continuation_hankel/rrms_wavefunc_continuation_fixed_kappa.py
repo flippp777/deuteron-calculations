@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from concurrent.futures import ThreadPoolExecutor
 from scipy.integrate import trapezoid
 import sys
+from uncertainties import ufloat
+from uncertainties import unumpy as unp
 
 if sys.platform == 'win32':
     sys.path.insert(1, r'C:\Users\phili.DESKTOP\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
@@ -406,7 +408,7 @@ def ANN_comparison_11to13(save=False):
     if save:
         plt.savefig("ANN_comparison_fixed_kappa.pdf", pad_inches=0)
     
-def ANN_comparison_11to14(save=False):
+def ANN_comparison_11to14(savefig=False, saveval=False):
     Nmax_lst = np.arange(1, 11)
     aHO_lst = [1.1, 1.2, 1.3, 1.4]
     NNmax_lst = np.arange(4, 11)
@@ -456,8 +458,8 @@ def ANN_comparison_11to14(save=False):
                    '$a_{HO}=1.4$ fm'])
     axs[0].grid(linestyle='--')
 
-    ANN_lst = [1.770, 1.959, 1.957, 1.904, 1.943, 1.899, 1.912]
-    ANN_err_lst = [[0.053, 0.084], [0.062, 0.062], [0.056, 0.047], [0.046, 0.042], [0.048, 0.030], [0.019, 0.018], [0.012, 0.016]]
+    ANN_lst = np.array([1.770, 1.959, 1.957, 1.904, 1.943, 1.899, 1.912])
+    ANN_err_lst = np.array([[0.053, 0.084], [0.062, 0.062], [0.056, 0.047], [0.046, 0.042], [0.048, 0.030], [0.019, 0.018], [0.012, 0.016]])
     ANN_err_lst = np.array(ANN_err_lst).transpose()
     
     
@@ -469,8 +471,21 @@ def ANN_comparison_11to14(save=False):
     axs[1].legend(['Mean value', 'ANN prediction'])
     axs[1].grid(linestyle='--')
     
-    if save:
+    if savefig:
         plt.savefig("ANN_comparison_fixed_kappa.pdf", pad_inches=0)
+        
+    if saveval:
+        ANN_err_lst = ANN_err_lst.transpose()
+        ANN_unlst = unp.uarray(ANN_lst, ANN_err_lst[:,0])
+        ANN_uplst = unp.uarray(ANN_lst, ANN_err_lst[:,1])
+
+        mean_ulst = unp.uarray(mean_lst, std_lst)
+
+        values = np.array([NNmax_lst, mean_lst, std_lst, ANN_lst, unp.std_devs(ANN_unlst), unp.std_devs(ANN_uplst), 
+                           unp.nominal_values((mean_ulst-ANN_unlst)/ANN_unlst)*100, unp.std_devs((mean_ulst-ANN_unlst)/ANN_unlst)*100, unp.std_devs((mean_ulst-ANN_uplst)/ANN_uplst)*100])
+        print(values)
+        np.savetxt('ANN_comparison_fixed_kappa.txt', values.transpose(), 
+                   header="NNmax mean_rrms u(mean_rrms) ANN u-(ANN) u+(ANN) rel.deviation u-(rel.deviation) u+(rel.deviation)")
 
 def plot_wavefunc_continuation_rrms_final(save=False):
     r = np.arange(0, 250, 0.1)
@@ -595,7 +610,7 @@ def rrms_values(aHO, save=False):
          
     
 # ANN_comparison_11to13(False)
-ANN_comparison_11to14(True)
+ANN_comparison_11to14(False, True)
 
 
 # plot_wavefunc_continuation_rrms(r, 1.2, 20, 1, 1, 'u/w', 10, 50, False)
