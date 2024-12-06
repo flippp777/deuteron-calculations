@@ -429,43 +429,44 @@ def ANN_comparison_11to14(save=False):
         std_lst.append(np.std(rrms_lsts[:, i-4:i].flatten()))
     
     
-    fig = plt.figure(figsize=(12,7.45))
+    fig = plt.figure(figsize=set_size(502.14963))
     gs = fig.add_gridspec(1, 2, wspace=0)
     axs = gs.subplots(sharey=True)
     
-    
-    aHO11_plt = axs[0].plot(Nmax_lst, rrms_lsts[0], 'o-')
-    aHO11_color = aHO11_plt[0].get_color()
-    axs[0].plot(rrms_fullwav[0][0], rrms_fullwav[0][1], 'o--', color = aHO11_color)
-    aHO12_plt = axs[0].plot(Nmax_lst, rrms_lsts[1], 'v-')
-    aHO12_color = aHO12_plt[0].get_color()
-    axs[0].plot(rrms_fullwav[1][0], rrms_fullwav[1][1], 'v--', color= aHO12_color)
-    aHO13_plt = axs[0].plot(Nmax_lst, rrms_lsts[2], '^-')
-    aHO13_color = aHO13_plt[0].get_color()
-    axs[0].plot(rrms_fullwav[2][0], rrms_fullwav[2][1], '^--', color=aHO13_color)
-    aHO14_plt = axs[0].plot(Nmax_lst, rrms_lsts[3], 'd-')
-    aHO14_color = aHO13_plt[0].get_color()
-    axs[0].plot(rrms_fullwav[3][0], rrms_fullwav[3][1], 'd--', color=aHO14_color)
-    axs[0].set_xlabel('$N_{max}$')
+    n = len(aHO_lst)
+    aHO11_plt1 = axs[0].plot(Nmax_lst, rrms_lsts[0], 'x-', color=colorFader('#FF00FF', "#000000", 0/n))
+    aHO11_color = aHO11_plt1[0].get_color()
+    aHO12_plt1 = axs[0].plot(Nmax_lst, rrms_lsts[1], 'x-', color=colorFader('#FF00FF', "#000000", 1/n))
+    aHO12_color = aHO12_plt1[0].get_color()
+    aHO13_plt1 = axs[0].plot(Nmax_lst, rrms_lsts[2], 'x-', color=colorFader('#FF00FF', "#000000", 2/n))
+    aHO13_color = aHO13_plt1[0].get_color()
+    aHO14_plt1 = axs[0].plot(Nmax_lst, rrms_lsts[3], 'x-', color=colorFader('#FF00FF', "#000000", 3/n))
+    aHO14_color = aHO14_plt1[0].get_color()
+    aHO11_plt2 = axs[0].plot(rrms_fullwav[0][0], rrms_fullwav[0][1], 'o--', color=aHO11_color)
+    aHO12_plt2 = axs[0].plot(rrms_fullwav[1][0], rrms_fullwav[1][1], 'o--', color=aHO12_color)
+    aHO13_plt2 = axs[0].plot(rrms_fullwav[2][0], rrms_fullwav[2][1], 'o--', color=aHO13_color)
+    aHO14_plt2 = axs[0].plot(rrms_fullwav[3][0], rrms_fullwav[3][1], 'o--', color=aHO14_color)
+
+    axs[0].set_xlabel('$Ñ_{max}$')
     axs[0].set_ylabel('$R_{rms}$ (fm)')
-    plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
-    axs[0].legend(['$a_{HO}=1.1$ fm, Fortsetzung', '$a_{HO}=1.1$ fm, Wellenfunktion',
-                '$a_{HO}=1.2$ fm, Fortsetzung', '$a_{HO}=1.2$ fm, Wellenfunktion',
-                '$a_{HO}=1.3$ fm, Fortsetzung', '$a_{HO}=1.3$ fm, Wellenfunktion', 
-                '$a_{HO}=1.4$ fm, Fortsetzung', '$a_{HO}=1.4$ fm, Wellenfunktion'], loc='lower right')
+    plt.yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2, 2.4], ['1.20', '1.40', '1.60', '1.80', '1.97', '', '2.20', '2.40'])
+    axs[0].legend(['$a_{HO}=1.1$ fm',
+                   '$a_{HO}=1.2$ fm',
+                   '$a_{HO}=1.3$ fm',
+                   '$a_{HO}=1.4$ fm'])
     axs[0].grid(linestyle='--')
-    
+
     ANN_lst = [1.770, 1.959, 1.957, 1.904, 1.943, 1.899, 1.912]
     ANN_err_lst = [[0.053, 0.084], [0.062, 0.062], [0.056, 0.047], [0.046, 0.042], [0.048, 0.030], [0.019, 0.018], [0.012, 0.016]]
     ANN_err_lst = np.array(ANN_err_lst).transpose()
     
     
-    axs[1].errorbar(NNmax_lst, mean_lst, yerr=std_lst, fmt='o', capsize=5)
-    axs[1].errorbar(NNmax_lst, ANN_lst, yerr=ANN_err_lst, fmt='v', capsize=5)
+    axs[1].errorbar(NNmax_lst, mean_lst, yerr=std_lst, fmt='x', capsize=5, color='#FF00FF')
+    axs[1].errorbar(NNmax_lst, ANN_lst, yerr=ANN_err_lst, fmt='o', capsize=5, color='#007f00')
     axs[1].set_xlabel('$NN_{max}$')
     # plt.ylabel('$R_{rms}$ (fm)')
     # axs[1].yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
-    axs[1].legend(['Mittelwert der Fortsetzungen', 'ANN Vorgersage'], loc='lower right')
+    axs[1].legend(['Mean value', 'ANN prediction'])
     axs[1].grid(linestyle='--')
     
     if save:
@@ -593,8 +594,8 @@ def rrms_values(aHO, save=False):
 # rrms_values(1.2, True)
          
     
-ANN_comparison_11to13(False)
-ANN_comparison_11to14(False)
+# ANN_comparison_11to13(False)
+ANN_comparison_11to14(True)
 
 
 # plot_wavefunc_continuation_rrms(r, 1.2, 20, 1, 1, 'u/w', 10, 50, False)

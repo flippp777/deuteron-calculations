@@ -520,7 +520,7 @@ def ANN_comparison(save=False):
     for aHO in aHO_lst:
         rrms_lst = []
         for Nmax in Nmax_lst:
-            rrms_lst.append(find_continuation_parameters(Nmax, aHO)[6])
+            rrms_lst.append(find_continuation_parameters(Nmax, aHO, "u/w")[6])
         rrms_lsts.append(rrms_lst)
         rrms_fullwav.append(rrms_integral_trapz(10, 1, aHO, 1, 150, 0.01))
         
@@ -570,6 +570,72 @@ def ANN_comparison(save=False):
     if save:
         plt.savefig("ANN_comparison_fitted_kappa.pdf", pad_inches=0)
 
+def ANN_comparison_11to14(save=False):
+    Nmax_lst = np.arange(1, 11)
+    aHO_lst = [1.1, 1.2, 1.3, 1.4]
+    NNmax_lst = np.arange(4, 11)
+    
+    rrms_lsts = []
+    rrms_fullwav = []
+    for aHO in aHO_lst:
+        rrms_lst = []
+        for Nmax in Nmax_lst:
+            rrms_lst.append(find_continuation_parameters(Nmax, aHO, "u/w")[6])
+        rrms_lsts.append(rrms_lst)
+        rrms_fullwav.append(rrms_integral_trapz(10, 1, aHO, 1, 150, 0.01))
+        
+    rrms_lsts = np.array(rrms_lsts)
+
+    mean_lst = []
+    std_lst = []
+    for i in NNmax_lst:
+        mean_lst.append(np.mean(rrms_lsts[:, i-4:i].flatten()))
+        std_lst.append(np.std(rrms_lsts[:, i-4:i].flatten()))
+    
+    
+    fig = plt.figure(figsize=set_size(502.14963))
+    gs = fig.add_gridspec(1, 2, wspace=0)
+    axs = gs.subplots(sharey=True)
+    
+    n = len(aHO_lst)
+    aHO11_plt1 = axs[0].plot(Nmax_lst, rrms_lsts[0], 'x-', color=colorFader('#FF00FF', "#000000", 0/n))
+    aHO11_color = aHO11_plt1[0].get_color()
+    aHO12_plt1 = axs[0].plot(Nmax_lst, rrms_lsts[1], 'x-', color=colorFader('#FF00FF', "#000000", 1/n))
+    aHO12_color = aHO12_plt1[0].get_color()
+    aHO13_plt1 = axs[0].plot(Nmax_lst, rrms_lsts[2], 'x-', color=colorFader('#FF00FF', "#000000", 2/n))
+    aHO13_color = aHO13_plt1[0].get_color()
+    aHO14_plt1 = axs[0].plot(Nmax_lst, rrms_lsts[3], 'x-', color=colorFader('#FF00FF', "#000000", 3/n))
+    aHO14_color = aHO14_plt1[0].get_color()
+    aHO11_plt2 = axs[0].plot(rrms_fullwav[0][0], rrms_fullwav[0][1], 'o--', color=aHO11_color)
+    aHO12_plt2 = axs[0].plot(rrms_fullwav[1][0], rrms_fullwav[1][1], 'o--', color=aHO12_color)
+    aHO13_plt2 = axs[0].plot(rrms_fullwav[2][0], rrms_fullwav[2][1], 'o--', color=aHO13_color)
+    aHO14_plt2 = axs[0].plot(rrms_fullwav[3][0], rrms_fullwav[3][1], 'o--', color=aHO14_color)
+
+    axs[0].set_xlabel('$Ñ_{max}$')
+    axs[0].set_ylabel('$R_{rms}$ (fm)')
+    plt.yticks([1, 1.5, 1.97, 2.0, 2.5, 3, 3.5, 4], ['1.00', '1.50', '1.97', '', '2.50', '3.00', '3.50', '4.00'])
+    axs[0].legend(['$a_{HO}=1.1$ fm',
+                   '$a_{HO}=1.2$ fm',
+                   '$a_{HO}=1.3$ fm',
+                   '$a_{HO}=1.4$ fm'])
+    axs[0].grid(linestyle='--')
+
+    ANN_lst = [1.770, 1.959, 1.957, 1.904, 1.943, 1.899, 1.912]
+    ANN_err_lst = [[0.053, 0.084], [0.062, 0.062], [0.056, 0.047], [0.046, 0.042], [0.048, 0.030], [0.019, 0.018], [0.012, 0.016]]
+    ANN_err_lst = np.array(ANN_err_lst).transpose()
+    
+    
+    axs[1].errorbar(NNmax_lst, mean_lst, yerr=std_lst, fmt='x', capsize=5, color='#FF00FF')
+    axs[1].errorbar(NNmax_lst, ANN_lst, yerr=ANN_err_lst, fmt='o', capsize=5, color='#007f00')
+    axs[1].set_xlabel('$NN_{max}$')
+    # plt.ylabel('$R_{rms}$ (fm)')
+    # axs[1].yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
+    axs[1].legend(['Mean value', 'ANN prediction'])
+    axs[1].grid(linestyle='--')
+    
+    if save:
+        plt.savefig("ANN_comparison_fitted_kappa.pdf", pad_inches=0)
+
 def rrms_values(aHO, save=False):
     Nmax = [2,5,8,11,16,20]
     rrms_contiunuation = []
@@ -590,11 +656,11 @@ def rrms_values(aHO, save=False):
         np.savetxt(f'rrms_fitted_values_aHO{aHO}.txt', full_arr)
         
 # rrms_values(1.2, True)
-plot_wavefunc_continuation_rrms_final(True)
+# plot_wavefunc_continuation_rrms_final(True)
 
         
-    
-# ANN_comparison(True)
+# ANN_comparison()
+ANN_comparison_11to14(True)
 
 # plot_wavefunc_continuation_rrms(r, 2, 60, 1, 1, 'u/w', 10, 50, False)
 # plot_wavefunc_continuation_rrms(r, 1.2, 60, 1, 1, 'u/w', 10, 50, True)
