@@ -1,8 +1,13 @@
 import matplotlib.pyplot as plt
-import numpy as np
-from asymmetric_uncertainties import aufloat
+from matplotlib import rc
 
-u = aufloat(3, 1.1, 1.0)
-w = aufloat(3, 1.0, 1)
+# LaTeX aktivieren und XCharter einstellen
+rc('text', usetex=True)
+rc('font', **{'family': 'serif', 'serif': ['XCharter']})
 
-print(u)
+# Beispielplot
+plt.plot([0, 1, 2], [0, 1, 4])
+plt.title(r"Beispielplot mit $\texttt{XCharter}$")
+plt.xlabel("X-Achse")
+plt.ylabel("Y-Achse")
+plt.show()
