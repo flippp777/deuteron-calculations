@@ -91,14 +91,14 @@ def plot_wavefunc_aHO_L2(Nmax, aHO):
 
 def final_wavefunc_plots(save=False):
     r_model = np.arange(0, 150, 0.1)
-    Nmax = np.arange(0, 51, 5)
+    Nmax = np.arange(0, 51, 10)
     
     purple = '#FF00FF'
-    dark_purple = '#190019'
-    blue = '#6666FF'
-    dark_blue = '#000019'
-    red = '#FF6666'
-    dark_red = '#190000'
+    dark_purple = '#330033'
+    blue = '#4c4cFF'
+    dark_blue = '#000033'
+    red = '#FF0000'
+    dark_red = '#330000'
     black = '#000000'
     n = len(Nmax)
     
