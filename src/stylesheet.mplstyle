@@ -1,0 +1,4 @@
+font.family: serif
+font.serif: XCharter
+text.usetex: True
+text.latex.preamble: \usepackage{amsmath}\usepackage{amssymb}\usepackage{siunitx}[=v2]
