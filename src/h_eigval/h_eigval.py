@@ -3,6 +3,15 @@ import matplotlib as mpl
 from matplotlib import pyplot as plt
 from sys import exit
 
+from matplotlib import rc
+
+# LaTeX aktivieren und XCharter einstellen
+# rc('text', usetex=True)
+# rc('font', **{'family': 'serif', 'serif': ['XCharter']})
+
+plt.style.use('src\stylesheet.mplstyle')
+
+
 def set_size(width, fraction=1, subplots=(1, 1)):
     """Set figure dimensions to avoid scaling in LaTeX.
 
@@ -277,11 +286,50 @@ def plotsE0(Nmax_Nmax, aHO_Nmax, Nmax_aHO, aHO_aHO, save=False):
     if save: 
         plt.savefig(f'final_plots/energy/E0.pdf', bbox_inches='tight')
 
+def plotsE0_final(Nmax_Nmax, aHO_Nmax, save=False):
+    E0_Nmax = []
+    for m in range(len(aHO_Nmax)):
+        E0_Nmaxm = []
+        for Nmax in Nmax_Nmax:
+            E0_Nmaxm.append(E0(chi[m], aHO_Nmax[m], Nmax))
+        E0_Nmax.append(E0_Nmaxm)
+
+    E0_Nmax = np.array(E0_Nmax) 
+
+    red = '#FF0000'
+    blue = '#0000FF'
+    black = '#000000'
+    purple = '#FF00FF'
+    n_Nmax = len(aHO_Nmax)
+
+    # fig = plt.figure(figsize=set_size(418.25555))
+    plt.figure(figsize=set_size(502.14963))
+
+    for i in range(E0_Nmax.shape[0]):
+        plt.plot(Nmax_Nmax,E0_Nmax[i], 'x-', color=colorFader(purple, black, i/n_Nmax))
+
+    legend = np.array([])
+    for i in aHO:
+        legend = np.append(legend,'\(a_\\text{HO} =\ \)'+ f'\({i}\ \)' + 'fm')
+
+    # plt.title('$E_0$ bei verschiedenen $a_{HO}$')
+    plt.legend(legend, loc=1)
+    plt.xlabel('$\\Tilde{N}_\\text{max}$')
+    plt.ylabel('\(E_0\ \)MeV')
+    plt.yticks([-2.225, -2, -1, 0, 1, 2, 3], ['-2.225', '','-1.000', '0.000', '1.000', '2.000', '3.000'])
+    plt.grid(linestyle='--')
+    # plt.xlim(0,25)
+    # plt.ylim(-2.5, 3.5)
+    
+    
+    if save: 
+        plt.savefig(f'final_plots/energy/E0.pdf', bbox_inches='tight')
+
 # plotsE0Nmax(np.arange(0, 21,1), [1.2, 1.4, 1.6, 1.8, 2], True)
 
 # plotsE0aHO(np.arange(0, 11, 1), [1.2, 1.4, 1.6, 1.8, 2], True)
 
-plotsE0(np.arange(0, 26,1), [1.2, 1.4, 1.6, 1.8, 2],np.arange(0, 6, 1), [1.2, 1.4, 1.6, 1.8, 2], True)
+plotsE0_final(np.arange(0, 26,1), [1.2, 1.4, 1.6, 1.8, 2], True)
 
 # E0_lst_150 = [E0(chi[i], aHO[i], 150) for i in range(5)]
 # print(E0_lst_150)
