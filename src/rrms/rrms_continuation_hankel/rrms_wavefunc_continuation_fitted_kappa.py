@@ -638,17 +638,20 @@ def ANN_comparison_11to14(savefig=False, saveval=False):
         plt.savefig("ANN_comparison_fitted_kappa.pdf", pad_inches=0)
 
     if saveval:
+        ANN_lst = np.array(ANN_lst)
         ANN_err_lst = ANN_err_lst.transpose()
         ANN_unlst = unp.uarray(ANN_lst, ANN_err_lst[:,0])
         ANN_uplst = unp.uarray(ANN_lst, ANN_err_lst[:,1])
 
         mean_ulst = unp.uarray(mean_lst, std_lst)
 
-        values = np.array([NNmax_lst, mean_lst, std_lst, ANN_lst, unp.std_devs(ANN_unlst), unp.std_devs(ANN_uplst), 
-                           unp.nominal_values((mean_ulst-ANN_unlst)/ANN_unlst)*100, unp.std_devs((mean_ulst-ANN_unlst)/ANN_unlst)*100, unp.std_devs((mean_ulst-ANN_uplst)/ANN_uplst)*100])
+        values = np.array([NNmax_lst, mean_lst, std_lst, 
+                           unp.nominal_values((mean_ulst-1.97)/1.97)*100, unp.std_devs((mean_ulst-1.97)/1.97)*100, 
+                           ANN_lst, unp.std_devs(ANN_unlst), unp.std_devs(ANN_uplst), 
+                           ((ANN_lst-1.97)/1.97)*100, unp.std_devs((ANN_unlst-1.97)/1.97)*100, unp.std_devs((ANN_uplst-1.97)/1.97)*100])
         print(values)
         np.savetxt('ANN_comparison_fitted_kappa.txt', values.transpose(), 
-                   header="NNmax mean_rrms u(mean_rrms) ANN u-(ANN) u+(ANN) rel.deviation u-(rel.deviation) u+(rel.deviation)")
+                   header="NNmax mean_rrms u(mean_rrms) rel.deviation u(rel.deviation) ANN u-(ANN) u+(ANN) rel.deviation u-(rel.deviation) u+(rel.deviation)")
 
 def rrms_values(aHO, save=False):
     Nmax = [2,5,8,11,16,20]

@@ -611,8 +611,8 @@ def rrms_values(aHO, save=False):
 # rrms_values(1.2, True)
          
     
-# ANN_comparison_11to13(False)
-ANN_comparison_11to14(False, True)
+ANN_comparison_11to13(False)
+# ANN_comparison_11to14(False, True)
 
 
 # plot_wavefunc_continuation_rrms(r, 1.2, 20, 1, 1, 'u/w', 10, 50, False)
