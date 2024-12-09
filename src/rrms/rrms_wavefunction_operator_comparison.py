@@ -15,6 +15,8 @@ from make.matrix import mat
 from plotstyle.colorFader import colorFader
 from plotstyle.set_size import set_size
 
+plt.style.use('src\stylesheet.mplstyle')
+
 
 chi_Nmax150_aHO12 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.20.meho', skiprows=1)
 chi_Nmax150_aHO14 = np.loadtxt(r'matrix_elements/chi2bM3A_srg0000_NMax150_LMax02_aHO01.40.meho', skiprows=1)
@@ -116,11 +118,11 @@ plt.figure(figsize=set_size(502.14963))
 for i in range(aHO_lst.shape[0]):
     plot = plt.plot(rrms_operator[i, 0], rrms_operator[i, 1], 'x-', color=colorFader('#0000FF', '#00004c', i/len(aHO_lst)), markersize=4)
     plt.plot(rrms_wavefunc[i, 0], rrms_wavefunc[i, 1], 'x', linestyle='-.', color=colorFader('#FF0000', '#4c0000', i/len(aHO_lst)), markersize=4)
-legend = np.array([['$a_{HO}$=' + str(aHO)+' fm, Operator', '$a_{HO}$='+ str(aHO)+' fm, Wave function'] for aHO in aHO_lst]).flatten()
+legend = np.array([['\(a_\\text{HO}=\ \)' + f'\({aHO}\ \)' +'fm, Operator', '\(a_\\text{HO}=\ \)' + f'\({aHO}\ \)' +'fm, Wave function'] for aHO in aHO_lst]).flatten()
 plt.legend(legend, loc='lower right', ncol=2)
-plt.ylabel("$R_{rms}$ (fm)")
+plt.ylabel("$R_\\text{rms}$ [fm]")
 plt.yticks([1.2, 1.4, 1.6, 1.8, Rrms, 2.0, 2.2], ['1.20', '1.40', '1.60', '1.80', '1.97', '', '2.20'])
-plt.xlabel('$n_{max}$')
+plt.xlabel('$\\Tilde{N}_\\text{max}$')
 plt.xlim(0, 60)
 plt.grid(linestyle='--')
 
