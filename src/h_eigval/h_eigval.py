@@ -315,7 +315,7 @@ def plotsE0_final(Nmax_Nmax, aHO_Nmax, save=False):
     # plt.title('$E_0$ bei verschiedenen $a_{HO}$')
     plt.legend(legend, loc=1)
     plt.xlabel('$\\Tilde{N}_\\text{max}$')
-    plt.ylabel('\(E_0\ \)[MeV]')
+    plt.ylabel('\(E_0\) [MeV]')
     plt.yticks([-2.225, -2, -1, 0, 1, 2, 3], ['-2.225', '','-1.000', '0.000', '1.000', '2.000', '3.000'])
     plt.grid(linestyle='--')
     # plt.xlim(0,25)
