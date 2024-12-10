@@ -13,6 +13,7 @@ from make.position_space_wavefunc import deuteron_wavefunc
 from plotstyle.colorFader import colorFader
 from plotstyle.set_size import set_size
 
+plt.style.use('src\stylesheet.mplstyle')
 
 def absu(r, Nmax, aHO):
     return np.abs(r * deuteron_wavefunc(Nmax, aHO, r)[1])
@@ -121,18 +122,18 @@ def final_plot(save=False):
 
     for i in range(aHO_lst.shape[0]):
         axs[0].plot(Nmax, Q[i], 'x-', color=colorFader('#FF00FF', '#000000', i/len(aHO_lst)), markersize=4)
-    legend = np.array([['$a_{HO}$=' + str(aHO)] for aHO in aHO_lst]).flatten()
+    legend = np.array([['\(a_{HO}=\ \)' + f'\({aHO}\ \)' + 'fm'] for aHO in aHO_lst]).flatten()
     axs[0].legend(legend, loc='upper right', ncol=1)
-    axs[0].set_ylabel("$Q$ ($e_0$fm$^2$)")
+    axs[0].set_ylabel("\(Q\ [e\\text{fm}^2]\)")
     axs[0].set_yticks([0.15, 0.20, 0.25, 0.271, 0.30, 0.35, 0.40, 0.45])
-    axs[0].set_xlabel('$n_{max}$')
+    axs[0].set_xlabel('$\\Tilde{N}_\\text{max}$')
     # axs[0].set_xlim(0, 30)
     axs[0].grid(linestyle='--')
 
     for i in range(aHO_lst.shape[0]):
         plt.plot(Nmax, Q_abs[i], 'x-', color=colorFader('#FF00FF', '#000000', i/len(aHO_lst)), markersize=4)
     axs[1].legend(legend, loc='upper right', ncol=1)
-    axs[1].set_xlabel('$n_{max}$')
+    axs[1].set_xlabel('$\\Tilde{N}_\\text{max}$')
     # axs[1].set_xlim(0, 30)
     axs[1].grid(linestyle='--')
 
@@ -157,15 +158,15 @@ def final_plot_normal(save=False):
     plt.xlim(0, 60)
     plt.grid(linestyle='--')
     
-# final_plot(True)
+final_plot(True)
 
 # plot_Q(60, 0, 1)
 
 plt.show()
 
 
-print(np.mean([Q_integral_trapz_Nmax(150, aHO) for aHO in aHO_lst]), np.std([Q_integral_trapz_Nmax(150, aHO) for aHO in aHO_lst]))
-print(np.mean([Q_integral_trapz_Nmax(60, aHO) for aHO in aHO_lst]), np.std([Q_integral_trapz_Nmax(60, aHO) for aHO in aHO_lst]))
-print('\n')
-print(np.mean([Q_integral_trapz_Nmax_normal(150, aHO) for aHO in aHO_lst]), np.std([Q_integral_trapz_Nmax_normal(150, aHO) for aHO in aHO_lst]))
-print(np.mean([Q_integral_trapz_Nmax_normal(60, aHO) for aHO in aHO_lst]), np.std([Q_integral_trapz_Nmax_normal(60, aHO) for aHO in aHO_lst]))
+# print(np.mean([Q_integral_trapz_Nmax(150, aHO) for aHO in aHO_lst]), np.std([Q_integral_trapz_Nmax(150, aHO) for aHO in aHO_lst]))
+# print(np.mean([Q_integral_trapz_Nmax(60, aHO) for aHO in aHO_lst]), np.std([Q_integral_trapz_Nmax(60, aHO) for aHO in aHO_lst]))
+# print('\n')
+# print(np.mean([Q_integral_trapz_Nmax_normal(150, aHO) for aHO in aHO_lst]), np.std([Q_integral_trapz_Nmax_normal(150, aHO) for aHO in aHO_lst]))
+# print(np.mean([Q_integral_trapz_Nmax_normal(60, aHO) for aHO in aHO_lst]), np.std([Q_integral_trapz_Nmax_normal(60, aHO) for aHO in aHO_lst]))
