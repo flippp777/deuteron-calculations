@@ -467,7 +467,7 @@ def plot_wavefunc_continuation_rrms_final(save=False):
         if j == 0:
             plt.text(1.25, 2*10**(-6), '$a_\\text{HO}=1.2\ $fm')
         else:
-            plt.text(1.25, 2*10**(-6), '$a_\\text{HO}=2.0\ $fm')
+            plt.text(2.5, 2*10**(-6), '$a_\\text{HO}=2.0\ $fm')
         plt.semilogy()
         plt.grid(linestyle='--')
         plt.ylim(10**(-6), 1)
