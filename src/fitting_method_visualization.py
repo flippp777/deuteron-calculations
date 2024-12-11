@@ -152,6 +152,8 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     # Removing duplicates
     fit_points_indices_L0 = np.unique(fit_points_indices_L0).astype(int)
     fit_points_indices_L2 = np.unique(fit_points_indices_L2).astype(int)
+    
+    inital_fitpoint_indices = fit_points_indices_L0
 
     # use only the fit_point_num number of points in the middle of the list
     if fit_points_indices_L0.size > number_used_points:
@@ -165,6 +167,8 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
         # two_third_index = int(fit_points_indices.size * 2 / 3)
         three_quater_index = middle_index + int(fit_points_indices_L2.size / 4)
         fit_points_indices_L2 = fit_points_indices_L2[three_quater_index - int(number_used_points / 2):three_quater_index + int(number_used_points / 2)]
+        
+    mkrit_fitpoint_indices = fit_points_indices_L0
 
     
     # fit points from fit_pint_indexes
@@ -174,14 +178,16 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     fit_point_mean_L0 = np.mean(fit_points_L0[1])
     fit_point_std_L0 = np.std(fit_points_L0[1])
     fit_points_L0 = fit_points_L0.transpose()[(
-        (fit_points_L0[1] <= fit_point_mean_L0 + 1 * fit_point_std_L0) & 
-        (fit_points_L0[1] >= fit_point_mean_L0 - 1 * fit_point_std_L0))].transpose()
+        (fit_points_L0[1] <= fit_point_mean_L0 + 1.5 * fit_point_std_L0) & 
+        (fit_points_L0[1] >= fit_point_mean_L0 - 1.5 * fit_point_std_L0))].transpose()
 
     fit_point_mean_L2 = np.mean(fit_points_L2[1])
     fit_point_std_L2 = np.std(fit_points_L2[1])
     fit_points_L2 = fit_points_L2.transpose()[(
-        (fit_points_L2[1] <= fit_point_mean_L2 + 1 * fit_point_std_L2) & 
-        (fit_points_L2[1] >= fit_point_mean_L2 - 1 * fit_point_std_L2))].transpose()
+        (fit_points_L2[1] <= fit_point_mean_L2 + 1.5 * fit_point_std_L2) & 
+        (fit_points_L2[1] >= fit_point_mean_L2 - 1.5 * fit_point_std_L2))].transpose()
+    
+    final_fitpoints = fit_points_L0
     
     params = create_params(a=1, kappa=dict(value=0.2305, min=0.1, max=0.4))
     
@@ -189,61 +195,12 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
 
     result_L0 = Model_L0.fit(fit_points_L0[1], r=fit_points_L0[0], params=params)
     kappa_L0 = result_L0.best_values["kappa"]
-
-    # a0_fit = result_L0.best_values["a"]
-    # plt.figure()
-    # h0result.plot_fit()
-    
-    # plt.plot(r, h0_model_a(r, h0result.best_values['a'], kappa_phi0))
-    # plt.scatter(fit_points_phi0[0], fit_points_phi0[1])
-    # plt.ylim(min(fit_points_phi0[1])-1, max(fit_points_phi0[1])+1)
-    # plt.xlim(min(fit_points_phi0[0])-1, max(fit_points_phi0[0])+1)
-    # plt.show()
+    a0_fit = result_L0.best_values["a"]
 
     Model_L2 = Model(model_a_L2)
 
     result_L2 = Model_L2.fit(fit_points_L2[1], r=fit_points_L2[0], params=params)
     kappa_L2 = result_L2.best_values["kappa"]
-
-    # a2_fit = result_L2.best_values["a"]
-    # plt.figure()
-    # h2result.plot_fit()
-    # plt.figure()
-    # plt.plot(r, h2_model_a(r, 0.1*h0result.best_values['a'], 0.2305))
-    # plt.plot(r, h2_model_a(r, h0result.best_values['a'], kappa_phi2))
-    # plt.ylim(0, 0.02)
-    # plt.xlim(min(fit_points_phi2[0]), max(fit_points_phi2[0]))
-    # plt.show()
-    
-    # plt.plot(r, h2_model_a(r, h2result.best_values['a'], kappa_phi2))
-    # plt.plot(r, phi2_lst[1])
-    # plt.scatter(fit_points_phi2[0], fit_points_phi2[1])
-    # plt.legend(['Fit', 'phi2', 'fit points'])
-    # plt.semilogy()
-    # plt.ylim(10**(-6), 10)
-    # plt.xlim(0,20)
-
-    # plt.figure()
-    # plt.plot(r, np.abs(np.gradient(np.log(h2_model(r, kappa_phi2)), r)))
-    # plt.plot(r, np.abs(np.gradient(np.log(phi2_lst[1]), r)))
-    # # plt.scatter(fit_points_phi2[0], fit_points_phi2[1])
-    # # plt.legend(['Fit', 'phi2', 'fit points'])
-    # # plt.semilogy()
-    # # plt.ylim(10**(-6), 10)
-    # # plt.xlim(0,20)
-
-    # plt.figure()
-    # plt.plot(r, np.gradient(h2_model_a(r, h2result.best_values['a'], kappa_phi2), r))
-    # plt.plot(r, np.gradient(phi2_lst[1], r))
-    # plt.legend(['Fit', 'phi2'])
-    # plt.semilogy()
-    # plt.ylim(10**(-10), 10)
-    # plt.xlim(0,20)
-
-    # plt.show()
-    
-    
-    # sys.exit()
     
     # Finding a point that has the same slope as the fitted one (up to a factor)
     d_dr_L0 = np.gradient(np.log(fit_points_L0[1]), fit_points_L0[0])[1:-1]
@@ -271,27 +228,36 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     a_L0 = L0(connection_point_L0, NNmax, aHO) / model_L0(connection_point_L0, kappa_L0)
     a_L2 = L2(connection_point_L2, NNmax, aHO) / model_L2(connection_point_L2, kappa_L2)
 
-    def continuation_L0(r):
-        cont = []
-        for i in range(r.size):
-            if r[i] <= connection_point_L0:
-                cont.append(wavefunc_L0[1,i])
-            else:
-                cont.append(model_a_L0(r[i], a_L0, kappa_L0))
-        return np.array(cont)
 
-    def continuation_L2(r):
-        cont = []
-        for i in range(r.size):
-            if r[i] <= connection_point_L2:
-                cont.append(wavefunc_L2[1,i])
-            else:
-                cont.append(model_a_L2(r[i], a_L2, kappa_L2))
-        return np.array(cont)
+    inital_fitpoint_indices = [element for element in inital_fitpoint_indices if element not in mkrit_fitpoint_indices]
+
+    fig = plt.figure(figsize=set_size(502.14963))
     
-    if wavefunc == 'phi':
-        rrms = np.sqrt(trapezoid((continuation_L0(r)**2 + continuation_L2(r)**2) * r**4, x=r)/4)
-    elif wavefunc == 'u/w':
-        rrms = np.sqrt(trapezoid((continuation_L0(r)**2 + continuation_L2(r)**2) * r**2, x=r)/4)
+    plt.plot(r, wavefunc_L0[0], color='#0000ff')
+    plt.plot(r,wavefunc_L0[1], color='#ff0000')
+    plt.plot(r[inital_fitpoint_indices], wavefunc_L0[1, inital_fitpoint_indices], 'd', markersize=4)
+    plt.plot(r[mkrit_fitpoint_indices], wavefunc_L0[1, mkrit_fitpoint_indices], 'd', markersize=4)
+    plt.plot(final_fitpoints[0], final_fitpoints[1], 'd', markersize=4)
+    plt.plot([0,17], [fit_point_mean_L0, fit_point_mean_L0])
+    std_plot = plt.plot([0,17], [fit_point_mean_L0 + 1.5 * fit_point_std_L0, fit_point_mean_L0 + 1.5 * fit_point_std_L0])
+    plt.plot([2,17], [fit_point_mean_L0 - 1.5 * fit_point_std_L0, fit_point_mean_L0 - 1.5 * fit_point_std_L0], color=std_plot[0].get_color())
+    plt.arrow(5, fit_point_mean_L0, 0, 1.5*fit_point_std_L0, length_includes_head=True, head_width=0.1, head_length=0.01, color='black')
+    plt.arrow(5, fit_point_mean_L0+1.5*fit_point_std_L0, 0, -1.5*fit_point_std_L0, length_includes_head=True, head_width=0.1, head_length=0.01, color='black')
+    plt.arrow(5, fit_point_mean_L0, 0, -1.5*fit_point_std_L0, length_includes_head=True, head_width=0.1, head_length=0.01, color='black')
+    plt.arrow(5, fit_point_mean_L0-1.5*fit_point_std_L0, 0, +1.5*fit_point_std_L0, length_includes_head=True, head_width=0.1, head_length=0.01, color='black')
+    plt.xlim(2,17)
+    plt.ylim(10**(-2),1)
+    plt.ylabel('[\(1/\\sqrt{\\text{fm}}\)]')
+    plt.xlabel('\(r\) [fm]')
+    plt.semilogy()
+    plt.grid(linestyle='--')
+    plt.legend(['\(|u_{\\Tilde{N}_\\text{max}}(r)|\)', '\(|u_{\\Tilde{N}_\\text{max}-1}(r)|\)', 'Initial fit points', 'Fit points after \(m\)-Criterion', 'Final fit points', 'Mean'])
 
-    return kappa_L0, a_L0, connection_point_L0, kappa_L2, a_L2, connection_point_L2, rrms, fit_points_L0, fit_points_L2
+
+
+
+    return kappa_L0, a_L0, connection_point_L0, kappa_L2, a_L2, connection_point_L2, fit_points_L0, fit_points_L2
+
+find_continuation_parameters(30, 1.2, 'u/w')
+
+plt.show()
