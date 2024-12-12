@@ -411,8 +411,8 @@ def plot_wavefunc_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, wavefunc, numbe
 
 def plot_wavefunc_continuation_rrms_final(save=False):
     r = np.arange(0, 250, 0.1)
-    # Nmax_lst = np.array([2, 5, 8, 11, 16, 20, 30])
-    Nmax_lst = np.arange(1,31, 1)
+    Nmax_lst = np.array([2, 5, 8, 11, 16, 20, 30])
+    # Nmax_lst = np.arange(1,31, 1)
     
     wavefunc = 'u/w'
     if wavefunc == 'phi':

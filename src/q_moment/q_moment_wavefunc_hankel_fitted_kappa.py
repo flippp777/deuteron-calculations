@@ -15,6 +15,8 @@ from make.position_space_wavefunc import deuteron_wavefunc
 from plotstyle.colorFader import colorFader
 from plotstyle.set_size import set_size
 
+plt.style.use('src\stylesheet.mplstyle')
+
 def u(r, Nmax, aHO):
     return np.abs(r * deuteron_wavefunc(Nmax, aHO, r)[1])
 
@@ -298,21 +300,23 @@ def plot_wavefunc_continuation_q_final(save=False):
 
     axs[0].plot(q_full_wave_12[0], q_full_wave_12[1], 'x-', color='black', markersize=4)
     axs[0].plot(Nmax_lst, q_12, 'x-', color=purple, markersize=4)
-    axs[0].legend(["Wave functions", 'Continuated wave functions'])
-    axs[0].set_xlabel('$n_{max}$')
-    axs[0].set_ylabel("Q ($e_0$fm$^2$)")
+    axs[0].legend(["\(Q^\\text{wav}\)", '\(Q^\\text{fit}\)'])
+    axs[0].set_xlabel('$\\Tilde{N}_\\text{max}$')
+    axs[0].set_ylabel("$Q$ [$e$fm$^2$]")
+    axs[0].text(20, 0.175, '$a_\\text{HO}=1.2\ $fm')
     axs[0].set_ylim(0.15,0.45)
     axs[0].set_yticks([0.15, 0.2, 0.25, 0.2709, 0.3, 0.35, 0.4, 0.45])
     axs[0].grid(linestyle='--')
     
     axs[1].plot(q_full_wave_20[0], q_full_wave_20[1], 'x-', color='black', markersize=4)
     axs[1].plot(Nmax_lst, q_20, 'x-', color=purple, markersize=4)
-    axs[1].legend(["Wave functions", 'Continuated wave functions'])
-    axs[1].set_xlabel('$n_{max}$')
+    axs[1].legend(["\(Q^\\text{wav}\)", '\(Q^\\text{fit}\)'])
+    axs[1].set_xlabel('$\\Tilde{N}_\\text{max}$')
+    axs[1].text(20, 0.175, '$a_\\text{HO}=2.0\ $fm')
     axs[1].grid(linestyle='--')
 
     if save:
-        plt.savefig("q_continuation_1.2-2.0_NNmax60_Nstep1_fitted_kappa.pdf", bbox_inches='tight')
+        plt.savefig("q_continuation_1.2-2.0_final_fitted_kappa.pdf", bbox_inches='tight')
 
 def q_values(aHO, save=False):
     Nmax = [2,5,8,11,16,20]
