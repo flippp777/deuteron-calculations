@@ -9,7 +9,7 @@ from matplotlib import rc
 # rc('text', usetex=True)
 # rc('font', **{'family': 'serif', 'serif': ['XCharter']})
 
-plt.style.use('src\stylesheet.mplstyle')
+plt.style.use('src/stylesheet.mplstyle')
 
 
 def set_size(width, fraction=1, subplots=(1, 1)):

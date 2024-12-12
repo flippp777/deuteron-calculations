@@ -14,7 +14,7 @@ from make.position_space_wavefunc import deuteron_wavefunc
 from plotstyle.colorFader import colorFader
 from plotstyle.set_size import set_size
 
-plt.style.use('src\stylesheet.mplstyle')
+plt.style.use('src/stylesheet.mplstyle')
 
 def u(r, Nmax, aHO):
     return np.abs(r * deuteron_wavefunc(Nmax, aHO, r)[1])
@@ -284,7 +284,8 @@ def plot_wavefunc_continuation_q_final(save=False):
         plt.savefig("q_continuation_1.2-2.0_final_fixed_kappa.pdf", bbox_inches='tight')
 
 def q_values(aHO, save=False):
-    Nmax = [2,5,8,11,16,20]
+    # Nmax = [2,5,8,11,16,20]
+    Nmax = [1,4,6]
     q_contiunuation = []
     q_wavefunc = [] 
     q_conv = 0.2709
@@ -302,9 +303,9 @@ def q_values(aHO, save=False):
     if save:
         np.savetxt(f'q_fixed_values_aHO{aHO}.txt', full_arr)
         
-# q_values(2, True)
+q_values(2, False)
 
-plot_wavefunc_continuation_q_final(True)
+plot_wavefunc_continuation_q_final(False)
 
 # plot_continuation_wavefunc_Q(r, 1.2, 60, 1, 1, 29, 10, 50, True)
 # plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, True)
