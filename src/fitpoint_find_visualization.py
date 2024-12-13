@@ -235,9 +235,9 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     
     plt.plot(r, wavefunc_L0[1], color='#0000ff')
     plt.plot(r,wavefunc_L0[0], color='#ff0000')
-    plt.plot(r[inital_fitpoint_indices], wavefunc_L0[1, inital_fitpoint_indices], 'd', markersize=4)
-    plt.plot(r[mkrit_fitpoint_indices], wavefunc_L0[1, mkrit_fitpoint_indices], 'd', markersize=4)
-    final_fitoint_plot = plt.plot(final_fitpoints[0], final_fitpoints[1], 'd', markersize=4)
+    plt.plot(r[inital_fitpoint_indices], wavefunc_L0[1, inital_fitpoint_indices], 'd', markersize=4, color='#11458C')
+    plt.plot(r[mkrit_fitpoint_indices], wavefunc_L0[1, mkrit_fitpoint_indices], 'd', markersize=4, color='#E1A100')
+    final_fitoint_plot = plt.plot(final_fitpoints[0], final_fitpoints[1], 'd', markersize=4, color='#F510C6')
     plt.plot([0,17], [fit_point_mean_L0, fit_point_mean_L0], color=final_fitoint_plot[0].get_color())
     plt.plot([0,17], [fit_point_mean_L0 + 1.5 * fit_point_std_L0, fit_point_mean_L0 + 1.5 * fit_point_std_L0], color='gray')
     plt.plot([2,17], [fit_point_mean_L0 - 1.5 * fit_point_std_L0, fit_point_mean_L0 - 1.5 * fit_point_std_L0], color='gray')
@@ -260,5 +260,6 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     return kappa_L0, a_L0, connection_point_L0, kappa_L2, a_L2, connection_point_L2, fit_points_L0, fit_points_L2
 
 find_continuation_parameters(30, 1.2, 'u/w')
+plt.savefig('fitpoint_find_visulization.pdf', bbox_inches='tight')
 
 plt.show()
