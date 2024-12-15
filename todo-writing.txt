@@ -1,5 +1,6 @@
 Correction
   - ANN Comparison
+  - Introduction
   - Roberts's notes
     -> Remove R_gs from text and plots
       -> New plots with unit on y-axis
@@ -17,10 +18,13 @@ Timeline
   1. Comparison continuation methods 😎
   2. Integrate visulization plots for fitting methods 😎
   3. ANN Comparison
-  4. Conlcusion & Outlook
+  4. Introduction
+  5. Conlcusion & Outlook
   6. Roberts's notes
 
 ------------------------------------------------------
 
 Additional Things
   - Write about the dependence of the fit points
+  - change the ANN aho selection or calculate my
+    rrms different

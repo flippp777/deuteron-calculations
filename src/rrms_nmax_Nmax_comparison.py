@@ -14,6 +14,7 @@ from make.position_space_wavefunc import deuteron_wavefunc
 from plotstyle.colorFader import colorFader
 from plotstyle.set_size import set_size
 
+plt.style.use('src\stylesheet.mplstyle')
 
 def deut_density(r, Nmax, aHO):
     return deuteron_wavefunc(Nmax, aHO, r)[3]
@@ -63,15 +64,15 @@ for i in range(len(aho_lst)):
 #     plt.plot(nmax_lst, rrms_Nmax[i], 'o--', color=colorFader('#FF00FF', '#000000', i/4))
 
 plt.grid(linestyle='--')
-plt.xlabel('$n_{max}≈N_{max}/2$')
-plt.ylabel('$R_{rms}$ (fm)')
-plt.legend(np.array([['$a_{HO}=$'+str(aho)+' fm, $R_{rms}(n_{max})$', '$a_{HO}=$'+str(aho)+' fm, $R_{rms}(N_{max})$'] for aho in aho_lst]).flatten(), ncol=2)
+plt.xlabel('$\\Tilde{N}_\\text{max}\\approx N_\\text{max}/2$')
+plt.ylabel('$R_\\text{rms}$ [fm]')
+plt.legend(np.array([['$a_\\text{HO}=$'+str(aho)+' fm, $R_\\text{rms}(\\Tilde{N}_\\text{max})$', '$a_\\text{HO}=$'+str(aho)+' fm, $R_\\text{rms}(N_\\text{max})$'] for aho in aho_lst]).flatten(), ncol=2)
 
-# plt.savefig("rrms_nmax_Nmax_comparison.pdf", bbox_inches='tight')
+plt.savefig("rrms_nmax_Nmax_comparison.pdf", bbox_inches='tight')
 
-# plt.show()
+plt.show()
 
 
 values = np.array([nmax_lst, rrms_nmax[1,1], rrms_Nmax[1], np.abs((rrms_nmax[1,1]-rrms_Nmax[1])/rrms_Nmax[1])*100, 
                     rrms_nmax[2,1], rrms_Nmax[2], np.abs((rrms_nmax[2,1]-rrms_Nmax[2])/rrms_Nmax[2])*100])
-np.savetxt('nmax_Nmax_comparison.txt', values.transpose())
+# np.savetxt('nmax_Nmax_comparison.txt', values.transpose())

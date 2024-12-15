@@ -616,13 +616,13 @@ def ANN_comparison_11to14(savefig=False, saveval=False):
     aHO13_plt2 = axs[0].plot(rrms_fullwav[2][0], rrms_fullwav[2][1], 'o--', color=aHO13_color)
     aHO14_plt2 = axs[0].plot(rrms_fullwav[3][0], rrms_fullwav[3][1], 'o--', color=aHO14_color)
 
-    axs[0].set_xlabel('$Ñ_{max}$')
-    axs[0].set_ylabel('$R_{rms}$ (fm)')
+    axs[0].set_xlabel('$\\Tilde{N}_\\text{max}$')
+    axs[0].set_ylabel('$R_\\text{rms}$ [fm]')
     plt.yticks([1, 1.5, 1.97, 2.0, 2.5, 3, 3.5, 4], ['1.00', '1.50', '1.97', '', '2.50', '3.00', '3.50', '4.00'])
-    axs[0].legend(['$a_{HO}=1.1$ fm',
-                   '$a_{HO}=1.2$ fm',
-                   '$a_{HO}=1.3$ fm',
-                   '$a_{HO}=1.4$ fm'])
+    axs[0].legend(['$a_\\text{HO}=1.1$ fm',
+                   '$a_\\text{HO}=1.2$ fm',
+                   '$a_\\text{HO}=1.3$ fm',
+                   '$a_\\text{HO}=1.4$ fm'])
     axs[0].grid(linestyle='--')
 
     ANN_lst = [1.770, 1.959, 1.957, 1.904, 1.943, 1.899, 1.912]
@@ -630,12 +630,12 @@ def ANN_comparison_11to14(savefig=False, saveval=False):
     ANN_err_lst = np.array(ANN_err_lst).transpose()
     
     
-    axs[1].errorbar(NNmax_lst, mean_lst, yerr=std_lst, fmt='x', capsize=5, color='#FF00FF')
-    axs[1].errorbar(NNmax_lst, ANN_lst, yerr=ANN_err_lst, fmt='o', capsize=5, color='#007f00')
-    axs[1].set_xlabel('$NN_{max}$')
+    axs[1].errorbar(NNmax_lst, mean_lst, yerr=std_lst, fmt='v', capsize=5, color='#0000FF')
+    axs[1].errorbar(NNmax_lst, ANN_lst, yerr=ANN_err_lst, fmt='^', capsize=5, color='#FF0000')
+    axs[1].set_xlabel('$\\Bar{N}_\\text{max}$')
     # plt.ylabel('$R_{rms}$ (fm)')
     # axs[1].yticks([1.2, 1.4, 1.6, 1.8, 1.96998, 2.0, 2.2])
-    axs[1].legend(['Mean value', 'ANN prediction'])
+    axs[1].legend(['\(R_\\text{rms}^\\text{fit,c}\)', '\(R_\\text{rms}^\\text{ANN}\)'])
     axs[1].grid(linestyle='--')
     
     if savefig:
@@ -678,11 +678,11 @@ def rrms_values(aHO, save=False):
         
 # rrms_values(1.2, True)
 
-plot_wavefunc_continuation_rrms_final(False)
+# plot_wavefunc_continuation_rrms_final(False)
 
         
 # ANN_comparison()
-# ANN_comparison_11to14(False, True)
+ANN_comparison_11to14(True, False)
 
 # plot_wavefunc_continuation_rrms(r, 2, 60, 1, 1, 'u/w', 10, 50, False)
 # plot_wavefunc_continuation_rrms(r, 1.2, 60, 1, 1, 'u/w', 10, 50, True)
