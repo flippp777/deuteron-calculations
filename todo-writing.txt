@@ -7,7 +7,7 @@ Correction
 
 Writing
   - Comparison continuation methods 😎
-  - Conlcusion & Outlook
+  - Conlcusion & Outlook 😎
 
 Additions
   - Integrate visulization plots for fitting methods 😎
@@ -19,7 +19,7 @@ Timeline
   2. Integrate visulization plots for fitting methods 😎
   3. ANN Comparison
   4. Introduction
-  5. Conlcusion & Outlook
+  5. Conlcusion & Outlook 😎
   6. Roberts's notes
 
 ------------------------------------------------------

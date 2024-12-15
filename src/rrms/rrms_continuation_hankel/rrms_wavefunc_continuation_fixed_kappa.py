@@ -472,7 +472,7 @@ def ANN_comparison_11to14(savefig=False, saveval=False):
     axs[1].grid(linestyle='--')
     
     if savefig:
-        plt.savefig("ANN_comparison_fixed_kappa.pdf", pad_inches=0)
+        plt.savefig("ANN_comparison_fixed_kappa.pdf", bbox_inches='tight')
         
     if saveval:
         ANN_err_lst = ANN_err_lst.transpose()

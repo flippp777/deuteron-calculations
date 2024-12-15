@@ -167,7 +167,6 @@ def final_wavefunc_plots(save=False):
     for i in range(n):
         axs[1].plot(r_model, u(i, 2, r_model), color=colorFader(blue, black, i/n))
         axs[1].plot(r_model, w(i, 2, r_model), color=colorFader(red, black, i/n))
-        axs[1].plot(r_model, psi(i, 2, r_model), color=colorFader(purple, black, i/n))
     axs[1].text(10, 0.45, '$a_\\text{HO}=\\SI{2.0}{\\femto\\m}$')
     axs[1].set_xlim(0,17.5)
     # axs[1].set_xticks([0, 2.5, 5, 7.5, 10, 12.5, 15])

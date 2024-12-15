@@ -247,11 +247,14 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
               arrowprops=dict(arrowstyle='<->', color='black', lw=1, shrinkA=0, shrinkB=0))
     plt.text(5.1, 0.1, '\(+s\\cdot\\sigma\)',va='center', ha='left', color='black')
     plt.text(5.1, 0.055, '\(-s\\cdot\\sigma\)',va='center', ha='left', color='black')
+    plt.vlines(3, 10**(-2), 10, linestyle='--', color='gray')
     plt.xlim(2,17)
+    plt.xticks([2,3,4,6,8,10,12,14,16], [2, '\(r_\\text{s}\)',4,6,8,10,12,14,16])
     plt.ylim(10**(-2),1)
     plt.xlabel('\(r\) [fm]')
     plt.semilogy()
-    plt.legend(['\(|u_{\\Tilde{N}_\\text{max}}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|u_{\\Tilde{N}_\\text{max}-1}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(P_{u,i}\)', '\(P_{u,m}\)', '\(P_{u,f}\)', 'Mean of \(P_{u,f}\)'])
+    plt.legend(['\(|u_{\\Tilde{N}_\\text{max}}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|u_{\\Tilde{N}_\\text{max}-1}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(P_{u,i}\) [\(1/\\sqrt{\\text{fm}}\)]', 
+                '\(P_{u,m}\) [\(1/\\sqrt{\\text{fm}}\)]', '\(P_{u,f}\) [\(1/\\sqrt{\\text{fm}}\)]', 'Mean of \(P_{u,f}\) [\(1/\\sqrt{\\text{fm}}\)]'])
 
 
 
