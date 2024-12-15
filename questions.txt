@@ -1,0 +1,3 @@
+- visualization of fitting method
+- unit of d in fitting method
+- do points have units?

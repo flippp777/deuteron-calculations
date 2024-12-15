@@ -1,18 +1,26 @@
- - degeneracy for m in Deuteron Ground state.
- - say that behavior is systematic for low aho when nmax is increased. not the case for larger aho.
- - Fitting constrains.
- 
- FINNISHED SECTIONS (MOSTLY)
-  - Introduction
-  - The Deuteron
-  - Investigated Observables
-  - NCSM
-  - Spherical symmetric potential well
-  
- - Obtaining Wave Fucntions & Observables (Introduction)
- - Energy
- - Wave Functions
- - Rrms
- - el. Quadrupole Moment
+Correction
+  - ANN Comparison
+  - Roberts's notes
+    -> Remove R_gs from text and plots
+      -> New plots with unit on y-axis
 
- - Wave Function Continuations and Resulting Observables (Introduction)
+Writing
+  - Comparison continuation methods 😎
+  - Conlcusion & Outlook
+
+Additions
+  - Integrate visulization plots for fitting methods 😎
+
+------------------------------------------------------
+
+Timeline
+  1. Comparison continuation methods 😎
+  2. Integrate visulization plots for fitting methods 😎
+  3. ANN Comparison
+  4. Conlcusion & Outlook
+  6. Roberts's notes
+
+------------------------------------------------------
+
+Additional Things
+  - Write about the dependence of the fit points

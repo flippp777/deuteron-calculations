@@ -259,11 +259,11 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     
     d_dr_L2 = np.gradient(np.log(fit_points_L2[1]), fit_points_L2[0])[1:-1]
     L2_model = np.log(model_L2(fit_points_L2[0], kappa_L2))
-    d_dr_L2 = np.gradient(L2_model, fit_points_L2[0])[1:-1]
+    d_dr_L2_model = np.gradient(L2_model, fit_points_L2[0])[1:-1]
     connection_point_L2 = np.array([])
     delta = 10**(-3)
     while connection_point_L2.size == 0:
-        connection_point_L2 = fit_points_L2[0][1:-1][((d_dr_L2 > d_dr_L2 - delta) & (d_dr_L2 < d_dr_L2 + delta))]
+        connection_point_L2 = fit_points_L2[0][1:-1][((d_dr_L2_model > d_dr_L2 - delta) & (d_dr_L2_model < d_dr_L2 + delta))]
         # print(f'phi2: Nmax={NNmax}, delta={delta}')
         delta += 10**(-3)
     connection_point_L2 = connection_point_L2[0]
@@ -411,8 +411,8 @@ def plot_wavefunc_continuation_rrms(r, aHO, NNmax, NNmin, dNmax, wavefunc, numbe
 
 def plot_wavefunc_continuation_rrms_final(save=False):
     r = np.arange(0, 250, 0.1)
-    Nmax_lst = np.array([2, 5, 8, 11, 16, 20, 30])
-    # Nmax_lst = np.arange(1,31, 1)
+    # Nmax_lst = np.array([2, 5, 8, 11, 16, 20, 30])
+    Nmax_lst = np.arange(1,31, 1)
     
     wavefunc = 'u/w'
     if wavefunc == 'phi':
@@ -678,7 +678,7 @@ def rrms_values(aHO, save=False):
         
 # rrms_values(1.2, True)
 
-plot_wavefunc_continuation_rrms_final(True)
+plot_wavefunc_continuation_rrms_final(False)
 
         
 # ANN_comparison()

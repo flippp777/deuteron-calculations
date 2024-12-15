@@ -249,10 +249,9 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     plt.text(5.1, 0.055, '\(-s\\cdot\\sigma\)',va='center', ha='left', color='black')
     plt.xlim(2,17)
     plt.ylim(10**(-2),1)
-    plt.ylabel('[\(1/\\sqrt{\\text{fm}}\)]')
     plt.xlabel('\(r\) [fm]')
     plt.semilogy()
-    plt.legend(['\(|u_{\\Tilde{N}_\\text{max}}(r)|\)', '\(|u_{\\Tilde{N}_\\text{max}-1}(r)|\)', '\(P_{u,i}\)', '\(P_{u,m}\)', '\(P_{u,f}\)', 'Mean of \(P_{u,f}\)'])
+    plt.legend(['\(|u_{\\Tilde{N}_\\text{max}}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|u_{\\Tilde{N}_\\text{max}-1}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(P_{u,i}\)', '\(P_{u,m}\)', '\(P_{u,f}\)', 'Mean of \(P_{u,f}\)'])
 
 
 

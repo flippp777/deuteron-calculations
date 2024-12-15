@@ -205,20 +205,20 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     L0_model = np.log(model_L0(fit_points_L0[0], kappa_L0))
     d_dr_L0_model = np.gradient(L0_model, fit_points_L0[0])[1:-1]
     connection_point_L0 = np.array([])
-    delta = 10**(-3)
+    delta = 10**(-6)
     while connection_point_L0.size == 0:
         connection_point_L0 = fit_points_L0[0][1:-1][((d_dr_L0 > d_dr_L0_model - delta) & (d_dr_L0 < d_dr_L0_model + delta))]
         # print(f'phi0: Nmax={NNmax}, delta={delta}')
-        delta += 10**(-3)
+        delta += 10**(-6)
     connection_point_L0 = connection_point_L0[0]
     
     d_dr_L2 = np.gradient(np.log(fit_points_L2[1]), fit_points_L2[0])[1:-1]
     L2_model = np.log(model_L2(fit_points_L2[0], kappa_L2))
-    d_dr_L2 = np.gradient(L2_model, fit_points_L2[0])[1:-1]
+    d_dr_L2_model = np.gradient(L2_model, fit_points_L2[0])[1:-1]
     connection_point_L2 = np.array([])
     delta = 10**(-3)
     while connection_point_L2.size == 0:
-        connection_point_L2 = fit_points_L2[0][1:-1][((d_dr_L2 > d_dr_L2 - delta) & (d_dr_L2 < d_dr_L2 + delta))]
+        connection_point_L2 = fit_points_L2[0][1:-1][((d_dr_L2 > d_dr_L2_model - delta) & (d_dr_L2 < d_dr_L2_model + delta))]
         # print(f'phi2: Nmax={NNmax}, delta={delta}')
         delta += 10**(-3)
     connection_point_L2 = connection_point_L2[0]
@@ -238,20 +238,20 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     plt.vlines(connection_point_L2, 10**(-3), 0.3, linestyle='--', color='gray')
     # plt.plot(connection_point_L2, L2(connection_point_L2, NNmax, aHO), 'X', markersize=8, color='black')
     # plt.text(3.6, 0.04, '\(r_\\text{c}\)')
-    plt.xticks([2,3,connection_point_L2,4,5,6,7,8,9], [2,3,'\(r_\\text{c}\)',4,5,6,7,8,9])
-    plt.xlim(2,9)
+    plt.xticks([2,3,connection_point_L2,4,5,6,7,8,9,10], [2,3,'\(r_\\text{c}\)',4,5,6,7,8,9,10])
+    plt.xlim(4,10)
     plt.ylim(15**(-2),0.15)
-    plt.ylabel('[\(1/\\sqrt{\\text{fm}}\)]')
     plt.xlabel('\(r\) [fm]')
     plt.semilogy()
-    plt.legend(['\(|w_{\\Tilde{N}_\\text{max}}(r)|\)', '\(|w_{\\Tilde{N}_\\text{max}-1}(r)|\)', '\(P_{w,f}\)', '\(|w_e^\\text{fit}(r)|\)', '\(|w_e^\\text{con}(r)|\)'])
+    plt.legend(['\(|w_{\\Tilde{N}_\\text{max}}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|w_{\\Tilde{N}_\\text{max}-1}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', 
+                '\(P_{w,f}\)', '\(|w_e^\\text{fit}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|w_e^\\text{con}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]'])
 
 
-
+    print(connection_point_L2)
 
     return kappa_L0, a_L0, connection_point_L0, kappa_L2, a_L2, connection_point_L2, fit_points_L0, fit_points_L2
 
-find_continuation_parameters(7, 1.2, 'u/w')
+find_continuation_parameters(13, 1.2, 'u/w')
 plt.savefig('connection_visulization.pdf', bbox_inches='tight')
 
 plt.show()
