@@ -581,15 +581,19 @@ def ANN_comparison_11to14(savefig=False, saveval=False):
     NNmax_lst = np.arange(4, 11)
     
     rrms_lsts = []
-    rrms_fullwav = []
     for aHO in aHO_lst:
         rrms_lst = []
         for Nmax in Nmax_lst:
             rrms_lst.append(find_continuation_parameters(Nmax, aHO, "u/w")[6])
         rrms_lsts.append(rrms_lst)
-        rrms_fullwav.append(rrms_integral_trapz(10, 1, aHO, 1, 150, 0.01))
         
     rrms_lsts = np.array(rrms_lsts)
+
+    rrms_ANN_Nmax= np.array([
+        [1.161056, 1.232539, 1.373228, 1.399997, 1.482726, 1.512896, 1.567623, 1.607370, 1.641652, 1.673522],
+        [1.236529, 1.322089, 1.454896, 1.473087, 1.577656, 1.578479, 1.642089, 1.664974, 1.703608, 1.732694],
+        [1.313415, 1.420203, 1.533740, 1.545947, 1.665010, 1.648953, 1.721657, 1.713929, 1.763416, 1.777995],
+        [1.392616, 1.525526, 1.614778, 1.626553, 1.740034, 1.716378, 1.806013, 1.769064, 1.824986, 1.812697]])
 
     mean_lst = []
     std_lst = []
@@ -611,10 +615,10 @@ def ANN_comparison_11to14(savefig=False, saveval=False):
     aHO13_color = aHO13_plt1[0].get_color()
     aHO14_plt1 = axs[0].plot(Nmax_lst, rrms_lsts[3], 'x-', color=colorFader('#FF00FF', "#000000", 3/n))
     aHO14_color = aHO14_plt1[0].get_color()
-    aHO11_plt2 = axs[0].plot(rrms_fullwav[0][0], rrms_fullwav[0][1], 'o--', color=aHO11_color)
-    aHO12_plt2 = axs[0].plot(rrms_fullwav[1][0], rrms_fullwav[1][1], 'o--', color=aHO12_color)
-    aHO13_plt2 = axs[0].plot(rrms_fullwav[2][0], rrms_fullwav[2][1], 'o--', color=aHO13_color)
-    aHO14_plt2 = axs[0].plot(rrms_fullwav[3][0], rrms_fullwav[3][1], 'o--', color=aHO14_color)
+    aHO11_plt2 = axs[0].plot(Nmax_lst, rrms_ANN_Nmax[0], 'o--', color=aHO11_color)
+    aHO12_plt2 = axs[0].plot(Nmax_lst, rrms_ANN_Nmax[1], 'o--', color=aHO12_color)
+    aHO13_plt2 = axs[0].plot(Nmax_lst, rrms_ANN_Nmax[2], 'o--', color=aHO13_color)
+    aHO14_plt2 = axs[0].plot(Nmax_lst, rrms_ANN_Nmax[3], 'o--', color=aHO14_color)
 
     axs[0].set_xlabel('$\\Tilde{N}_\\text{max}$')
     axs[0].set_ylabel('$R_\\text{rms}$ [fm]')
