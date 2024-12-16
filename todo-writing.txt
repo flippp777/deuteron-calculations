@@ -1,9 +1,9 @@
 Correction
   - ANN Comparison 😎
   - Introduction 😎
-  - Roberts's notes
-    -> Remove R_gs from text and plots
-      -> New plots with unit on y-axis
+  - Roberts's notes 😎
+    -> Remove R_gs from text and plots 😎
+  - Conclusion 😎
 
 Writing
   - Comparison continuation methods 😎
@@ -20,16 +20,17 @@ Timeline
   3. ANN Comparison 😎
   4. Introduction 😎
   5. Conlcusion & Outlook 😎
-  6. Roberts's notes
+  6. Roberts's notes 😎
+  7. Conclusion 😎
 
 ------------------------------------------------------
 
 Additional Things
   - Write about the dependence of the fit points
-  - change the ANN aho selection or calculate my
-    rrms different
+  - Overestimation in fixed aHO=1.2 case due to
+    increased wave function height
 
 ____________________________________________________
 
 Questions/Check
- - partial radial wave funcions
+ - general check of the thesis (partial radial wave funcions)
