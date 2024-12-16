@@ -26,8 +26,8 @@ Timeline
 ------------------------------------------------------
 
 Additional Things
-  - Write about the dependence of the fit points
-  - Overestimation in fixed aHO=1.2 case due to
+  - Write about the dependence of the fit points 😎
+  - Overestimation in fixed aHO=1.2 case due to 😎
     increased wave function height
 
 ____________________________________________________
