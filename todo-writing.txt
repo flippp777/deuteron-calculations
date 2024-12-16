@@ -28,3 +28,8 @@ Additional Things
   - Write about the dependence of the fit points
   - change the ANN aho selection or calculate my
     rrms different
+
+____________________________________________________
+
+Questions/Check
+ - partial radial wave funcions

@@ -17,7 +17,7 @@ from make.position_space_wavefunc import deuteron_wavefunc
 from plotstyle.colorFader import colorFader
 from plotstyle.set_size import set_size
 
-plt.style.use('src\stylesheet.mplstyle')
+plt.style.use('src/stylesheet.mplstyle')
 
 def deut_density(r, Nmax, aHO):
     return deuteron_wavefunc(Nmax, aHO, r)[3]
@@ -244,7 +244,7 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     plt.xlabel('\(r\) [fm]')
     plt.semilogy()
     plt.legend(['\(|w_{\\Tilde{N}_\\text{max}}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|w_{\\Tilde{N}_\\text{max}-1}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', 
-                '\(P_{w,f}\)', '\(|w_e^\\text{fit}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|w_e^\\text{con}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]'])
+                '\(P_{w,f}\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|w_e^\\text{fit}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|w_e^\\text{con}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]'])
 
 
     print(connection_point_L2)

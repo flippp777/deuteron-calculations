@@ -17,7 +17,7 @@ from make.position_space_wavefunc import deuteron_wavefunc
 from plotstyle.colorFader import colorFader
 from plotstyle.set_size import set_size
 
-plt.style.use('src\stylesheet.mplstyle')
+plt.style.use('src/stylesheet.mplstyle')
 
 def deut_density(r, Nmax, aHO):
     return deuteron_wavefunc(Nmax, aHO, r)[3]
@@ -236,9 +236,9 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     plt.plot(r, wavefunc_L0[1], color='#0000ff')
     plt.plot(r,wavefunc_L0[0], color='#ff0000')
     plt.plot(r[inital_fitpoint_indices], wavefunc_L0[1, inital_fitpoint_indices], 'd', markersize=4, color='#11458C')
-    plt.plot(r[mkrit_fitpoint_indices], wavefunc_L0[1, mkrit_fitpoint_indices], 'd', markersize=4, color='#E1A100')
-    final_fitoint_plot = plt.plot(final_fitpoints[0], final_fitpoints[1], 'd', markersize=4, color='#F510C6')
-    plt.plot([0,17], [fit_point_mean_L0, fit_point_mean_L0], color=final_fitoint_plot[0].get_color())
+    m_fitoint_plot = plt.plot(r[mkrit_fitpoint_indices], wavefunc_L0[1, mkrit_fitpoint_indices], 'd', markersize=4, color='#E1A100')
+    plt.plot([0,17], [fit_point_mean_L0, fit_point_mean_L0], color=m_fitoint_plot[0].get_color())
+    plt.plot(final_fitpoints[0], final_fitpoints[1], 'd', markersize=4, color='#F510C6')
     plt.plot([0,17], [fit_point_mean_L0 + 1.5 * fit_point_std_L0, fit_point_mean_L0 + 1.5 * fit_point_std_L0], color='gray')
     plt.plot([2,17], [fit_point_mean_L0 - 1.5 * fit_point_std_L0, fit_point_mean_L0 - 1.5 * fit_point_std_L0], color='gray')
     plt.annotate('', xy=(5, fit_point_mean_L0), xytext=(5, fit_point_mean_L0+1.5*fit_point_std_L0),
@@ -254,7 +254,7 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     plt.xlabel('\(r\) [fm]')
     plt.semilogy()
     plt.legend(['\(|u_{\\Tilde{N}_\\text{max}}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|u_{\\Tilde{N}_\\text{max}-1}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(P_{u,i}\) [\(1/\\sqrt{\\text{fm}}\)]', 
-                '\(P_{u,m}\) [\(1/\\sqrt{\\text{fm}}\)]', '\(P_{u,f}\) [\(1/\\sqrt{\\text{fm}}\)]', 'Mean of \(P_{u,f}\) [\(1/\\sqrt{\\text{fm}}\)]'])
+                '\(P_{u,m}\) [\(1/\\sqrt{\\text{fm}}\)]', 'Mean of \(P_{u,m}\) [\(1/\\sqrt{\\text{fm}}\)]', '\(P_{u,f}\) [\(1/\\sqrt{\\text{fm}}\)]'])
 
 
 
