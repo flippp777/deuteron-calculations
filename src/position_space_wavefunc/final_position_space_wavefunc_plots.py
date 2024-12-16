@@ -174,7 +174,7 @@ def final_wavefunc_plots(save=False):
     axs[1].set_xlabel('$r$ [fm]')
     axs[1].grid(linestyle='--')
     if save:
-        plt.savefig('wave_functions_nmax0-30_aHO1.2-2.0.pdf', bbox_inches='tight')
+        plt.savefig('wave_functions_nmax0-50_aHO1.2-2.0.pdf', bbox_inches='tight')
 
 
     fig = plt.figure(figsize=set_size(502.15))
@@ -204,7 +204,7 @@ def final_wavefunc_plots(save=False):
     axs[1].set_xlabel('$r$ [fm]')
     axs[1].grid(linestyle='--')
     if save:
-        plt.savefig('wave_functions_nmax0-30_aHO1.2-2.0_log.pdf', bbox_inches='tight')
+        plt.savefig('wave_functions_nmax0-50_aHO1.2-2.0_log.pdf', bbox_inches='tight')
 
 final_wavefunc_plots(True)
 
