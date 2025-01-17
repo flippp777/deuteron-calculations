@@ -262,6 +262,6 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     return kappa_L0, a_L0, connection_point_L0, kappa_L2, a_L2, connection_point_L2, fit_points_L0, fit_points_L2
 
 find_continuation_parameters(30, 1.2, 'u/w')
-plt.savefig('fitpoint_find_visulization.pdf', bbox_inches='tight')
+plt.savefig('fitpoint_find_visulization.svg', bbox_inches='tight')
 
 plt.show()

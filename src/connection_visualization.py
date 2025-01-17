@@ -9,7 +9,7 @@ import sys
 from uncertainties import unumpy as unp
 
 if sys.platform == 'win32':
-    sys.path.insert(1, r'C:\Users\phili.DESKTOP\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
+    sys.path.insert(1, r'src')
 else:
     sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 
@@ -252,6 +252,6 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     return kappa_L0, a_L0, connection_point_L0, kappa_L2, a_L2, connection_point_L2, fit_points_L0, fit_points_L2
 
 find_continuation_parameters(13, 1.2, 'u/w')
-plt.savefig('connection_visulization.pdf', bbox_inches='tight')
+plt.savefig('connection_visulization.svg', bbox_inches='tight')
 
 plt.show()

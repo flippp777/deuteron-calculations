@@ -5,7 +5,7 @@ import sys
 import os
 
 if sys.platform == "win32":
-    sys.path.insert(1, r'C:\Users\phili.DESKTOP\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
+    sys.path.insert(1, r'src')
 else:
     sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 

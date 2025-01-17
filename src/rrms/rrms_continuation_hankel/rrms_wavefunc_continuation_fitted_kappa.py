@@ -9,7 +9,7 @@ import sys
 from uncertainties import unumpy as unp
 
 if sys.platform == 'win32':
-    sys.path.insert(1, r'C:\Users\phili.DESKTOP\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
+    sys.path.insert(1, r'src')
 else:
     sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 
@@ -478,7 +478,7 @@ def plot_wavefunc_continuation_rrms_final(save=False):
         
         
         if save:
-            plt.savefig(f"wavefunc_continuation_aHO{aHO_lst[j]}_final_fitted_kappa.pdf", bbox_inches='tight')
+            plt.savefig(f"wavefunc_continuation_aHO{aHO_lst[j]}_final_fitted_kappa.svg", bbox_inches='tight')
     
     rrms_12 = np.delete(rrms_lst[0],0) 
     rrms_20 = np.delete(rrms_lst[1],0) 
@@ -509,7 +509,7 @@ def plot_wavefunc_continuation_rrms_final(save=False):
     axs[1].grid(linestyle='--')
 
     if save:
-        plt.savefig("rrms_continuation_1.2-2.0_final_fitted_kappa.pdf", bbox_inches='tight')
+        plt.savefig("rrms_continuation_1.2-2.0_final_fitted_kappa.svg", bbox_inches='tight')
         
         
 # plot_wavefunc_continuation_rrms_final(True)
@@ -682,11 +682,11 @@ def rrms_values(aHO, save=False):
         
 # rrms_values(1.2, True)
 
-# plot_wavefunc_continuation_rrms_final(False)
+plot_wavefunc_continuation_rrms_final(True)
 
         
 # ANN_comparison()
-ANN_comparison_11to14(True, False)
+# ANN_comparison_11to14(True, False)
 
 # plot_wavefunc_continuation_rrms(r, 2, 60, 1, 1, 'u/w', 10, 50, False)
 # plot_wavefunc_continuation_rrms(r, 1.2, 60, 1, 1, 'u/w', 10, 50, True)

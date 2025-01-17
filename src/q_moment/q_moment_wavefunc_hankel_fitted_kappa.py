@@ -7,7 +7,7 @@ from scipy.optimize import curve_fit
 from lmfit import Model, Parameters, create_params
 
 if sys.platform == "win32":
-    sys.path.insert(1, r'C:\Users\phili.DESKTOP\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
+    sys.path.insert(1, r'src')
 else:
     sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 
@@ -316,7 +316,7 @@ def plot_wavefunc_continuation_q_final(save=False):
     axs[1].grid(linestyle='--')
 
     if save:
-        plt.savefig("q_continuation_1.2-2.0_final_fitted_kappa.pdf", bbox_inches='tight')
+        plt.savefig("q_continuation_1.2-2.0_final_fitted_kappa.svg", bbox_inches='tight')
 
 def q_values(aHO, save=False):
     Nmax = [2,5,8,11,16,20]
