@@ -266,7 +266,7 @@ def plot_wavefunc_continuation_q_final(save=False):
 
     axs[0].plot(q_full_wave_12[0], q_full_wave_12[1], 'x-', color='black', markersize=4)
     axs[0].plot(Nmax_lst, q_12, 'x-', color=purple, markersize=4)
-    axs[0].legend(["\(Q^\\text{wav}\)", '\(Q^\\text{fit}\)'])
+    axs[0].legend(["\(Q^\\text{wav}\)", '\(Q^\\text{fix}\)'])
     axs[0].set_xlabel('$\\Tilde{N}_\\text{max}$')
     axs[0].set_ylabel("$Q$ [$e$fm$^2$]")
     axs[0].text(20, 0.175, '$a_\\text{HO}=1.2\ $fm')
@@ -275,13 +275,13 @@ def plot_wavefunc_continuation_q_final(save=False):
     
     axs[1].plot(q_full_wave_20[0], q_full_wave_20[1], 'x-', color='black', markersize=4)
     axs[1].plot(Nmax_lst, q_20, 'x-', color=purple, markersize=4)
-    axs[1].legend(["\(Q^\\text{wav}\)", '\(Q^\\text{fit}\)'])
+    axs[1].legend(["\(Q^\\text{wav}\)", '\(Q^\\text{fix}\)'])
     axs[1].set_xlabel('$\\Tilde{N}_\\text{max}$')
     axs[1].text(20, 0.175, '$a_\\text{HO}=2.0\ $fm')
     axs[1].grid(linestyle='--')
 
     if save:
-        plt.savefig("q_continuation_1.2-2.0_final_fixed_kappa.pdf", bbox_inches='tight')
+        plt.savefig("q_continuation_1.2-2.0_final_fixed_kappa.svg", bbox_inches='tight')
 
 def q_values(aHO, save=False):
     # Nmax = [2,5,8,11,16,20]
@@ -305,7 +305,7 @@ def q_values(aHO, save=False):
         
 q_values(2, False)
 
-plot_wavefunc_continuation_q_final(False)
+plot_wavefunc_continuation_q_final(True)
 
 # plot_continuation_wavefunc_Q(r, 1.2, 60, 1, 1, 29, 10, 50, True)
 # plot_continuation_wavefunc_Q(r, 2.0, 60, 3, 1, 46, 10, 50, True)

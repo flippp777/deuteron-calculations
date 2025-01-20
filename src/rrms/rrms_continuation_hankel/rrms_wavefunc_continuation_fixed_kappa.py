@@ -476,7 +476,7 @@ def ANN_comparison_11to14(savefig=False, saveval=False):
     axs[1].grid(linestyle='--')
     
     if savefig:
-        plt.savefig("ANN_comparison_fixed_kappa.pdf", bbox_inches='tight')
+        plt.savefig("ANN_comparison_fixed_kappa.svg", bbox_inches='tight')
         
     if saveval:
         ANN_err_lst = ANN_err_lst.transpose()
@@ -562,7 +562,7 @@ def plot_wavefunc_continuation_rrms_final(save=False):
         
         
         if save:
-            plt.savefig(f"wavefunc_continuation_aHO{aHO_lst[j]}_final_fixed_kappa.pdf", bbox_inches='tight')
+            plt.savefig(f"wavefunc_continuation_aHO{aHO_lst[j]}_final_fixed_kappa.svg", bbox_inches='tight')
     
     rrms_12 = np.delete(rrms_lst[0],0) 
     rrms_20 = np.delete(rrms_lst[1],0) 
@@ -577,7 +577,7 @@ def plot_wavefunc_continuation_rrms_final(save=False):
 
     axs[0].plot(rrms_full_wave_12[0], rrms_full_wave_12[1], 'x-', color='black', markersize=4)
     axs[0].plot(Nmax_lst, rrms_12, 'x-', color=purple, markersize=4)
-    axs[0].legend(["\(R_\\text{rms}^\\text{wav}\)", '\(R_\\text{rms}^\\text{wav}\)'], loc='upper right')
+    axs[0].legend(["\(R_\\text{rms}^\\text{wav}\)", '\(R_\\text{rms}^\\text{fix}\)'], loc='upper right')
     axs[0].set_xlabel('$\\Tilde{N}_\\text{max}$')
     axs[0].set_ylabel("$R_\\text{rms}$ [fm]")
     axs[0].text(20, 1.1, '$a_\\text{HO}=1.2\ $fm')
@@ -587,13 +587,13 @@ def plot_wavefunc_continuation_rrms_final(save=False):
     
     axs[1].plot(rrms_full_wave_20[0], rrms_full_wave_20[1], 'x-', color='black', markersize=4)
     axs[1].plot(Nmax_lst, rrms_20, 'x-', color=purple, markersize=4)
-    axs[1].legend(["\(R_\\text{rms}^\\text{wav}\)", '\(R_\\text{rms}^\\text{wav}\)'], loc='upper right')
+    axs[1].legend(["\(R_\\text{rms}^\\text{wav}\)", '\(R_\\text{rms}^\\text{fix}\)'], loc='upper right')
     axs[1].text(20, 1.1, '$a_\\text{HO}=2.0\ $fm')
     axs[1].set_xlabel('$\\Tilde{N}_\\text{max}$')
     axs[1].grid(linestyle='--')
 
     if save:
-        plt.savefig("rrms_continuation_1.2-2.0_final_fixed_kappa.pdf", bbox_inches='tight')
+        plt.savefig("rrms_continuation_1.2-2.0_final_fixed_kappa.svg", bbox_inches='tight')
 
 def rrms_values(aHO, save=False):
     Nmax = [2,5,8,11,16,20]
@@ -617,9 +617,9 @@ def rrms_values(aHO, save=False):
 # rrms_values(1.2, True)
          
     
-# plot_wavefunc_continuation_rrms_final(True)
+plot_wavefunc_continuation_rrms_final(True)
 # ANN_comparison_11to13(False)
-ANN_comparison_11to14(True, False)
+# ANN_comparison_11to14(True, False)
 
 
 # plot_wavefunc_continuation_rrms(r, 1.2, 20, 1, 1, 'u/w', 10, 50, False)

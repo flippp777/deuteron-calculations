@@ -493,7 +493,7 @@ def plot_wavefunc_continuation_rrms_final(save=False):
 
     axs[0].plot(rrms_full_wave_12[0], rrms_full_wave_12[1], 'x-', color='black', markersize=4)
     axs[0].plot(Nmax_lst, rrms_12, 'x-', color=purple, markersize=4)
-    axs[0].legend(["\(R_\\text{rms}^\\text{wav}\)", '\(R_\\text{rms}^\\text{wav}\)'], loc='upper right')
+    axs[0].legend(["\(R_\\text{rms}^\\text{wav}\)", '\(R_\\text{rms}^\\text{fit}\)'], loc='upper right')
     axs[0].set_xlabel('$\\Tilde{N}_\\text{max}$')
     axs[0].set_ylabel("$R_\\text{rms}$ [fm]")
     axs[0].text(20, 1.1, '$a_\\text{HO}=1.2\ $fm')
@@ -503,7 +503,7 @@ def plot_wavefunc_continuation_rrms_final(save=False):
     
     axs[1].plot(rrms_full_wave_20[0], rrms_full_wave_20[1], 'x-', color='black', markersize=4)
     axs[1].plot(Nmax_lst, rrms_20, 'x-', color=purple, markersize=4)
-    axs[1].legend(["\(R_\\text{rms}^\\text{wav}\)", '\(R_\\text{rms}^\\text{wav}\)'], loc='upper right')
+    axs[1].legend(["\(R_\\text{rms}^\\text{wav}\)", '\(R_\\text{rms}^\\text{fit}\)'], loc='upper right')
     axs[1].text(20, 1.1, '$a_\\text{HO}=2.0\ $fm')
     axs[1].set_xlabel('$\\Tilde{N}_\\text{max}$')
     axs[1].grid(linestyle='--')
@@ -643,7 +643,7 @@ def ANN_comparison_11to14(savefig=False, saveval=False):
     axs[1].grid(linestyle='--')
     
     if savefig:
-        plt.savefig("ANN_comparison_fitted_kappa.pdf", bbox_inches='tight')
+        plt.savefig("ANN_comparison_fitted_kappa.svg", bbox_inches='tight')
 
     if saveval:
         ANN_lst = np.array(ANN_lst)
