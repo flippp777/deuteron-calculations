@@ -8,7 +8,7 @@ from uncertainties import ufloat
 from uncertainties import unumpy as unp
 
 if sys.platform == 'win32':
-    sys.path.insert(1, r'C:\Users\phili.DESKTOP\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
+    sys.path.insert(1, r'src')
 else:
     sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 
@@ -495,8 +495,10 @@ def ANN_comparison_11to14(savefig=False, saveval=False):
 
 def plot_wavefunc_continuation_rrms_final(save=False):
     r = np.arange(0, 250, 0.1)
-    Nmax_lst = np.arange(1, 30 + 1, 1)
+    # Nmax_lst = np.arange(1, 30 + 1, 1)
     # Nmax_lst = np.array([2, 5, 8, 11, 16, 20, 30])
+    Nmax_lst = [1, 6, 11, 28]
+
     
     wavefunc = 'u/w'
     if wavefunc == 'phi':

@@ -91,7 +91,9 @@ def plot_wavefunc_aHO_L2(Nmax, aHO):
 
 def final_wavefunc_plots(save=False):
     r_model = np.arange(0, 150, 0.1)
-    Nmax = np.arange(0, 51, 10)
+    # Nmax = np.arange(0, 21, 5)
+    # Nmax = np.append(Nmax, 150)
+    Nmax = [1, 8, 15, 150]
     
     purple = '#FF00FF'
     dark_purple = '#330033'
@@ -154,19 +156,19 @@ def final_wavefunc_plots(save=False):
     axs = gs.subplots(sharey=True)
 
     for i in range(n):
-        axs[0].plot(r_model, u(i, 1.2, r_model), color=colorFader(blue, dark_blue, i/n))
-        axs[0].plot(r_model, w(i, 1.2, r_model), color=colorFader(red, dark_red, i/n))
+        axs[0].plot(r_model, u(Nmax[i], 1.2, r_model), color=colorFader(blue, dark_blue, i/n))
+        axs[0].plot(r_model, w(Nmax[i], 1.2, r_model), color=colorFader(red, dark_red, i/n))
     axs[0].text(6, 0.45, '$a_\\text{HO}=\\SI{1.2}{\\femto\\m}$')
-    axs[0].set_xlim(0,10)
-    axs[0].set_xticks([0, 2, 4, 6, 8])
+    axs[0].set_xlim(0,17.5)
+    axs[0].set_xticks([0, 5, 10, 15])
     axs[0].set_ylim(top=0.7)
     axs[0].legend(legend)
     axs[0].set_xlabel('$r$ [fm]')
     axs[0].grid(linestyle='--')
 
     for i in range(n):
-        axs[1].plot(r_model, u(i, 2, r_model), color=colorFader(blue, black, i/n))
-        axs[1].plot(r_model, w(i, 2, r_model), color=colorFader(red, black, i/n))
+        axs[1].plot(r_model, u(Nmax[i], 2, r_model), color=colorFader(blue, black, i/n))
+        axs[1].plot(r_model, w(Nmax[i], 2, r_model), color=colorFader(red, black, i/n))
     axs[1].text(10, 0.45, '$a_\\text{HO}=\\SI{2.0}{\\femto\\m}$')
     axs[1].set_xlim(0,17.5)
     # axs[1].set_xticks([0, 2.5, 5, 7.5, 10, 12.5, 15])
@@ -174,7 +176,7 @@ def final_wavefunc_plots(save=False):
     axs[1].set_xlabel('$r$ [fm]')
     axs[1].grid(linestyle='--')
     if save:
-        plt.savefig('wave_functions_nmax0-50_aHO1.2-2.0.pdf', bbox_inches='tight')
+        plt.savefig('wave_functions_nmax0-50_aHO1.2-2.0.svg', bbox_inches='tight')
 
 
     fig = plt.figure(figsize=set_size(502.15))
@@ -184,27 +186,27 @@ def final_wavefunc_plots(save=False):
     legend = ['$|u(r)|$ \([1/\\sqrt{\\text{fm}}]\)', '$|w(r)|$ \([1/\\sqrt{\\text{fm}}]\)'] 
     
     for i in range(n):
-        axs[0].plot(r_model, np.abs(u(i, 1.2, r_model)), color=colorFader(blue, dark_blue, i/n))
-        axs[0].plot(r_model, np.abs(w(i, 1.2, r_model)), color=colorFader(red, dark_red, i/n))
+        axs[0].plot(r_model, np.abs(u(Nmax[i], 1.2, r_model)), color=colorFader(blue, dark_blue, i/n))
+        axs[0].plot(r_model, np.abs(w(Nmax[i], 1.2, r_model)), color=colorFader(red, dark_red, i/n))
     axs[0].text(7.5, 0.3, '$a_\\text{HO}=\\SI{1.2}{\\femto\\m}$')
-    axs[0].set_xlim(0,12.5)
-    axs[0].set_xticks([0, 2.5, 5, 7.5, 10])
+    axs[0].set_xlim(0,17.5)
+    axs[0].set_xticks([0, 5, 10, 15])
     axs[0].legend(legend)
     axs[0].set_xlabel('$r$ [fm]')
     axs[0].grid(linestyle='--')
 
     for i in range(n):
-        axs[1].plot(r_model, np.abs(u(i, 2, r_model)), color=colorFader(blue, black, i/n))
-        axs[1].plot(r_model, np.abs(w(i, 2, r_model)), color=colorFader(red, black, i/n))
+        axs[1].plot(r_model, np.abs(u(Nmax[i], 2, r_model)), color=colorFader(blue, black, i/n))
+        axs[1].plot(r_model, np.abs(w(Nmax[i], 2, r_model)), color=colorFader(red, black, i/n))
     axs[1].text(13.5, 0.3, '$a_\\text{HO}=\\SI{2.0}{\\femto\\m}$')
     axs[1].semilogy()
     axs[1].set_ylim(10**(-5),1)
-    axs[1].set_xlim(0,22.5)
-    axs[1].legend(legend)
+    axs[1].set_xlim(0,27.5)
+    axs[1].legend(legend, loc="lower left")
     axs[1].set_xlabel('$r$ [fm]')
     axs[1].grid(linestyle='--')
     if save:
-        plt.savefig('wave_functions_nmax0-50_aHO1.2-2.0_log.pdf', bbox_inches='tight')
+        plt.savefig('wave_functions_nmax0-50_aHO1.2-2.0_log.svg', bbox_inches='tight')
 
 final_wavefunc_plots(True)
 
