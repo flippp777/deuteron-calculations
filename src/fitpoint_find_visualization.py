@@ -235,28 +235,27 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     
     plt.plot(r, wavefunc_L0[1], color='#0000ff')
     plt.plot(r,wavefunc_L0[0], color='#ff0000')
-    plt.plot(r[inital_fitpoint_indices], wavefunc_L0[1, inital_fitpoint_indices], 'd', markersize=4, color='#11458C')
-    m_fitoint_plot = plt.plot(r[mkrit_fitpoint_indices], wavefunc_L0[1, mkrit_fitpoint_indices], 'd', markersize=4, color='#E1A100')
-    plt.plot([0,17], [fit_point_mean_L0, fit_point_mean_L0], color=m_fitoint_plot[0].get_color())
-    plt.plot(final_fitpoints[0], final_fitpoints[1], 'd', markersize=4, color='#F510C6')
-    plt.plot([0,17], [fit_point_mean_L0 + 1.5 * fit_point_std_L0, fit_point_mean_L0 + 1.5 * fit_point_std_L0], color='gray')
-    plt.plot([2,17], [fit_point_mean_L0 - 1.5 * fit_point_std_L0, fit_point_mean_L0 - 1.5 * fit_point_std_L0], color='gray')
-    plt.annotate('', xy=(5, fit_point_mean_L0), xytext=(5, fit_point_mean_L0+1.5*fit_point_std_L0),
-              arrowprops=dict(arrowstyle='<->', color='black', lw=1, shrinkA=0, shrinkB=0))
-    plt.annotate('', xy=(5, fit_point_mean_L0), xytext=(5, fit_point_mean_L0-1.5*fit_point_std_L0),
-              arrowprops=dict(arrowstyle='<->', color='black', lw=1, shrinkA=0, shrinkB=0))
-    plt.text(5.1, 0.1, '\(+s\\cdot\\sigma\)',va='center', ha='left', color='black')
-    plt.text(5.1, 0.055, '\(-s\\cdot\\sigma\)',va='center', ha='left', color='black')
+    #plt.plot(r[inital_fitpoint_indices], wavefunc_L0[1, inital_fitpoint_indices], 'd', markersize=4, color='#11458C')
+    #m_fitoint_plot = plt.plot(r[mkrit_fitpoint_indices], wavefunc_L0[1, mkrit_fitpoint_indices], 'd', markersize=4, color='#E1A100')
+    #plt.plot([0,17], [fit_point_mean_L0, fit_point_mean_L0], color=m_fitoint_plot[0].get_color())
+    #plt.plot(final_fitpoints[0], final_fitpoints[1], 'd', markersize=4, color='#F510C6')
+    #plt.plot([0,17], [fit_point_mean_L0 + 1.5 * fit_point_std_L0, fit_point_mean_L0 + 1.5 * fit_point_std_L0], color='gray')
+    #plt.plot([2,17], [fit_point_mean_L0 - 1.5 * fit_point_std_L0, fit_point_mean_L0 - 1.5 * fit_point_std_L0], color='gray')
+    #plt.annotate('', xy=(5, fit_point_mean_L0), xytext=(5, fit_point_mean_L0+1.5*fit_point_std_L0),
+    #          arrowprops=dict(arrowstyle='<->', color='black', lw=1, shrinkA=0, shrinkB=0))
+    #plt.annotate('', xy=(5, fit_point_mean_L0), xytext=(5, fit_point_mean_L0-1.5*fit_point_std_L0),
+    #          arrowprops=dict(arrowstyle='<->', color='black', lw=1, shrinkA=0, shrinkB=0))
+    #plt.text(5.1, 0.1, '\(+s\\cdot\\sigma\)',va='center', ha='left', color='black')
+    #plt.text(5.1, 0.055, '\(-s\\cdot\\sigma\)',va='center', ha='left', color='black')
     plt.vlines(3, 10**(-2), 10, linestyle='--', color='gray')
     plt.xlim(2,17)
     plt.xticks([2,3,4,6,8,10,12,14,16], [2, '\(r_\\text{s}\)',4,6,8,10,12,14,16])
     plt.ylim(10**(-2),1)
     plt.xlabel('\(r\) [fm]')
     plt.semilogy()
-    plt.legend(['\(|u_{\\Tilde{N}_\\text{max}}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|u_{\\Tilde{N}_\\text{max}-1}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(P_{u,i}\) [\(1/\\sqrt{\\text{fm}}\)]', 
-                '\(P_{u,m}\) [\(1/\\sqrt{\\text{fm}}\)]', 'Mean of \(P_{u,m}\) [\(1/\\sqrt{\\text{fm}}\)]', '\(P_{u,f}\) [\(1/\\sqrt{\\text{fm}}\)]'])
     #plt.legend(['\(|u_{\\Tilde{N}_\\text{max}}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|u_{\\Tilde{N}_\\text{max}-1}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(P_{u,i}\) [\(1/\\sqrt{\\text{fm}}\)]', 
-    #            '\(P_{u,m}\) [\(1/\\sqrt{\\text{fm}}\)]'])
+    #            '\(P_{u,m}\) [\(1/\\sqrt{\\text{fm}}\)]', 'Mean of \(P_{u,m}\) [\(1/\\sqrt{\\text{fm}}\)]', '\(P_{u,f}\) [\(1/\\sqrt{\\text{fm}}\)]'])
+    plt.legend(['\(|u_{\\Tilde{N}_\\text{max}}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|u_{\\Tilde{N}_\\text{max}-1}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]'])
 
 
 
@@ -264,6 +263,6 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     return kappa_L0, a_L0, connection_point_L0, kappa_L2, a_L2, connection_point_L2, fit_points_L0, fit_points_L2
 
 find_continuation_parameters(30, 1.2, 'u/w')
-plt.savefig('fitpoint_find_visulization4.svg', bbox_inches='tight')
+plt.savefig('fitpoint_find_visulization0.5.svg', bbox_inches='tight')
 
 plt.show()

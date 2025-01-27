@@ -234,7 +234,7 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     plt.plot(r,wavefunc_L2[0], color='#ff0000')
     plt.plot(fit_points_L2[0], fit_points_L2[1], 'd', markersize=5, color='#F510C6')
     plt.plot(r, model_a_L2(r, a2_fit, kappa_L2), color='#11458C')
-    plt.plot(r, model_a_L2(r, a_L2, kappa_L2), color='#E1A100')
+    #plt.plot(r, model_a_L2(r, a_L2, kappa_L2), color='#E1A100')
     plt.vlines(connection_point_L2, 10**(-3), 0.3, linestyle='--', color='gray')
     # plt.plot(connection_point_L2, L2(connection_point_L2, NNmax, aHO), 'X', markersize=8, color='black')
     # plt.text(3.6, 0.04, '\(r_\\text{c}\)')
@@ -243,8 +243,10 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     plt.ylim(15**(-2),0.15)
     plt.xlabel('\(r\) [fm]')
     plt.semilogy()
+    #plt.legend(['\(|w_{\\Tilde{N}_\\text{max}}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|w_{\\Tilde{N}_\\text{max}-1}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', 
+    #            '\(P_{w,f}\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|w_e^\\text{fit}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|w_e^\\text{con}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]'])
     plt.legend(['\(|w_{\\Tilde{N}_\\text{max}}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|w_{\\Tilde{N}_\\text{max}-1}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', 
-                '\(P_{w,f}\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|w_e^\\text{fit}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|w_e^\\text{con}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]'])
+                '\(P_{w,f}\) [\(1/\\sqrt{\\text{fm}}\)]', '\(|w_e^\\text{fit}(r)|\) [\(1/\\sqrt{\\text{fm}}\)]'])
 
 
     print(connection_point_L2)
@@ -252,6 +254,6 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     return kappa_L0, a_L0, connection_point_L0, kappa_L2, a_L2, connection_point_L2, fit_points_L0, fit_points_L2
 
 find_continuation_parameters(13, 1.2, 'u/w')
-plt.savefig('connection_visulization.svg', bbox_inches='tight')
+plt.savefig('connection_visulization3.svg', bbox_inches='tight')
 
 plt.show()
