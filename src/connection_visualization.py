@@ -235,10 +235,10 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     plt.plot(fit_points_L2[0], fit_points_L2[1], 'd', markersize=5, color='#F510C6')
     plt.plot(r, model_a_L2(r, a2_fit, kappa_L2), color='#11458C')
     #plt.plot(r, model_a_L2(r, a_L2, kappa_L2), color='#E1A100')
-    plt.vlines(connection_point_L2, 10**(-3), 0.3, linestyle='--', color='gray')
+    #plt.vlines(connection_point_L2, 10**(-3), 0.3, linestyle='--', color='gray')
     # plt.plot(connection_point_L2, L2(connection_point_L2, NNmax, aHO), 'X', markersize=8, color='black')
     # plt.text(3.6, 0.04, '\(r_\\text{c}\)')
-    plt.xticks([2,3,connection_point_L2,4,5,6,7,8,9,10], [2,3,'\(r_\\text{c}\)',4,5,6,7,8,9,10])
+    #plt.xticks([2,3,connection_point_L2,4,5,6,7,8,9,10], [2,3,'\(r_\\text{c}\)',4,5,6,7,8,9,10])
     plt.xlim(4,10)
     plt.ylim(15**(-2),0.15)
     plt.xlabel('\(r\) [fm]')
@@ -254,6 +254,6 @@ def find_continuation_parameters(NNmax, aHO, wavefunc, number_at_least_collected
     return kappa_L0, a_L0, connection_point_L0, kappa_L2, a_L2, connection_point_L2, fit_points_L0, fit_points_L2
 
 find_continuation_parameters(13, 1.2, 'u/w')
-plt.savefig('connection_visulization3.svg', bbox_inches='tight')
+plt.savefig('connection_visulization0.5.svg', bbox_inches='tight')
 
 plt.show()

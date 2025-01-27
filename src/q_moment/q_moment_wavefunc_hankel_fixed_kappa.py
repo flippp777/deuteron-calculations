@@ -6,7 +6,7 @@ from concurrent.futures import ThreadPoolExecutor
 from scipy.optimize import curve_fit
 
 if sys.platform == "win32":
-    sys.path.insert(1, r'C:\Users\phili.DESKTOP\OneDrive\Uni OneDrive\Bachelor\Bachelorthesis\deuteron-calculations\src')
+    sys.path.insert(1, r'src')
 else:
     sys.path.insert(1, '/home/philipp/bachelorthesis/deuteron-calculations/src')
 
@@ -270,7 +270,7 @@ def plot_wavefunc_continuation_q_final(save=False):
     axs[0].set_xlabel('$\\Tilde{N}_\\text{max}$')
     axs[0].set_ylabel("$Q$ [$e$fm$^2$]")
     axs[0].text(20, 0.175, '$a_\\text{HO}=1.2\ $fm')
-    axs[0].set_yticks([1.5, 0.2, 0.25, 0.2709, 0.3, 0.35, 0.4, 0.45])
+    axs[0].set_yticks([0.15, 0.2, 0.25, 0.2709, 0.3, 0.35, 0.4, 0.45])
     axs[0].grid(linestyle='--')
     
     axs[1].plot(q_full_wave_20[0], q_full_wave_20[1], 'x-', color='black', markersize=4)
