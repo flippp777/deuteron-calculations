@@ -8,3 +8,7 @@ __pycache__/
 .vscode/
 .nosync
 .DS_Store
+
+# matrix elements are not distributed
+matrix_elements/*
+!matrix_elements/README.md
