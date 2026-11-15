@@ -44,7 +44,7 @@ src/
 ├── fitpoint_find_visualization.py
 ├── rrms_nmax_Nmax_comparison.py
 └── plotstyle/, stylesheet.mplstyle  # LaTeX-sized matplotlib styling
-matrix_elements/     # HO matrix elements of the interaction and T_rel (input)
+matrix_elements/     # HO matrix elements (input, not included)
 calculated_values/   # resulting r_rms and Q values
 final_plots/         # figures used in the thesis
 ```
@@ -72,4 +72,8 @@ pip install numpy scipy matplotlib lmfit uncertainties joblib
 python src/rrms/rrms_continuation_hankel/rrms_wavefunc_continuation_fixed_kappa.py
 ```
 
-Run the scripts from the repository root, because the paths to `matrix_elements/` and the stylesheet are relative to it.
+The matrix elements are not included; [`matrix_elements/README.md`](matrix_elements/README.md) lists the files the scripts expect. Run the scripts from the repository root, because the paths to `matrix_elements/` and the stylesheet are relative to it.
+
+## License
+
+The code is released under the [MIT License](LICENSE). The nuclear matrix elements used as input are not included and not covered by this license.
