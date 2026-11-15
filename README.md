@@ -37,7 +37,7 @@ src/
 ├── position_space_wavefunc/    # wave function plots, tail slopes
 ├── rrms/
 │   ├── rrms_expval/            # direct HO expectation values
-│   ├── rrms_continnuation_exp/ # exponential continuation
+│   ├── rrms_continuation_exp/    # exponential continuation
 │   └── rrms_continuation_hankel/ # Hankel-function continuation (fixed / fitted κ)
 ├── q_moment/                   # quadrupole moment Q
 ├── connection_visualization.py # illustration of the matching procedure
