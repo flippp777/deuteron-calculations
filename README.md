@@ -73,3 +73,7 @@ python src/rrms/rrms_continuation_hankel/rrms_wavefunc_continuation_fixed_kappa.
 ```
 
 Run the scripts from the repository root, because the paths to `matrix_elements/` and the stylesheet are relative to it.
+
+## License
+
+The code is released under the [MIT License](LICENSE). The nuclear matrix elements in `matrix_elements/` are not covered by this license.
