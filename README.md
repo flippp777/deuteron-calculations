@@ -51,6 +51,10 @@ final_plots/         # figures used in the thesis
 
 ## Selected results
 
+![rms radius of the deuteron vs. Ñmax, direct and with Hankel-function continuation](plots_presentation/Rrms/rrms_continuation_1.2-2.0_final_fixed_kappa.svg)
+
+*rms radius of the deuteron vs. Ñmax for a_HO = 1.2 fm and 2.0 fm: directly from the HO wave function (black) and with the Hankel-function continuation at fixed κ (magenta). The continued radius settles near 1.97 fm at much smaller Ñmax, especially for a_HO = 1.2 fm.*
+
 | | |
 |---|---|
 | Wave function continuation | [`final_plots/wave_functions/`](final_plots/wave_functions) |
